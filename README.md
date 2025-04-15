@@ -2,7 +2,7 @@
 
 Wine Tasting Notes Generator that follows the __WSET Level 3__.
 
-This project is designed to help wine enthusiasts and students of the WSET course to take structured tasting notes.
+This project is designed to help wine enthusiasts, sommeliers, WSET awardees and wine students of the WSET course to take structured tasting notes.
 
 # Disclaimer
 
