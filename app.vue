@@ -1,6 +1,7 @@
 <template>
-  <div>
+  <div class="container">
     <NuxtRouteAnnouncer />
-    Oi
+    <h1 class="text-4xl">Wine Tasting Generator</h1>
+    <AppearanceStep />
   </div>
 </template>
