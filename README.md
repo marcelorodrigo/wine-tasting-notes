@@ -1,6 +1,6 @@
-# Nuxt Minimal Starter
+# Wine Tasting Notes Generator following WSET
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+A Nuxt-based application for generating wine tasting notes following the Wine & Spirit Education Trust (WSET) methodology.
 
 ## Setup
 
