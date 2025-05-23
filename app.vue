@@ -1,6 +1,12 @@
+<script setup lang="ts">
+import { UApp } from '#components';
+
+</script>
+
 <template>
-  <div>
-    <NuxtRouteAnnouncer />
-    <NuxtWelcome />
-  </div>
+  <UApp>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+  </UApp>>
 </template>
