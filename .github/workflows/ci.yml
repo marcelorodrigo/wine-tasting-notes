@@ -1,7 +1,9 @@
 name: Pull Request Build
 on:
   pull_request
-
+concurrency:
+    group: pr-${{ github.ref }}
+    cancel-in-progress: true
 jobs:
   ci:
     runs-on: ubuntu-latest
@@ -24,7 +26,7 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Lint
         run: pnpm run lint
