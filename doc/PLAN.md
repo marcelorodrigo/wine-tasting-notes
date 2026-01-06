@@ -86,6 +86,500 @@ Based on WSET Level 3 Systematic Approach to Tasting Wine (2022, Issue 2), we ne
 - `qualityLevel`: 'faulty' | 'poor' | 'acceptable' | 'good' | 'very good' | 'outstanding' | null
 - `readiness`: 'too young' | 'can drink now, but has potential for ageing' | 'drink now: not suitable for ageing or further ageing' | 'too old' | null
 
+## Wine Type Filtering System - Detailed Specification
+
+### Wine Type Filtering Matrix
+
+**Primary Aromas & Flavors Categories by Wine Type:**
+
+| Category | White | Rosé | Red |
+|----------|-------|------|-----|
+| Floral | ✓ | ✓ | ✓ |
+| Green Fruit | ✓ | ✓ | ✗ |
+| Citrus Fruit | ✓ | ✓ | ✗ |
+| Stone Fruit | ✓ | ✓ | ✗ |
+| Tropical Fruit | ✓ | ✓ | ✗ |
+| Red Fruit | ✗ | ✓ | ✓ |
+| Black Fruit | ✗ | ✓ | ✓ |
+| Dried/Cooked Fruit | ✗ | ✓ | ✓ |
+| Herbaceous | ✓ | ✓ | ✓ |
+| Herbal | ✓ | ✓ | ✓ |
+| Pungent Spice | ✓ | ✓ | ✓ |
+| Other | ✓ | ✓ | ✓ |
+
+**Secondary Aromas & Flavors (All Wine Types):**
+- Yeast - ✓ All types
+- Malolactic Conversion - ✓ All types
+- Oak - ✓ All types
+
+**Tertiary Aromas & Flavors by Wine Type:**
+
+| Category | White | Rosé | Red |
+|----------|-------|------|-----|
+| Deliberate Oxidation | ✓ | ✓ | ✓ |
+| Fruit Development (White) | ✓ | ✓ | ✗ |
+| Fruit Development (Red) | ✗ | ✓ | ✓ |
+| Bottle Age (White) | ✓ | ✓ | ✗ |
+| Bottle Age (Red) | ✗ | ✓ | ✓ |
+
+### Component Architecture - Wine Type Filtering
+
+#### Component: `WineTypeSelector.vue`
+**Location:** `app/components/wizard/inputs/WineTypeSelector.vue`
+
+**Props:**
+```typescript
+{
+  modelValue: 'white' | 'rosé' | 'red' | null
+}
+```
+
+**Emits:**
+- `update:modelValue`: emitted when selection changes
+
+**Features:**
+- Large, visual radio buttons or cards (mobile-friendly)
+- Wine glass icons for each type (from Iconify)
+- Clear visual feedback for selected type
+- Prominent placement at top of Appearance step
+- Can't be easily missed or skipped
+
+**Implementation Notes:**
+- Use Nuxt UI Radio or custom card-based design
+- Each option should be 44px+ touch target minimum
+- Show color preview for each wine type (burgundy for red, light gold for white, rose pink for rosé)
+
+---
+
+#### Component: `AromaFlavorPicker.vue` (Updated)
+**Location:** `app/components/wizard/inputs/AromaFlavorPicker.vue`
+
+**Props:**
+```typescript
+{
+  modelValue: Object with aroma/flavor selections,
+  wineType: 'white' | 'rosé' | 'red' | null,  // NEW - required for filtering
+  section: 'nose' | 'palate'  // differentiate aromas vs flavors
+}
+```
+
+**Computed Properties:**
+- `visiblePrimaryCategories`: Filters primary categories based on wineType
+- `visibleTertiaryCategories`: Filters tertiary categories based on wineType
+- `allSecondaryCategories`: Always returns all secondary categories (no filtering)
+
+**Template Structure:**
+```
+- No Wine Type Selected Warning
+  └─ Message: "👆 Please select your wine type in the Appearance section above to continue"
+  
+- Primary Aromas (if wine type selected)
+  ├─ [Only show categories valid for wine type]
+  └─ Each category with checkbox list
+  
+- Secondary Aromas (always show)
+  ├─ Yeast
+  ├─ Malolactic Conversion
+  └─ Oak
+  
+- Tertiary Aromas (if wine type selected)
+  ├─ [Only show categories valid for wine type]
+  └─ Each category with checkbox list
+```
+
+**Features:**
+- Accordion/collapsible sections for Primary/Secondary/Tertiary (use Nuxt UI Accordion)
+- Within each, sub-sections for categories
+- Categories not applicable to current wine type are not rendered at all
+- If wineType is null, show helpful message and disable interaction
+- Smooth animations when categories appear/disappear
+
+---
+
+#### Composable: `useTastingData.ts` (Updated)
+
+**New Responsibilities:**
+
+1. **Wine Type Change Handler:**
+```typescript
+function handleWineTypeChange(newWineType: WineType | null, oldWineType: WineType | null) {
+  if (!newWineType || !oldWineType) return;
+  
+  // Clean nose aromas
+  if (tastingData.value.nose && tastingData.value.nose.aromas) {
+    cleanAromasForWineType(tastingData.value.nose.aromas, newWineType);
+  }
+  
+  // Clean palate flavors
+  if (tastingData.value.palate && tastingData.value.palate.flavors) {
+    cleanAromasForWineType(tastingData.value.palate.flavors, newWineType);
+  }
+}
+
+function cleanAromasForWineType(aromaObj: AromaObject, wineType: WineType) {
+  // Primary aromas cleanup
+  const validPrimaryCategories = primaryCategoriesConfig[wineType];
+  for (const category in aromaObj.primary) {
+    if (!validPrimaryCategories.includes(category)) {
+      aromaObj.primary[category] = []; // Clear invalid selections
+    }
+  }
+  
+  // Tertiary aromas cleanup
+  const validTertiaryCategories = tertiaryCategoriesConfig[wineType];
+  for (const category in aromaObj.tertiary) {
+    if (!validTertiaryCategories.includes(category)) {
+      aromaObj.tertiary[category] = []; // Clear invalid selections
+    }
+  }
+  
+  // Secondary: no cleanup needed (all types have access)
+}
+```
+
+2. **Watch for Wine Type Changes:**
+```typescript
+watch(() => tastingData.value.appearance.wineType, (newVal, oldVal) => {
+  if (newVal !== oldVal) {
+    handleWineTypeChange(newVal, oldVal);
+  }
+});
+```
+
+3. **Validation Function:**
+```typescript
+function validateDataConsistency(): boolean {
+  const wineType = tastingData.value.appearance.wineType;
+  if (!wineType) return true; // No validation needed if no wine type
+  
+  // Validate nose aromas
+  const noseValid = validateAromasForWineType(
+    tastingData.value.nose.aromas, 
+    wineType
+  );
+  
+  // Validate palate flavors
+  const palateValid = validateAromasForWineType(
+    tastingData.value.palate.flavors, 
+    wineType
+  );
+  
+  return noseValid && palateValid;
+}
+
+function validateAromasForWineType(aromas: AromaObject, wineType: WineType): boolean {
+  const validPrimaryCategories = primaryCategoriesConfig[wineType];
+  const validTertiaryCategories = tertiaryCategoriesConfig[wineType];
+  
+  for (const category in aromas.primary) {
+    if (!validPrimaryCategories.includes(category) && aromas.primary[category]?.length > 0) {
+      return false; // Invalid primary selection found
+    }
+  }
+  
+  for (const category in aromas.tertiary) {
+    if (!validTertiaryCategories.includes(category) && aromas.tertiary[category]?.length > 0) {
+      return false; // Invalid tertiary selection found
+    }
+  }
+  
+  return true;
+}
+```
+
+4. **Expose Validation Methods:**
+```typescript
+return {
+  // existing exports...
+  validateDataConsistency,
+  handleWineTypeChange
+}
+```
+
+---
+
+#### Utility: `wineTypeFilters.ts` (NEW)
+**Location:** `app/utils/wineTypeFilters.ts`
+
+**Purpose:** Centralized filtering configuration and logic - single source of truth for all wine type dependencies
+
+**Full Implementation:**
+```typescript
+export type WineType = 'white' | 'rosé' | 'red';
+
+export const PRIMARY_CATEGORIES_BY_WINE_TYPE: Record<WineType, string[]> = {
+  white: [
+    'floral',
+    'greenFruit',
+    'citrusFruit',
+    'stoneFruit',
+    'tropicalFruit',
+    'herbaceous',
+    'herbal',
+    'pungentSpice',
+    'other'
+  ],
+  red: [
+    'floral',
+    'redFruit',
+    'blackFruit',
+    'driedCookedFruit',
+    'herbaceous',
+    'herbal',
+    'pungentSpice',
+    'other'
+  ],
+  rosé: [
+    'floral',
+    'greenFruit',
+    'citrusFruit',
+    'stoneFruit',
+    'tropicalFruit',
+    'redFruit',
+    'blackFruit',
+    'driedCookedFruit',
+    'herbaceous',
+    'herbal',
+    'pungentSpice',
+    'other'
+  ]
+};
+
+export const TERTIARY_CATEGORIES_BY_WINE_TYPE: Record<WineType, string[]> = {
+  white: [
+    'deliberateOxidation',
+    'fruitDevelopmentWhite',
+    'bottleAgeWhite'
+  ],
+  red: [
+    'deliberateOxidation',
+    'fruitDevelopmentRed',
+    'bottleAgeRed'
+  ],
+  rosé: [
+    'deliberateOxidation',
+    'fruitDevelopmentWhite',
+    'fruitDevelopmentRed',
+    'bottleAgeWhite',
+    'bottleAgeRed'
+  ]
+};
+
+export const SECONDARY_CATEGORIES = [
+  'yeast',
+  'malolacticConversion',
+  'oak'
+]; // All wine types have access to all secondary categories
+
+/**
+ * Check if a primary aroma category should be visible for the given wine type
+ */
+export function isPrimaryCategoryVisibleForWineType(
+  category: string,
+  wineType: WineType | null
+): boolean {
+  if (!wineType) return false;
+  return PRIMARY_CATEGORIES_BY_WINE_TYPE[wineType].includes(category);
+}
+
+/**
+ * Check if a tertiary aroma category should be visible for the given wine type
+ */
+export function isTertiaryCategoryVisibleForWineType(
+  category: string,
+  wineType: WineType | null
+): boolean {
+  if (!wineType) return false;
+  return TERTIARY_CATEGORIES_BY_WINE_TYPE[wineType].includes(category);
+}
+
+/**
+ * Get all visible categories for a wine type (primary + secondary + tertiary)
+ */
+export function getVisibleCategoriesForWineType(wineType: WineType | null) {
+  if (!wineType) {
+    return {
+      primary: [],
+      secondary: SECONDARY_CATEGORIES,
+      tertiary: []
+    };
+  }
+
+  return {
+    primary: PRIMARY_CATEGORIES_BY_WINE_TYPE[wineType],
+    secondary: SECONDARY_CATEGORIES,
+    tertiary: TERTIARY_CATEGORIES_BY_WINE_TYPE[wineType]
+  };
+}
+
+/**
+ * Validate that an aroma/flavor selection is valid for a wine type
+ */
+export function isAromaValidForWineType(
+  category: string,
+  wineType: WineType | null,
+  categoryType: 'primary' | 'secondary' | 'tertiary'
+): boolean {
+  if (!wineType) return false;
+
+  switch (categoryType) {
+    case 'primary':
+      return isPrimaryCategoryVisibleForWineType(category, wineType);
+    case 'tertiary':
+      return isTertiaryCategoryVisibleForWineType(category, wineType);
+    case 'secondary':
+      return true; // All secondary categories valid for all wine types
+    default:
+      return false;
+  }
+}
+```
+
+---
+
+#### TypeScript Type Updates
+
+**Add to `app/types/tasting.ts`:**
+
+```typescript
+export type WineType = 'white' | 'rosé' | 'red';
+
+export interface AromaObject {
+  primary: {
+    floral?: string[];
+    greenFruit?: string[];
+    citrusFruit?: string[];
+    stoneFruit?: string[];
+    tropicalFruit?: string[];
+    redFruit?: string[];
+    blackFruit?: string[];
+    driedCookedFruit?: string[];
+    herbaceous?: string[];
+    herbal?: string[];
+    pungentSpice?: string[];
+    other?: string[];
+  };
+  secondary: {
+    yeast?: string[];
+    malolacticConversion?: string[];
+    oak?: string[];
+  };
+  tertiary: {
+    deliberateOxidation?: string[];
+    fruitDevelopmentWhite?: string[];
+    fruitDevelopmentRed?: string[];
+    bottleAgeWhite?: string[];
+    bottleAgeRed?: string[];
+  };
+}
+
+export interface AppearanceData {
+  wineType: WineType | null;
+  clarity: 'clear' | 'hazy' | null;
+  intensity: 'pale' | 'medium' | 'deep' | null;
+  color: string | null;
+  otherObservations: string[];
+}
+
+export interface NoseData {
+  condition: 'clean' | 'unclean' | null;
+  intensity: 'light' | 'medium(-)' | 'medium' | 'medium(+)' | 'pronounced' | null;
+  aromas: AromaObject;
+  development: 'youthful' | 'developing' | 'fully developed' | 'tired/past its best' | null;
+}
+
+export interface PalateData {
+  sweetness: 'dry' | 'off-dry' | 'medium-dry' | 'medium-sweet' | 'sweet' | 'luscious' | null;
+  acidity: 'low' | 'medium(-)' | 'medium' | 'medium(+)' | 'high' | null;
+  tannin: 'low' | 'medium(-)' | 'medium' | 'medium(+)' | 'high' | null;
+  alcohol: 'low' | 'medium' | 'high' | null;
+  fortified: boolean;
+  body: 'light' | 'medium(-)' | 'medium' | 'medium(+)' | 'full' | null;
+  mousse: 'delicate' | 'creamy' | 'aggressive' | null;
+  flavorIntensity: 'light' | 'medium(-)' | 'medium' | 'medium(+)' | 'pronounced' | null;
+  flavors: AromaObject;
+  finish: 'short' | 'medium(-)' | 'medium' | 'medium(+)' | 'long' | null;
+}
+
+export interface ConclusionsData {
+  qualityLevel: 'faulty' | 'poor' | 'acceptable' | 'good' | 'very good' | 'outstanding' | null;
+  readiness: 'too young' | 'can drink now, but has potential for ageing' | 'drink now: not suitable for ageing or further ageing' | 'too old' | null;
+}
+
+export interface TastingData {
+  appearance: AppearanceData;
+  nose: NoseData;
+  palate: PalateData;
+  conclusions: ConclusionsData;
+}
+```
+
+---
+
+### Validation & Error Handling
+
+**User Experience Considerations:**
+
+1. **Wine Type Not Selected:**
+   - When user tries to view aroma/flavor picker without selecting wine type
+   - Show friendly message: "👆 Please select your wine type in the Appearance section above to continue"
+   - Disable/grey out aroma picker until wine type is selected
+   - Use Nuxt UI Alert component
+
+2. **Wine Type Changed:**
+   - Auto-clean invalid selections silently (best UX, less interruption)
+   - Show toast notification: "✓ Selection updated for your wine type"
+   - Optional: Use Nuxt UI Toast component from @nuxt/ui
+   - No confirmation dialog needed - let users undo if they change wine type again
+
+3. **Data Consistency Before Generation:**
+   - Before generating notes, validate all selections against current wine type
+   - In dev mode, log warnings if inconsistencies found
+   - In production, silently filter out invalid selections before generation
+   - This ensures note generation always has valid data
+
+4. **Mousse Field (Sparkling Wines):**
+   - Show Mousse field in Palate step ONLY if 'bubbles' or 'pétillance' observed in Appearance
+   - Otherwise hide or grey out
+   - This prevents confusion for non-sparkling wines
+
+---
+
+### Testing Requirements
+
+**Unit Tests - `wineTypeFilters.ts`:**
+- Test all filter functions with each wine type combination
+- Test edge cases: null wine type, invalid categories
+- Test getVisibleCategoriesForWineType for each type
+- Test isAromaValidForWineType comprehensively
+
+**Unit Tests - `useTastingData.ts`:**
+- Test wine type change handler for all transitions (white→red, red→rosé, etc.)
+- Test cleanup logic: verify invalid selections are cleared
+- Test validation function returns correct boolean
+- Test watch triggers on wine type change
+
+**Component Tests - `AromaFlavorPicker.vue`:**
+- Test category visibility for each wine type
+- Test that invalid categories don't render
+- Test that changing wine type updates visible categories
+- Test v-model binding works correctly with filtered data
+- Test "no wine type selected" message shows when needed
+
+**Component Tests - `WineTypeSelector.vue`:**
+- Test selection and emission of wine type
+- Test visual feedback for selected type
+- Test three options render correctly
+
+**Integration Tests:**
+- Full wizard flow: Select white, add white-specific aromas, change to red, verify cleanup
+- Verify rosé shows all categories
+- Test selecting aromas for white, changing to red, verify Red aromas only remain
+- Verify generation works with filtered/cleaned data
+- Test all transitions: white→red, white→rosé, red→white, red→rosé, rosé→white, rosé→red
+
+---
+
 ### Component Structure
 ```
 app/
@@ -95,7 +589,7 @@ app/
 │   │   ├── WizardProgress.vue
 │   │   ├── WizardNavigation.vue
 │   │   ├── steps/
-│   │   │   ├── AppearanceStep.vue         # Includes wine type selector first
+│   │   │   ├── AppearanceStep.vue         # Includes WineTypeSelector first
 │   │   │   ├── NoseStep.vue
 │   │   │   ├── PalateStep.vue
 │   │   │   └── ConclusionsStep.vue
@@ -103,17 +597,17 @@ app/
 │   │       ├── RadioGroup.vue
 │   │       ├── CheckboxGroup.vue
 │   │       ├── WineTypeSelector.vue       # NEW: Initial wine type picker
-│   │       └── AromaFlavorPicker.vue
+│   │       └── AromaFlavorPicker.vue      # UPDATED: Wine type filtering
 │   └── results/
 │       ├── TastingNoteDisplay.vue
 │       ├── ProfileSelector.vue
 │       └── CopyToClipboard.vue
 ├── composables/
-│   ├── useTastingData.ts
+│   ├── useTastingData.ts                  # UPDATED: Wine type change handling
 │   ├── useWizardNavigation.ts
 │   └── useNoteGenerator.ts
 ├── types/
-│   ├── tasting.ts
+│   ├── tasting.ts                         # UPDATED: Wine type interfaces
 │   └── profiles.ts
 └── utils/
     ├── templates/
@@ -121,6 +615,7 @@ app/
     │   ├── casual.ts
     │   ├── bartalk.ts
     │   └── playful.ts
+    ├── wineTypeFilters.ts                 # NEW: Centralized filtering logic
     ├── textGenerators.ts
     └── aromaCategorizer.ts
 ```
