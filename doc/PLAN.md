@@ -24,6 +24,7 @@ A Nuxt 4 application that helps users generate wine tasting notes based on WSET 
 Based on WSET Level 3 Systematic Approach to Tasting Wine (2022, Issue 2), we need to capture:
 
 #### Appearance
+- `wineType`: 'white' | 'rosé' | 'red' | null (primary selector, impacts color options and other logic)
 - `clarity`: 'clear' | 'hazy' | null
 - `intensity`: 'pale' | 'medium' | 'deep' | null
 - `color`: 
@@ -94,13 +95,14 @@ app/
 │   │   ├── WizardProgress.vue
 │   │   ├── WizardNavigation.vue
 │   │   ├── steps/
-│   │   │   ├── AppearanceStep.vue
+│   │   │   ├── AppearanceStep.vue         # Includes wine type selector first
 │   │   │   ├── NoseStep.vue
 │   │   │   ├── PalateStep.vue
 │   │   │   └── ConclusionsStep.vue
 │   │   └── inputs/
 │   │       ├── RadioGroup.vue
 │   │       ├── CheckboxGroup.vue
+│   │       ├── WineTypeSelector.vue       # NEW: Initial wine type picker
 │   │       └── AromaFlavorPicker.vue
 │   └── results/
 │       ├── TastingNoteDisplay.vue
@@ -237,14 +239,26 @@ Good bottle, but past its prime.
 ## Wizard Steps Detail
 
 ### Step 1: Appearance
-**Form Fields:**
+**Initial Selection - Wine Type:**
+- Wine Type (radio, required before continuing):
+  - White
+  - Rosé
+  - Red
+
+**Form Fields (dynamically filtered based on wine type):**
 - Clarity (radio): clear / hazy
 - Intensity (radio): pale / medium / deep
-- Color (radio, grouped):
-  - White: lemon-green / lemon / gold / amber / brown
-  - Rosé: pink / salmon / orange
-  - Red: purple / ruby / garnet / tawny / brown
+- Color (radio, dynamically filtered):
+  - If White selected: lemon-green / lemon / gold / amber / brown
+  - If Rosé selected: pink / salmon / orange
+  - If Red selected: purple / ruby / garnet / tawny / brown
 - Other Observations (checkboxes): legs/tears, deposit, pétillance, bubbles
+
+**Implementation Notes:**
+- Wine type selection is stored in data model (prevents confusion, enables other conditional logic)
+- Color options are filtered client-side based on selected wine type
+- If user changes wine type, previously selected color is cleared (for data consistency)
+- Mousse field in Palate step could also be conditionally shown based on wine observations (bubbles/pétillance)
 
 ### Step 2: Nose
 **Form Fields:**
