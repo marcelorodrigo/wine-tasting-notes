@@ -1,54 +1,228 @@
 # Guide for AI Coding Agents: wine-tasting-notes
 
-This project is a Nuxt 4 application using Nuxt UI, TypeScript, modern best practices, and a well-defined build/test workflow. Follow these guidelines for productivity and architectural compliance:
+This is a **Wine Tasting Notes Generator** - a Nuxt 4 application that generates WSET Level 3-compliant wine tasting notes in multiple stylistic profiles. Understanding the wine domain and multi-step wizard architecture is essential for productivity.
 
-## Big Picture Architecture
-- **Framework**: Nuxt 4 with Nuxt UI, TypeScript, and SSR/SSG enabled by default.
-- **Source Structure**:
-  - `app/`: Holds config (`app.config.ts` for UI branding) and root Vue (`app.vue`), primary pages in `pages/`, and custom components in `components/`.
-  - **Component auto-imports**: Most UI components and helpers are auto-imported via Nuxt conventions. Always prefer using <UApp>, <UHeader>, <UFooter>, <UButton>, etc.
-  - **Global CSS**: Found at `app/assets/css/main.css`, loaded via `nuxt.config.ts`.
-- **Routing**: Defined by files in `app/pages/`, follows Nuxt file conventions for automatic route generation. Check for any custom `routeRules` in `nuxt.config.ts`.
-- **Config**: Core options in `nuxt.config.ts`, including module imports, styling rules, routing, and ESLint rules.
+## Big Picture: Wine Tasting Domain Architecture
+
+### Project Scope
+- **Purpose**: Generate professional wine tasting notes based on WSET Level 3 standards (2022, Issue 2)
+- **Input**: 4-step wizard capturing wine observations (Appearance → Nose → Palate → Conclusions)
+- **Output**: Tasting notes in 4 profiles (Professional, Casual, Bar Talk, Playful)
+- **Key Constraint**: No data persistence, no backend, no AI/LLM - pure template-based text generation
+- **Design**: Mobile-first, works with partial/incomplete data
+
+### Wine Type is THE Critical Filter
+The **wine type** (white/rosé/red) selected in Step 1 drives filtering throughout the entire application:
+- **Color options** in Appearance (white shows lemon/gold, red shows ruby/garnet, etc.)
+- **Aroma categories** visible in Nose (whites see Green Fruit/Citrus; reds see Red/Black Fruit)
+- **Flavor categories** in Palate (same filtering as aromas)
+- **Tertiary characteristics** (Fruit Development White, Bottle Age Red, etc. - rosé gets ALL)
+- See `app/utils/wineTypeFilters.ts` for the filtering matrix - this is the single source of truth
+
+### Critical Architectural Decisions
+1. **Wine Type Selection First** - `WineTypeSelector.vue` must be the first control in AppearanceStep (cannot skip)
+2. **Auto-Clean on Wine Type Change** - When wine type changes, invalid aroma/flavor selections are silently cleared with a toast notification (not a dialog)
+3. **Rosé Wine Gets Full Access** - All aroma/flavor categories available for rosé (intentional design per requirements)
+4. **No Mousse for Still Wines** - Mousse field (aggressive/creamy/delicate) only shows if 'bubbles' or 'pétillance' observed
+5. **Template-Based Generation** - Text generation uses pure template strings + conditional logic, NOT AI (see `app/utils/templates/`)
+
+## Directory Structure & Key Files
+
+```
+app/
+├── components/wizard/             # 4-step wizard UI
+│   ├── WizardContainer.vue         # Main wizard wrapper + state
+│   ├── WizardProgress.vue          # Visual step indicator
+│   ├── WizardNavigation.vue        # Prev/Next/Generate buttons
+│   ├── steps/
+│   │   ├── AppearanceStep.vue      # Step 1: Wine type + clarity/intensity/color/observations
+│   │   ├── NoseStep.vue            # Step 2: Condition/intensity + aromas by category
+│   │   ├── PalateStep.vue          # Step 3: Sweetness/acidity/tannin/body/mousse/flavors
+│   │   └── ConclusionsStep.vue     # Step 4: Quality level + readiness
+│   ├── inputs/
+│   │   ├── WineTypeSelector.vue    # Radio cards: White/Rosé/Red (CRITICAL: must filter all)
+│   │   ├── RadioGroup.vue          # Reusable radio inputs
+│   │   ├── CheckboxGroup.vue       # Reusable checkbox inputs
+│   │   └── AromaFlavorPicker.vue   # Complex nested accordion for 100+ aroma options
+│   └── results/
+│       ├── TastingNoteDisplay.vue  # Shows generated note with formatting
+│       ├── ProfileSelector.vue     # Switch: Professional/Casual/Bar Talk/Playful
+│       └── CopyToClipboard.vue     # Copy to clipboard button
+├── composables/
+│   ├── useTastingData.ts           # Core state: reactive tasting data + wine type handlers
+│   ├── useWizardNavigation.ts      # Step management (currentStep, goNext, goPrevious)
+│   └── useNoteGenerator.ts         # Generates notes from data + profile type
+├── types/tasting.ts               # TypeScript interfaces: WineType, AromaObject, TastingData
+├── utils/
+│   ├── wineTypeFilters.ts          # CRITICAL: Filtering matrices + helper functions
+│   ├── textGenerators.ts           # Text assembly per section (appearance/nose/palate/conclusions)
+│   ├── aromaCategorizer.ts         # Format aroma lists with correct grammar
+│   └── templates/
+│       ├── professional.ts         # All-caps headers, formal language, technical
+│       ├── casual.ts               # Sentence-case headers, conversational flow
+│       ├── bartalk.ts              # No headers, punchy, direct engagement
+│       └── playful.ts              # Creative metaphors, humorous while accurate
+├── pages/index.vue                 # Main page: mounts WizardContainer
+└── app.config.ts                   # Branding colors (burgundy/gold wine theme)
+```
+
+## Data Model & State Management
+
+### Core Data Structure (useTastingData.ts)
+```typescript
+TastingData {
+  appearance: { wineType, clarity, intensity, color, otherObservations }
+  nose: { condition, intensity, aromas, development }
+  palate: { sweetness, acidity, tannin, alcohol, fortified, body, mousse, flavorIntensity, flavors, finish }
+  conclusions: { qualityLevel, readiness }
+}
+
+AromaObject { primary: {...}, secondary: {...}, tertiary: {...} }
+// Primary categories: floral, greenFruit, citrusFruit, stoneFruit, tropicalFruit, redFruit, blackFruit, driedCookedFruit, herbaceous, herbal, pungentSpice, other
+// Secondary: yeast, malolacticConversion, oak (same for all wine types)
+// Tertiary: deliberateOxidation, fruitDevelopmentWhite, fruitDevelopmentRed, bottleAgeWhite, bottleAgeRed
+```
+
+### State Management Pattern
+- **Single composable source of truth**: `useTastingData()` holds all wizard data as reactive refs
+- **Wine type watchers**: Auto-clean aromas/flavors when wine type changes via `handleWineTypeChange()`
+- **Validation**: `validateDataConsistency()` ensures all selections match current wine type
+- **Reset**: `resetTastingData()` clears everything for new tasting
+
+## Wine Type Filtering System (wineTypeFilters.ts)
+
+**This is the MOST important utility file** - it defines which categories are visible for each wine type.
+
+### Filtering Rules
+| Aroma Category | White | Rosé | Red |
+|---|---|---|---|
+| Floral, Herbal, Pungent Spice, Other | ✓ | ✓ | ✓ |
+| Green Fruit, Citrus, Stone, Tropical | ✓ | ✓ | ✗ |
+| Red Fruit, Black Fruit, Dried/Cooked | ✗ | ✓ | ✓ |
+| Secondary (Yeast, MLF, Oak) | ✓ | ✓ | ✓ |
+| Deliberate Oxidation | ✓ | ✓ | ✓ |
+| Fruit Dev White, Bottle Age White | ✓ | ✓ | ✗ |
+| Fruit Dev Red, Bottle Age Red | ✗ | ✓ | ✓ |
+
+### Key Functions (use these everywhere!)
+```typescript
+isPrimaryCategoryVisibleForWineType(category, wineType) // Check if category shows
+isTertiaryCategoryVisibleForWineType(category, wineType) // Check if category shows
+getVisibleCategoriesForWineType(wineType) // Get all {primary, secondary, tertiary}
+isAromaValidForWineType(category, wineType, type) // Validate selection
+```
 
 ## Developer Workflows
-- **Install/Setup**: Use `pnpm install` for dependency management.
-- **Development**: Start with `pnpm dev` (serves on http://localhost:3000).
-- **Production**: Build with `pnpm build`; preview locally with `pnpm preview`.
-- **Linting**: Run `pnpm lint` (uses ESLint with custom stylistic rules found in `nuxt.config.ts`).
-- **Type Checking**: Run `pnpm typecheck` for strict TS compliance.
-- **Testing**:
-  - Uses `@nuxt/test-utils` module for complete Nuxt 4 testing support.
-  - **Runtime** and **Unit** tests are configured, with runtime using the **happy-dom** Vitest environment for fast, browser-like behavior.
-  - Test coverage is always enabled via Vitest.
-  - Run all tests: `pnpm test`
-  - Nuxt component tests: `pnpm test:nuxt`
-  - Unit tests: `pnpm test:unit`
-  - Coverage: `pnpm test:coverage`
-  - All tests reside in `test/nuxt/` (Nuxt/app) and `test/unit/` (pure units).
-  - See nuxt.config.ts for module setup and testing customization.
 
-## Coding & Architectural Conventions
-- **Nuxt UI First**: Always prefer using official Nuxt UI components and the Nuxt UI design system (https://ui.nuxt.com/) for any new feature, change, or implementation. Avoid creating custom components unless Nuxt UI cannot satisfy the requirements. This ensures consistency and leverages existing styling, accessibility, and behavior out of the box.
-- **Tailwind CSS v4 Only for Styling**: Always use Tailwind CSS v4 utility classes for all styling needs. Do not create custom vanilla CSS, custom CSS files, or inline CSS. All new styles and overrides must use Tailwind conventions, which maximize maintainability and compatibility with Nuxt UI.
-- **UI/Branding**: Custom colors are set in `app.config.ts` under the `ui` key. Change here if adjusting primary/neutral branding.
-- **Component Patterns**: Utilize Nuxt UI for layouts, buttons, menus. Custom logic/components should follow the patterns set by `AppLogo.vue` or `TemplateMenu.vue`.
-- **Meta/SEO**: Use Nuxt composables (e.g., `useHead`, `useSeoMeta`) in root and page components for proper SEO.
-- **ESLint Stylistic**: Grammar (`commaDangle`: never, `braceStyle`: 1tbs) enforced at build/test.
-- **External Integrations**: Uses iconify assets and Nuxt UI. For more, check `package.json` and imported modules in `nuxt.config.ts`.
-- **SSR/SSG**: Defaults to SSR/SSG (static prerender at `/` route). Prefer SSR-compatible libraries/components.
+### Essential Commands
+```bash
+pnpm install          # Install dependencies
+pnpm dev              # Start dev server (http://localhost:3000)
+pnpm build            # Build for production
+pnpm lint             # Check ESLint + stylistic rules (commaDangle:never, braceStyle:1tbs)
+pnpm typecheck        # TypeScript strict mode validation
+pnpm test             # Run all tests (unit + Nuxt component tests)
+pnpm test:unit        # Unit tests only (utils, composables, templates)
+pnpm test:nuxt        # Component tests only (with happy-dom)
+pnpm test:coverage    # Coverage report
+```
 
-## Integration & Extension Points
-- **Add Components/Pages**: Place new Vue components in `app/components` or new pages in `app/pages`; routes are auto-generated.
-- **Config Modules**: All major modules (`@nuxt/ui`, `@nuxt/eslint`, `@nuxt/test-utils`) are set in `nuxt.config.ts`. Add new modules there for additional framework features.
-- **Custom Rules/Styles**: Extend the `eslint` or CSS settings in main config files.
+### Pre-Implementation Checklist
+1. Review `doc/PLAN.md` for full specifications (816 lines - references WSET standards)
+2. Check `app/utils/wineTypeFilters.ts` before working with aromas/flavors
+3. Understand wine type filtering impacts: appears in filters, no persistence means watchers must be explicit
+4. Mobile-first: Test at 320px width minimum, 44px+ touch targets
 
-## Key Files & Directories
-- `README.md`: General workflow and live demo reference.
-- `nuxt.config.ts`: Main Nuxt, ESLint, and route rules setup.
-- `app/`: Application Vue and UI infrastructure.
-- `test/`: All Vitest-based tests.
-- `public/`: Static assets (favicon).
+## Testing Strategy
+
+### Unit Tests (test/unit/)
+- **wineTypeFilters.ts**: All filter functions for each wine type + transitions
+- **textGenerators.ts**: Generate appearance/nose/palate/conclusions text - test with complete, partial, empty data
+- **templates/*.ts**: Each profile generates differently - test all 4 on same data
+- **aromaCategorizer.ts**: Correct grammar: "apple, pear and grape" not "apple, pear, grape"
+
+### Component Tests (test/nuxt/)
+- **AromaFlavorPicker.vue**: Renders only categories valid for wine type, responds to wine type changes
+- **WineTypeSelector.vue**: Selection works, emits correctly
+- **Step components**: Data binding works, optional fields don't block generation
+
+### Integration Tests
+- Complete wizard flows (white→add aromas→switch to red→verify cleanup)
+- Rosé shows all categories
+- Generation works with partial data
+- Profile switching produces different output styles
+
+## Coding Conventions
+
+### Nuxt UI First, Always
+- Use `<UButton>`, `<URadio>`, `<UCheckbox>`, `<UAccordion>` from Nuxt UI
+- No custom CSS - use Tailwind v4 utility classes only
+- Component auto-imports work for UI components + custom components in `app/components/`
+
+### Template Generation Pattern
+Each profile generator is similar:
+```typescript
+// app/utils/templates/professional.ts
+export function generateAppearanceText(data: AppearanceData): string {
+  if (!data.clarity && !data.intensity && !data.color) return ''
+  const parts = []
+  if (data.clarity) parts.push(data.clarity)
+  if (data.color) parts.push(`${data.color} in color`)
+  return `APPEARANCE: ${parts.join(' and ')}.`
+}
+```
+- **Return empty string** if section has no data
+- **Test with null/undefined/empty array** inputs - must not crash
+- **Different wording per profile** - Professional is formal, Casual is conversational, Bar Talk is punchy
+
+### Aroma/Flavor Formatting
+Aromas must be grouped by category with proper grammar:
+```
+"Detected floral (acacia, violet), green fruit (gooseberry), and yeast (bread) aromas."
+NOT: "Detected acacia, violet, gooseberry, bread"
+```
+Use `app/utils/aromaCategorizer.ts` to format lists correctly.
+
+### Wine Type Safety
+Every component that shows aromas/flavors MUST:
+1. Accept `wineType` as a prop
+2. Check `isPrimaryCategoryVisibleForWineType()` before rendering
+3. Show warning message if `wineType` is null
+
+## Common Pitfalls & Solutions
+
+| Issue | Solution |
+|---|---|
+| Aromas showing for wrong wine type | Check that component receives `wineType` prop + uses filter function |
+| Mousse field always visible | Should only show if otherObservations includes 'bubbles' or 'pétillance' |
+| Wine type change doesn't clear aromas | Ensure watch in useTastingData is active, handleWineTypeChange is called |
+| Generator crashes on empty input | All text functions must return '' if no data, never crash on null |
+| Rosé not showing all categories | Check isTertiaryCategoryVisibleForWineType - rosé should get both White and Red |
+| ESLint failing on build | Check commaDangle:never, braceStyle:1tbs in nuxt.config.ts |
+
+## Integration Points & External Dependencies
+
+- **Nuxt UI**: All UI components come from here (buttons, radios, accordions, cards)
+- **Tailwind CSS v4**: All styling - customize colors in `app.config.ts` under `ui.colors`
+- **Iconify**: Wine glass icons, fruit icons from `@iconify-json/lucide` and `@iconify-json/simple-icons`
+- **No Backend**: Everything runs client-side, state is session-only
+- **No AI/LLM**: All text is deterministic template-based, not generated by external services
+
+## Wine Domain Knowledge
+
+### WSET Level 3 Systematic Approach (what we follow)
+1. **Appearance**: Observe clarity, color, intensity, observations (legs, bubbles, etc.)
+2. **Nose**: Assess condition, intensity, identify aromas (Primary/Secondary/Tertiary), gauge development
+3. **Palate**: Rate sweetness, acidity, tannin, alcohol, body, mousse (if sparkling), identify flavors, assess finish
+4. **Conclusions**: Quality level (faulty to outstanding), readiness (too young to too old)
+
+### Wine Type Differences (crucial for filtering!)
+- **White wines**: Show green/citrus fruits, white bottle age (petrol/kerosene), white fruit development (dried apricot)
+- **Red wines**: Show red/black fruits, red bottle age (leather/earth/tobacco), red fruit development (fig/prune)
+- **Rosé wines**: Light colored, from red grapes - gets BOTH white and red characteristics
 
 ---
-This guide applies to agents making actual improvements in this Nuxt UI codebase. Always reference this file for relevant conventions before making automated or manual edits. For questions on non-standard conventions or edge case design, review this file and raise clarifications as needed.
+
+**Refer to `doc/PLAN.md` for the complete 816-line specification including all WSET field definitions, component templates, and implementation phases. This AGENTS.md is a quick reference for the critical concepts and architecture decisions.**
+
+When in doubt about wine domain specifics, check the inspiration source: the official WSET Level 3 standards document structure reflected in our data model and templates.
