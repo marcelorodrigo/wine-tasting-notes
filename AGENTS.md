@@ -201,11 +201,12 @@ Every component that shows aromas/flavors MUST:
 | ESLint failing on build | Check commaDangle:never, braceStyle:1tbs in nuxt.config.ts |
 
 ## Linting & Style
-- We use ESLint with stylistic rules and auto-fixing:
-  - `pnpm lint` runs ESLint with auto-fix (eslint --fix .)
+- We use ESLint with stylistic rules:
+  - `pnpm lint` runs ESLint without auto-fix (`eslint .`)
+  - `pnpm lint:fix` runs ESLint with auto-fix (`eslint --fix .`)
 - ESLint configuration lives in `nuxt.config.ts` under the `eslint` block for stylistic choices
-- If you add/modify code, always run `pnpm lint` and `pnpm typecheck` before committing
-- See package.json for the lint script
+- If you add/modify code, always run `pnpm lint` and `pnpm typecheck` before committing. Optionally, use `pnpm lint:fix` to auto-fix stylistic issues before commit.
+- See package.json for the scripts
 
 
 ## Integration Points & External Dependencies

@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@nuxt/eslint": "^1.12.1",
-    "@nuxtjs/eslint-module": "^4.1.0",
+
     "@vitest/coverage-v8": "^4.0.16",
     "@vue/test-utils": "^2.4.6",
     "eslint": "^9.39.2",
