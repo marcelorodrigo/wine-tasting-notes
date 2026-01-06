@@ -1,19 +1,20 @@
-name: ci
-
-on: push
-
+name: Pull Request Build
+on:
+  pull_request
+concurrency:
+    group: pr-${{ github.ref }}
+    cancel-in-progress: true
 jobs:
   ci:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        node: [22]
-
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          fetch-tags: 'false'
+          show-progress: 'false'
+          fetch-depth: '1'
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -21,11 +22,11 @@ jobs:
       - name: Install node
         uses: actions/setup-node@v6
         with:
-          node-version: ${{ matrix.node }}
+          node-version: 24
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Lint
         run: pnpm run lint
