@@ -5,7 +5,8 @@ import IndexPage from '~/pages/index.vue'
 describe('Landing page (index.vue)', () => {
   it('renders the hero heading', async () => {
     const wrapper = await mountSuspended(IndexPage)
-    expect(wrapper.text()).toContain('Craft Professional Wine Tasting Notes')
+    // The h1 contains a <span> and a <br>, so rendered text has extra whitespace
+    expect(wrapper.text()).toMatch(/Craft\s+Professional\s+Wine Tasting Notes/)
   })
 
   it('renders the WSET badge headline', async () => {
