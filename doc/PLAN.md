@@ -87,7 +87,7 @@ Based on WSET Level 3 Systematic Approach to Tasting Wine (2022, Issue 2), we ne
 - `readiness`: 'too young' | 'can drink now, but has potential for ageing' | 'drink now: not suitable for ageing or further ageing' | 'too old' | null
 
 ### Component Structure
-```
+```text
 app/
 ├── components/
 │   ├── wizard/
@@ -114,11 +114,12 @@ app/
 │   ├── useWizardNavigation.ts
 │   └── useNoteGenerator.ts
 ├── data/
-│   └── wset-sat-spec.json          # WSET SAT specification (single source of truth)
+│   └── wset-sat-spec.json          # Generated from wineTypeFilters.ts — WSET fields, aromas, colors
 ├── types/
-│   ├── tasting.ts                   # Auto-generated from wset-sat-spec.json
+│   ├── tasting.ts                   # Generated from wineTypeFilters.ts — TypeScript interfaces
 │   └── profiles.ts
 └── utils/
+    ├── wineTypeFilters.ts            # CANONICAL SOURCE OF TRUTH: filtering, aromas, field definitions
     ├── templates/
     │   ├── professional.ts
     │   ├── casual.ts
@@ -131,7 +132,12 @@ app/
 ## WSET SAT JSON Specification
 
 ### Overview
-The file `app/data/wset-sat-spec.json` is the **single source of truth** for the entire WSET tasting data model. It defines all fields, options, aroma taxonomy, colors, and wine type filtering rules. TypeScript types are auto-generated from this JSON file — no duplication.
+The canonical source of truth for wine-type filtering, aroma definitions, and WSET field structures lives in `app/utils/wineTypeFilters.ts`. From that file, two artifacts are generated:
+
+- `app/data/wset-sat-spec.json` — a JSON representation of the full WSET data model consumed by the Aroma Wheel, text templates, and wizard UI
+- `app/types/tasting.ts` — TypeScript interfaces auto-generated from the spec
+
+**Changes to fields, aromas, or filter rules must be made in `wineTypeFilters.ts`**, not directly in the JSON or type files. A generation step (build-time script or Nuxt module) produces the JSON spec and TypeScript types from that canonical source.
 
 ### Purpose
 The JSON spec is consumed by:
@@ -142,13 +148,13 @@ The JSON spec is consumed by:
 5. **Validation logic** — `wineTypeFilters` section drives all category filtering
 
 ### File Location
-```
+```text
 app/data/wset-sat-spec.json
 ```
 
 ### Structure
 
-```
+```text
 wset-sat-spec.json
 ├── standard          # WSET reference metadata (name, issue, copyright)
 ├── wineTypes         # ["white", "rosé", "red"]
@@ -171,8 +177,7 @@ Each field follows this schema:
   "options": [...],                          // for simple fields
   "optionsByWineType": { ... },              // for wine-type-dependent fields (e.g. color)
   "ref": "#/aromas",                         // for aroma/flavor wheel fields
-  "visibleWhen": { "field": "...", "includes": [...] },  // conditional visibility
-  "fortifiedOptions": [...]                  // alternative options for fortified wines
+  "visibleWhen": { "field": "/...", "includes": [...] }  // conditional visibility (JSON Pointer)
 }
 ```
 
@@ -206,11 +211,11 @@ The `wineTypeFilters` section maps each category to the wine types that can acce
 - When wine type changes, any selected aromas in now-filtered categories are silently removed
 
 ### Type Generation
-TypeScript types in `app/types/tasting.ts` should be auto-generated from this JSON spec:
+TypeScript types in `app/types/tasting.ts` are auto-generated from `wineTypeFilters.ts` via the JSON spec:
 - Union types derived from `options` arrays (e.g., `type Clarity = 'clear' | 'hazy'`)
 - `AromaObject` interface derived from category keys
 - `TastingData` interface derived from section structure
-- A build-time script or Nuxt module reads the JSON and emits `.ts` files
+- A build-time script or Nuxt module reads `wineTypeFilters.ts`, emits the JSON spec, then emits `.ts` types
 
 ### WSET Compliance Notes
 - All field scales, options, and descriptors match **WSET Level 3 SAT Issue 2, 2022** exactly
@@ -220,8 +225,9 @@ TypeScript types in `app/types/tasting.ts` should be auto-generated from this JS
 
 ## Implementation Phases
 ### Phase 1: Foundation & Data Models
-- Create `app/data/wset-sat-spec.json` — single source of truth for all WSET fields, aromas, and filters
-- Auto-generate TypeScript interfaces from JSON spec (`app/types/tasting.ts`)
+- Create `app/utils/wineTypeFilters.ts` — canonical source of truth for all WSET fields, aromas, and filter rules
+- Generate `app/data/wset-sat-spec.json` from wineTypeFilters.ts
+- Auto-generate TypeScript interfaces (`app/types/tasting.ts`) from the spec
 - Composable for reactive state and setters/reset
 - Unit tests for models and type generation
 
@@ -284,7 +290,7 @@ TypeScript types in `app/types/tasting.ts` should be auto-generated from this JS
 Based on the same input data (champagne-like sparkling white wine):
 
 #### Professional Profile
-```
+```text
 APPEARANCE: Clear and lemon in color, with medium intensity.
 
 NOSE: Clean, with medium intensity. Detected floral (acacia, violet), green fruit (gooseberry), tropical fruit (lychee), yeast (bread) and bottle age (kerosene) aromas.
@@ -295,7 +301,7 @@ CONCLUSIONS: This wine is of good quality. It's too old.
 ```
 
 #### Casual Profile
-```
+```text
 Appearance: Clear, lemon-colored, medium intensity.
 
 Nose: Clean and floral — think acacia and violet — with notes of gooseberry, lychee, a bready/yeasty touch and a hint of kerosene from bottle age.
@@ -306,7 +312,7 @@ Conclusion: A good wine, but past its prime.
 ```
 
 #### Bar Talk Profile
-```
+```text
 Smells floral and fresh — acacia/violet, gooseberry and a touch of lychee, with bready yeast and a faint kerosene edge from age.
 
 Tastes slightly off-dry, bright acid, light tannins and pretty warm from the alcohol. Fizzy, fairly light-bodied, with gooseberry, bread, a bit of marzipan from oxidation and savory aged notes.
@@ -315,7 +321,7 @@ Solid wine, but past its best.
 ```
 
 #### Playful Profile
-```
+```text
 Clear, lemony — like a citrus flashlight.
 
 Smells floral and bakery-fresh: acacia, violet, gooseberry, a hint of lychee and a sneaky kerosene whiff.
@@ -391,7 +397,7 @@ Replaces the accordion-based AromaFlavorPicker with an interactive SVG radial ch
 
 ### Visual Structure — 3 Concentric Rings
 
-```
+```text
 ┌──────────────────────────────────────────────────────────┐
 │                    OUTER RING                            │
 │    Individual aromas (clickable to toggle selection)     │
@@ -418,7 +424,7 @@ Replaces the accordion-based AromaFlavorPicker with an interactive SVG radial ch
 
 Each segment spans an angular arc proportional to the number of items it contains. Inner ring segments span the full arc of all their child middle-ring segments, and middle ring segments span the full arc of all their child outer-ring segments.
 
-```
+```text
 Inner ring segment sizes (by sub-category count):
   Primary:   12 categories → largest arc
   Secondary:  3 categories → medium arc
@@ -436,7 +442,7 @@ Middle ring segments (by individual aroma count):
   Herbaceous:       5 aromas
   Herbal:           6 aromas
   Pungent Spice:    2 aromas
-  Other:            4 aromas
+  Other:            3 aromas
   Yeast:            7 aromas
   MLF:              3 aromas
   Oak:             12 aromas
@@ -489,7 +495,7 @@ When a wine type is selected (white/rosé/red), categories that are not valid fo
 - **Valid categories**: Full color, interactive (clickable outer ring segments)
 - **Filtered categories**: Reduced opacity (e.g., `opacity: 0.25`), no pointer events, grey-tinted
 - **Rosé**: All categories remain active (per design — rosé gets everything)
-- **No wine type selected**: All categories active (no filtering)
+- **No wine type selected**: All categories muted and non-interactive (same disabled state as filtered categories); a warning message prompts the user to select a wine type first
 
 If a user changes wine type and has previously selected aromas in now-filtered categories, those selections are **silently cleared** (consistent with the existing auto-clean behavior + toast notification).
 
@@ -536,6 +542,7 @@ If a user changes wine type and has previously selected aromas in now-filtered c
 <!-- AromaWheelChips.vue -->
 <AromaWheelChips
   v-model="selectedAromas"      <!-- Same AromaObject, for removal -->
+  :wine-type="wineType"          <!-- WineType: filters chip visibility + null-state warning -->
   :aroma-definitions="AROMAS"
 />
 ```

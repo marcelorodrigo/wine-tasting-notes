@@ -55,10 +55,10 @@ app/
 │   ├── useNoteGenerator.ts         # Generates notes from data + profile type
 │   └── useAromaWheel.ts            # SVG geometry computation, segment angles, arc paths
 ├── data/
-│   └── wset-sat-spec.json          # SINGLE SOURCE OF TRUTH: all WSET fields, aromas, colors, filters
-├── types/tasting.ts               # Auto-generated from wset-sat-spec.json
+│   └── wset-sat-spec.json          # Generated from wineTypeFilters.ts — WSET fields, aromas, colors
+├── types/tasting.ts               # Generated from wineTypeFilters.ts — TypeScript interfaces
 ├── utils/
-│   ├── wineTypeFilters.ts          # CRITICAL: Filtering matrices + helper functions
+│   ├── wineTypeFilters.ts          # CANONICAL SOURCE OF TRUTH: filtering matrices, aroma data, helpers
 │   ├── textGenerators.ts           # Text assembly per section (appearance/nose/palate/conclusions)
 │   ├── aromaCategorizer.ts         # Format aroma lists with correct grammar
 │   └── templates/

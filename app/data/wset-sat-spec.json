@@ -72,8 +72,11 @@
     },
     "alcohol": {
       "inputType": "single",
-      "options": ["low", "medium", "high"],
-      "fortifiedOptions": ["low", "medium", "high"]
+      "options": ["low", "medium", "high"]
+    },
+    "fortified": {
+      "inputType": "boolean",
+      "description": "Marks the wine as fortified; when true, alcohol scale applies to fortified range"
     },
     "body": {
       "inputType": "single",
@@ -83,7 +86,7 @@
       "inputType": "single",
       "options": ["delicate", "creamy", "aggressive"],
       "visibleWhen": {
-        "field": "appearance.otherObservations",
+        "field": "/appearance/otherObservations",
         "includes": ["bubbles", "pétillance"]
       }
     },
