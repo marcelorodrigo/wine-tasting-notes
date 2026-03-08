@@ -43,7 +43,8 @@ app/
 │   │   ├── WineTypeSelector.vue    # Radio cards: White/Rosé/Red (CRITICAL: must filter all)
 │   │   ├── RadioGroup.vue          # Reusable radio inputs
 │   │   ├── CheckboxGroup.vue       # Reusable checkbox inputs
-│   │   └── AromaFlavorPicker.vue   # Complex nested accordion for 100+ aroma options
+│   │   ├── AromaWheel.vue          # SVG radial aroma chart (Wine Folly-style, 3 concentric rings)
+│   │   └── AromaWheelChips.vue     # Selected aromas summary chips with removal
 │   └── results/
 │       ├── TastingNoteDisplay.vue  # Shows generated note with formatting
 │       ├── ProfileSelector.vue     # Switch: Professional/Casual/Bar Talk/Playful
@@ -51,10 +52,13 @@ app/
 ├── composables/
 │   ├── useTastingData.ts           # Core state: reactive tasting data + wine type handlers
 │   ├── useWizardNavigation.ts      # Step management (currentStep, goNext, goPrevious)
-│   └── useNoteGenerator.ts         # Generates notes from data + profile type
-├── types/tasting.ts               # TypeScript interfaces: WineType, AromaObject, TastingData
+│   ├── useNoteGenerator.ts         # Generates notes from data + profile type
+│   └── useAromaWheel.ts            # SVG geometry computation, segment angles, arc paths
+├── data/
+│   └── wset-sat-spec.json          # Generated from wineTypeFilters.ts — WSET fields, aromas, colors
+├── types/tasting.ts               # Generated from wineTypeFilters.ts — TypeScript interfaces
 ├── utils/
-│   ├── wineTypeFilters.ts          # CRITICAL: Filtering matrices + helper functions
+│   ├── wineTypeFilters.ts          # CANONICAL SOURCE OF TRUTH: filtering matrices, aroma data, helpers
 │   ├── textGenerators.ts           # Text assembly per section (appearance/nose/palate/conclusions)
 │   ├── aromaCategorizer.ts         # Format aroma lists with correct grammar
 │   └── templates/
@@ -142,7 +146,7 @@ pnpm test:coverage    # Coverage report
 - **aromaCategorizer.ts**: Correct grammar: "apple, pear and grape" not "apple, pear, grape"
 
 ### Component Tests (test/nuxt/)
-- **AromaFlavorPicker.vue**: Renders only categories valid for wine type, responds to wine type changes
+- **AromaWheel.vue**: Renders SVG radial chart, mutes categories invalid for wine type, toggles aroma selection
 - **WineTypeSelector.vue**: Selection works, emits correctly
 - **Step components**: Data binding works, optional fields don't block generation
 
