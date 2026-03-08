@@ -9,3 +9,72 @@
 .font-display {
   font-family: var(--font-display);
 }
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Decorative blob floating animations */
+@keyframes blob-float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-24px) scale(1.04); }
+}
+
+@keyframes blob-float-reverse {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(18px) scale(0.96); }
+}
+
+.animate-blob-float {
+  animation: blob-float 10s ease-in-out infinite;
+}
+
+.animate-blob-float-reverse {
+  animation: blob-float-reverse 13s ease-in-out infinite;
+}
+
+/* Subtle shimmer for the preview card border */
+@property --gradient-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes gradient-rotate {
+  to { --gradient-angle: 360deg; }
+}
+
+.card-shimmer {
+  position: relative;
+}
+
+.card-shimmer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--gradient-angle),
+    transparent 40%,
+    var(--color-rose-400) 50%,
+    var(--color-amber-400) 55%,
+    transparent 65%
+  );
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: gradient-rotate 6s linear infinite;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-blob-float,
+  .animate-blob-float-reverse {
+    animation: none;
+  }
+  .card-shimmer::before {
+    animation: none;
+    opacity: 0;
+  }
+}
