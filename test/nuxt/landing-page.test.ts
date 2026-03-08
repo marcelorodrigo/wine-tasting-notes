@@ -28,7 +28,7 @@ describe('Landing page (index.vue)', () => {
     expect(wrapper.text()).toContain('WSET Level 3 Compliant')
     expect(wrapper.text()).toContain('Four Writing Profiles')
     expect(wrapper.text()).toContain('Mobile-First Design')
-    expect(wrapper.text()).toContain('No Data Stored')
+    expect(wrapper.text()).toContain('Nothing Leaves Your Device')
   })
 
   it('renders the bottom CTA section', async () => {
