@@ -1,74 +1,64 @@
+<script setup lang="ts">
+useSeoMeta({
+  title: 'Wine Tasting Notes — WSET-Compliant Tasting Note Generator',
+  description: 'Generate professional WSET Level 3-compliant wine tasting notes in four stylistic profiles. No data stored — everything stays on your device.'
+})
+</script>
+
 <template>
   <div>
     <UPageHero
-      title="Nuxt Starter Template"
-      description="A production-ready starter template powered by Nuxt UI. Build beautiful, accessible, and performant applications in minutes, not hours."
+      title="Craft Professional Wine Tasting Notes"
+      description="Guided by WSET Level 3 standards, describe what you see, smell and taste — then generate polished notes in four stylistic profiles. Nothing is stored; everything stays on your device."
       :links="[{
-        label: 'Get started',
-        to: 'https://ui.nuxt.com/docs/getting-started/installation/nuxt',
-        target: '_blank',
-        trailingIcon: 'i-lucide-arrow-right',
+        label: 'Start Tasting',
+        to: '/tasting',
+        trailingIcon: 'i-lucide-wine',
         size: 'xl'
-      }, {
-        label: 'Use this template',
-        to: 'https://github.com/nuxt-ui-templates/starter',
-        target: '_blank',
-        icon: 'i-simple-icons-github',
-        size: 'xl',
-        color: 'neutral',
-        variant: 'subtle'
       }]"
-    />
+    >
+      <template #headline>
+        <UBadge
+          label="WSET Level 3 · Issue 2 · 2022"
+          variant="subtle"
+          size="md"
+          icon="i-lucide-award"
+        />
+      </template>
+    </UPageHero>
 
     <UPageSection
       id="features"
-      title="Everything you need to build modern Nuxt apps"
-      description="Start with a solid foundation. This template includes all the essentials for building production-ready applications with Nuxt UI's powerful component system."
+      title="Everything you need for great tasting notes"
+      description="A structured, mobile-first wizard walks you through every dimension of wine evaluation — from appearance to conclusions."
       :features="[{
-        icon: 'i-lucide-rocket',
-        title: 'Production-ready from day one',
-        description: 'Pre-configured with TypeScript, ESLint, Tailwind CSS, and all the best practices. Focus on building features, not setting up tooling.'
+        icon: 'i-lucide-award',
+        title: 'WSET Level 3 Compliant',
+        description: 'All fields, scales and descriptors match the official WSET SAT (Issue 2, 2022). Every structured assessment step is covered.'
       }, {
-        icon: 'i-lucide-palette',
-        title: 'Beautiful by default',
-        description: 'Leveraging Nuxt UI\'s design system with automatic dark mode, consistent spacing, and polished components that look great out of the box.'
+        icon: 'i-lucide-message-square-text',
+        title: 'Four Writing Profiles',
+        description: 'Generate notes in Professional, Casual, Bar Talk or Playful styles. Switch between them instantly without re-entering your data.'
       }, {
-        icon: 'i-lucide-zap',
-        title: 'Lightning fast',
-        description: 'Optimized for performance with SSR/SSG support, automatic code splitting, and edge-ready deployment. Your users will love the speed.'
+        icon: 'i-lucide-smartphone',
+        title: 'Mobile-First Design',
+        description: 'Comfortable on any device — from phone to desktop. Touch-friendly controls and generous tap targets throughout.'
       }, {
-        icon: 'i-lucide-blocks',
-        title: '100+ components included',
-        description: 'Access Nuxt UI\'s comprehensive component library. From forms to navigation, everything is accessible, responsive, and customizable.'
-      }, {
-        icon: 'i-lucide-code-2',
-        title: 'Developer experience first',
-        description: 'Auto-imports, hot module replacement, and TypeScript support. Write less boilerplate and ship more features.'
-      }, {
-        icon: 'i-lucide-shield-check',
-        title: 'Built for scale',
-        description: 'Enterprise-ready architecture with proper error handling, SEO optimization, and security best practices built-in.'
+        icon: 'i-lucide-shield-off',
+        title: 'No Data Stored',
+        description: 'Your observations live only in your browser session. Nothing is sent to any server. Close the tab and it\'s gone.'
       }]"
     />
 
     <UPageSection>
       <UPageCTA
-        title="Ready to build your next Nuxt app?"
-        description="Join thousands of developers building with Nuxt and Nuxt UI. Get this template and start shipping today."
+        title="Ready to describe your next bottle?"
+        description="Work through the four-step wizard, then copy your tasting note in the style that suits the moment."
         variant="subtle"
         :links="[{
-          label: 'Start building',
-          to: 'https://ui.nuxt.com/docs/getting-started/installation/nuxt',
-          target: '_blank',
-          trailingIcon: 'i-lucide-arrow-right',
-          color: 'neutral'
-        }, {
-          label: 'View on GitHub',
-          to: 'https://github.com/nuxt-ui-templates/starter',
-          target: '_blank',
-          icon: 'i-simple-icons-github',
-          color: 'neutral',
-          variant: 'outline'
+          label: 'Start Tasting',
+          to: '/tasting',
+          trailingIcon: 'i-lucide-arrow-right'
         }]"
       />
     </UPageSection>
