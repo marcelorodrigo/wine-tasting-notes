@@ -17,42 +17,45 @@ useHead({
   }
 })
 
-const title = 'Nuxt Starter Template'
-const description = 'A production-ready starter template powered by Nuxt UI. Build beautiful, accessible, and performant applications in minutes, not hours.'
+const title = 'Wine Tasting Notes'
+const description = 'Generate professional WSET Level 3-compliant wine tasting notes in multiple stylistic profiles. No data stored — everything stays on your device.'
 
 useSeoMeta({
   title,
   description,
   ogTitle: title,
   ogDescription: description,
-  ogImage: 'https://ui.nuxt.com/assets/templates/nuxt/starter-light.png',
-  twitterImage: 'https://ui.nuxt.com/assets/templates/nuxt/starter-light.png',
   twitterCard: 'summary_large_image'
 })
+
+const route = useRoute()
+const isHomePage = computed(() => route.path === '/')
 </script>
 
 <template>
   <UApp>
     <UHeader>
       <template #left>
-        <NuxtLink to="/">
-          <AppLogo class="w-auto h-6 shrink-0" />
+        <NuxtLink
+          to="/"
+          aria-label="Wine Tasting Notes home"
+        >
+          <AppLogo />
         </NuxtLink>
-
-        <TemplateMenu />
       </template>
 
       <template #right>
-        <UColorModeButton />
-
         <UButton
-          to="https://github.com/nuxt-ui-templates/starter"
-          target="_blank"
-          icon="i-simple-icons-github"
-          aria-label="GitHub"
-          color="neutral"
-          variant="ghost"
+          v-if="isHomePage"
+          to="/tasting"
+          label="Start Tasting"
+          icon="i-lucide-wine"
+          color="primary"
+          variant="subtle"
+          size="md"
         />
+
+        <UColorModeButton />
       </template>
     </UHeader>
 
@@ -60,24 +63,17 @@ useSeoMeta({
       <NuxtPage />
     </UMain>
 
-    <USeparator icon="i-simple-icons-nuxtdotjs" />
+    <USeparator icon="i-lucide-wine" />
 
     <UFooter>
       <template #left>
         <p class="text-sm text-muted">
-          Built with Nuxt UI • © {{ new Date().getFullYear() }}
+          Built with <ULink
+            to="https://ui.nuxt.com"
+            target="_blank"
+            class="text-muted hover:text-default underline underline-offset-2"
+          >Nuxt UI</ULink> • © {{ new Date().getFullYear() }} Wine Tasting Notes
         </p>
-      </template>
-
-      <template #right>
-        <UButton
-          to="https://github.com/nuxt-ui-templates/starter"
-          target="_blank"
-          icon="i-simple-icons-github"
-          aria-label="GitHub"
-          color="neutral"
-          variant="ghost"
-        />
       </template>
     </UFooter>
   </UApp>
