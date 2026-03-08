@@ -1,0 +1,415 @@
+{
+  "$schema": "./wset-sat-spec.schema.json",
+  "version": "1.0.0",
+  "standard": {
+    "name": "WSET Level 3 Systematic Approach to Tasting Wine®",
+    "issue": "Issue 2, 2022",
+    "copyright": "Copyright Wine & Spirit Education Trust 2022"
+  },
+
+  "wineTypes": ["white", "rosé", "red"],
+
+  "appearance": {
+    "clarity": {
+      "inputType": "single",
+      "options": [
+        { "value": "clear" },
+        { "value": "hazy", "faultyIndicator": true }
+      ]
+    },
+    "intensity": {
+      "inputType": "single",
+      "options": ["pale", "medium", "deep"]
+    },
+    "color": {
+      "inputType": "single",
+      "optionsByWineType": {
+        "white": ["lemon-green", "lemon", "gold", "amber", "brown"],
+        "rosé": ["pink", "salmon", "orange"],
+        "red": ["purple", "ruby", "garnet", "tawny", "brown"]
+      }
+    },
+    "otherObservations": {
+      "inputType": "multi",
+      "options": ["legs/tears", "deposit", "pétillance", "bubbles"]
+    }
+  },
+
+  "nose": {
+    "condition": {
+      "inputType": "single",
+      "options": [
+        { "value": "clean" },
+        { "value": "unclean", "faultyIndicator": true }
+      ]
+    },
+    "intensity": {
+      "inputType": "single",
+      "options": ["light", "medium(-)", "medium", "medium(+)", "pronounced"]
+    },
+    "development": {
+      "inputType": "single",
+      "options": ["youthful", "developing", "fully developed", "tired/past its best"]
+    },
+    "aromas": {
+      "inputType": "aromaWheel",
+      "ref": "#/aromas"
+    }
+  },
+
+  "palate": {
+    "sweetness": {
+      "inputType": "single",
+      "options": ["dry", "off-dry", "medium-dry", "medium-sweet", "sweet", "luscious"]
+    },
+    "acidity": {
+      "inputType": "single",
+      "options": ["low", "medium(-)", "medium", "medium(+)", "high"]
+    },
+    "tannin": {
+      "inputType": "single",
+      "options": ["low", "medium(-)", "medium", "medium(+)", "high"]
+    },
+    "alcohol": {
+      "inputType": "single",
+      "options": ["low", "medium", "high"],
+      "fortifiedOptions": ["low", "medium", "high"]
+    },
+    "body": {
+      "inputType": "single",
+      "options": ["light", "medium(-)", "medium", "medium(+)", "full"]
+    },
+    "mousse": {
+      "inputType": "single",
+      "options": ["delicate", "creamy", "aggressive"],
+      "visibleWhen": {
+        "field": "appearance.otherObservations",
+        "includes": ["bubbles", "pétillance"]
+      }
+    },
+    "flavorIntensity": {
+      "inputType": "single",
+      "options": ["light", "medium(-)", "medium", "medium(+)", "pronounced"]
+    },
+    "flavors": {
+      "inputType": "aromaWheel",
+      "ref": "#/aromas"
+    },
+    "finish": {
+      "inputType": "single",
+      "options": ["short", "medium(-)", "medium", "medium(+)", "long"]
+    }
+  },
+
+  "conclusions": {
+    "qualityLevel": {
+      "inputType": "single",
+      "options": ["faulty", "poor", "acceptable", "good", "very good", "outstanding"]
+    },
+    "readiness": {
+      "inputType": "single",
+      "options": [
+        "too young",
+        "can drink now, but has potential for ageing",
+        "drink now: not suitable for ageing or further ageing",
+        "too old"
+      ]
+    }
+  },
+
+  "aromas": {
+    "primary": {
+      "label": "Primary",
+      "description": "The aromas and flavours of the grape and alcoholic fermentation",
+      "categories": {
+        "floral": {
+          "label": "Floral",
+          "color": "#9B59B6",
+          "descriptors": [
+            "acacia",
+            "honeysuckle",
+            "chamomile",
+            "elderflower",
+            "geranium",
+            "blossom",
+            "rose",
+            "violet"
+          ]
+        },
+        "greenFruit": {
+          "label": "Green Fruit",
+          "color": "#27AE60",
+          "descriptors": [
+            "apple",
+            "gooseberry",
+            "pear",
+            "pear drop",
+            "quince",
+            "grape"
+          ]
+        },
+        "citrusFruit": {
+          "label": "Citrus Fruit",
+          "color": "#F1C40F",
+          "descriptors": [
+            "grapefruit",
+            "lemon",
+            "lime",
+            "orange peel",
+            "lemon peel"
+          ]
+        },
+        "stoneFruit": {
+          "label": "Stone Fruit",
+          "color": "#E67E22",
+          "descriptors": [
+            "peach",
+            "apricot",
+            "nectarine"
+          ]
+        },
+        "tropicalFruit": {
+          "label": "Tropical Fruit",
+          "color": "#2ECC71",
+          "descriptors": [
+            "banana",
+            "lychee",
+            "mango",
+            "melon",
+            "passion fruit",
+            "pineapple"
+          ]
+        },
+        "redFruit": {
+          "label": "Red Fruit",
+          "color": "#E74C3C",
+          "descriptors": [
+            "redcurrant",
+            "cranberry",
+            "raspberry",
+            "strawberry",
+            "red cherry",
+            "red plum"
+          ]
+        },
+        "blackFruit": {
+          "label": "Black Fruit",
+          "color": "#8E44AD",
+          "descriptors": [
+            "blackcurrant",
+            "blackberry",
+            "bramble",
+            "blueberry",
+            "black cherry",
+            "black plum"
+          ]
+        },
+        "driedCookedFruit": {
+          "label": "Dried/Cooked Fruit",
+          "color": "#D35400",
+          "descriptors": [
+            "fig",
+            "prune",
+            "raisin",
+            "sultana",
+            "kirsch",
+            "jamminess",
+            "baked/stewed fruits",
+            "preserved fruits"
+          ]
+        },
+        "herbaceous": {
+          "label": "Herbaceous",
+          "color": "#6B8E23",
+          "descriptors": [
+            "green bell pepper (capsicum)",
+            "grass",
+            "tomato leaf",
+            "asparagus",
+            "blackcurrant leaf"
+          ]
+        },
+        "herbal": {
+          "label": "Herbal",
+          "color": "#1ABC9C",
+          "descriptors": [
+            "eucalyptus",
+            "mint",
+            "medicinal",
+            "lavender",
+            "fennel",
+            "dill"
+          ]
+        },
+        "pungentSpice": {
+          "label": "Pungent Spice",
+          "color": "#795548",
+          "descriptors": [
+            "black/white pepper",
+            "liquorice"
+          ]
+        },
+        "other": {
+          "label": "Other",
+          "color": "#7F8C8D",
+          "descriptors": [
+            "flint",
+            "wet stones",
+            "wet wool"
+          ]
+        }
+      }
+    },
+    "secondary": {
+      "label": "Secondary",
+      "description": "The aromas and flavours of post-fermentation winemaking",
+      "categories": {
+        "yeast": {
+          "label": "Yeast (lees, autolysis)",
+          "color": "#D4A574",
+          "descriptors": [
+            "biscuit",
+            "bread",
+            "toast",
+            "pastry",
+            "brioche",
+            "bread dough",
+            "cheese"
+          ]
+        },
+        "malolacticConversion": {
+          "label": "Malolactic Conversion",
+          "color": "#FDEBD0",
+          "descriptors": [
+            "butter",
+            "cheese",
+            "cream"
+          ]
+        },
+        "oak": {
+          "label": "Oak",
+          "color": "#8B4513",
+          "descriptors": [
+            "vanilla",
+            "cloves",
+            "nutmeg",
+            "coconut",
+            "butterscotch",
+            "toast",
+            "cedar",
+            "charred wood",
+            "smoke",
+            "chocolate",
+            "coffee",
+            "resinous"
+          ]
+        }
+      }
+    },
+    "tertiary": {
+      "label": "Tertiary",
+      "description": "The aromas and flavours of maturation",
+      "categories": {
+        "deliberateOxidation": {
+          "label": "Deliberate Oxidation",
+          "color": "#D4A017",
+          "descriptors": [
+            "almond",
+            "marzipan",
+            "hazelnut",
+            "walnut",
+            "chocolate",
+            "coffee",
+            "toffee",
+            "caramel"
+          ]
+        },
+        "fruitDevelopmentWhite": {
+          "label": "Fruit Development (white)",
+          "color": "#DAA520",
+          "descriptors": [
+            "dried apricot",
+            "marmalade",
+            "dried apple",
+            "dried banana"
+          ]
+        },
+        "fruitDevelopmentRed": {
+          "label": "Fruit Development (red)",
+          "color": "#6A0D47",
+          "descriptors": [
+            "fig",
+            "prune",
+            "tar",
+            "dried blackberry",
+            "dried cranberry",
+            "cooked blackberry",
+            "cooked red plum"
+          ]
+        },
+        "bottleAgeWhite": {
+          "label": "Bottle Age (white)",
+          "color": "#B8860B",
+          "descriptors": [
+            "petrol",
+            "kerosene",
+            "cinnamon",
+            "ginger",
+            "nutmeg",
+            "toast",
+            "nutty",
+            "mushroom",
+            "hay",
+            "honey"
+          ]
+        },
+        "bottleAgeRed": {
+          "label": "Bottle Age (red)",
+          "color": "#5D4037",
+          "descriptors": [
+            "leather",
+            "forest floor",
+            "earth",
+            "mushroom",
+            "game",
+            "tobacco",
+            "vegetal",
+            "wet leaves",
+            "savoury",
+            "meaty",
+            "farmyard"
+          ]
+        }
+      }
+    }
+  },
+
+  "wineTypeFilters": {
+    "primary": {
+      "floral": ["white", "rosé", "red"],
+      "greenFruit": ["white", "rosé"],
+      "citrusFruit": ["white", "rosé"],
+      "stoneFruit": ["white", "rosé"],
+      "tropicalFruit": ["white", "rosé"],
+      "redFruit": ["rosé", "red"],
+      "blackFruit": ["rosé", "red"],
+      "driedCookedFruit": ["rosé", "red"],
+      "herbaceous": ["white", "rosé", "red"],
+      "herbal": ["white", "rosé", "red"],
+      "pungentSpice": ["white", "rosé", "red"],
+      "other": ["white", "rosé", "red"]
+    },
+    "secondary": {
+      "yeast": ["white", "rosé", "red"],
+      "malolacticConversion": ["white", "rosé", "red"],
+      "oak": ["white", "rosé", "red"]
+    },
+    "tertiary": {
+      "deliberateOxidation": ["white", "rosé", "red"],
+      "fruitDevelopmentWhite": ["white", "rosé"],
+      "fruitDevelopmentRed": ["rosé", "red"],
+      "bottleAgeWhite": ["white", "rosé"],
+      "bottleAgeRed": ["rosé", "red"]
+    }
+  }
+}
