@@ -52,7 +52,7 @@ const isHomePage = computed(() => route.path === '/')
           icon="i-lucide-wine"
           color="primary"
           variant="subtle"
-          size="sm"
+          size="md"
         />
 
         <UColorModeButton />
