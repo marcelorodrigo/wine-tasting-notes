@@ -43,7 +43,7 @@ describe('WizardNavigation', () => {
     expect(wrapper.find('[data-testid="wizard-generate"]').exists()).toBe(false)
   })
 
-  it('shows Previous and Generate on step 3 (still has Next)', async () => {
+  it('shows Previous and Next on step 3 (Generate hidden)', async () => {
     const { goToStep } = useWizardNavigation()
     goToStep(3)
 
