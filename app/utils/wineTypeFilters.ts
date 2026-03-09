@@ -277,6 +277,7 @@ export function isAromaValidForWineType(
 export function getColorOptionsForWineType(wineType: 'white'): readonly WhiteWineColor[]
 export function getColorOptionsForWineType(wineType: 'rosé'): readonly RoseWineColor[]
 export function getColorOptionsForWineType(wineType: 'red'): readonly RedWineColor[]
+export function getColorOptionsForWineType(wineType: WineType): readonly Color[]
 export function getColorOptionsForWineType(wineType: null | undefined): readonly []
 export function getColorOptionsForWineType(wineType: WineType | null | undefined): readonly Color[] {
   return wineType ? COLOR_OPTIONS_BY_WINE_TYPE[wineType] : []
