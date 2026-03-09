@@ -295,9 +295,9 @@ describe('useTastingData', () => {
       expect(tastingData.value.nose.aromas!.primary.greenFruit).toEqual([])
       expect(tastingData.value.palate.flavors!.primary.greenFruit).toEqual([])
 
-      const aromosRemoved = removed.filter(r => r.field === 'aromas')
+      const aromasRemoved = removed.filter(r => r.field === 'aromas')
       const flavorsRemoved = removed.filter(r => r.field === 'flavors')
-      expect(aromosRemoved.some(r => r.category === 'greenFruit')).toBe(true)
+      expect(aromasRemoved.some(r => r.category === 'greenFruit')).toBe(true)
       expect(flavorsRemoved.some(r => r.category === 'greenFruit')).toBe(true)
     })
 
