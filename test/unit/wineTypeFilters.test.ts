@@ -56,6 +56,28 @@ describe('wineTypeFilters', () => {
     expect(isTertiaryCategoryVisibleForWineType('bottleAgeWhite', 'red')).toBe(false)
   })
 
+  it('reflects representative category transitions between white and red wines', () => {
+    expect(isPrimaryCategoryVisibleForWineType('greenFruit', 'white')).toBe(true)
+    expect(isPrimaryCategoryVisibleForWineType('greenFruit', 'red')).toBe(false)
+    expect(isAromaValidForWineType('greenFruit', 'white', 'primary')).toBe(true)
+    expect(isAromaValidForWineType('greenFruit', 'red', 'primary')).toBe(false)
+
+    expect(isPrimaryCategoryVisibleForWineType('redFruit', 'red')).toBe(true)
+    expect(isPrimaryCategoryVisibleForWineType('redFruit', 'white')).toBe(false)
+    expect(isAromaValidForWineType('redFruit', 'red', 'primary')).toBe(true)
+    expect(isAromaValidForWineType('redFruit', 'white', 'primary')).toBe(false)
+
+    expect(isTertiaryCategoryVisibleForWineType('bottleAgeWhite', 'white')).toBe(true)
+    expect(isTertiaryCategoryVisibleForWineType('bottleAgeWhite', 'red')).toBe(false)
+    expect(isAromaValidForWineType('bottleAgeWhite', 'white', 'tertiary')).toBe(true)
+    expect(isAromaValidForWineType('bottleAgeWhite', 'red', 'tertiary')).toBe(false)
+
+    expect(isTertiaryCategoryVisibleForWineType('bottleAgeRed', 'red')).toBe(true)
+    expect(isTertiaryCategoryVisibleForWineType('bottleAgeRed', 'white')).toBe(false)
+    expect(isAromaValidForWineType('bottleAgeRed', 'red', 'tertiary')).toBe(true)
+    expect(isAromaValidForWineType('bottleAgeRed', 'white', 'tertiary')).toBe(false)
+  })
+
   it('gives rosé access to every aroma category', () => {
     expect(getVisibleCategoriesForWineType('rosé')).toEqual({
       primary: Object.keys(AROMAS.primary),
