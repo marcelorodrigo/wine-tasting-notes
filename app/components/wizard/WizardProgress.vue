@@ -8,6 +8,12 @@ function getStepState(stepNumber: number): StepState {
   if (stepNumber === currentStep.value) return 'active'
   return 'upcoming'
 }
+
+function handleStepClick(step: number): void {
+  if (getStepState(step) !== 'upcoming') {
+    goToStep(step)
+  }
+}
 </script>
 
 <template>
@@ -23,13 +29,15 @@ function getStepState(stepNumber: number): StepState {
         :class="step < totalSteps ? 'flex-1' : ''"
       >
         <!-- Step button -->
-        <button
-          type="button"
-          class="group flex flex-col items-center gap-1.5 focus-visible:outline-none"
+        <UButton
+          variant="ghost"
+          color="neutral"
+          class="group"
+          :ui="{ base: 'flex-col gap-1.5 min-h-[44px] min-w-[44px] h-auto p-2' }"
           :aria-current="getStepState(step) === 'active' ? 'step' : undefined"
           :aria-label="`Step ${step}: ${stepLabels[step - 1]}`"
           :data-state="getStepState(step)"
-          @click="goToStep(step)"
+          @click="handleStepClick(step)"
         >
           <!-- Indicator circle -->
           <span
@@ -42,11 +50,13 @@ function getStepState(stepNumber: number): StepState {
           >
             <UIcon
               v-if="getStepState(step) === 'completed'"
+              data-testid="step-icon"
               name="i-lucide-check"
               class="size-4 sm:size-5"
             />
             <UIcon
               v-else
+              data-testid="step-icon"
               :name="stepIcons[step - 1]"
               class="size-4 sm:size-5"
             />
@@ -63,7 +73,7 @@ function getStepState(stepNumber: number): StepState {
           >
             {{ stepLabels[step - 1] }}
           </span>
-        </button>
+        </UButton>
 
         <!-- Connector line -->
         <div

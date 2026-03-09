@@ -78,13 +78,23 @@ describe('WizardProgress', () => {
     expect(buttons[3]!.attributes('data-state')).toBe('upcoming')
   })
 
-  it('navigates to a step when clicked', async () => {
+  it('navigates to a completed step when clicked', async () => {
+    const { goToStep, currentStep } = useWizardNavigation()
+    goToStep(4)
+
+    const wrapper = await mountSuspended(WizardProgress)
+    const buttons = wrapper.findAll('button')
+    await buttons[1]!.trigger('click')
+    expect(currentStep.value).toBe(2)
+  })
+
+  it('does not navigate when an upcoming step is clicked', async () => {
     const { currentStep } = useWizardNavigation()
     const wrapper = await mountSuspended(WizardProgress)
 
     const buttons = wrapper.findAll('button')
     await buttons[2]!.trigger('click')
-    expect(currentStep.value).toBe(3)
+    expect(currentStep.value).toBe(1)
   })
 
   it('navigates back to step 1 when first step is clicked', async () => {
@@ -105,7 +115,7 @@ describe('WizardProgress', () => {
 
   it('renders step icons', async () => {
     const wrapper = await mountSuspended(WizardProgress)
-    const icons = wrapper.findAll('span.iconify')
+    const icons = wrapper.findAll('[data-testid="step-icon"]')
     expect(icons.length).toBeGreaterThanOrEqual(4)
   })
 
