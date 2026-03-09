@@ -119,6 +119,36 @@ describe('WizardProgress', () => {
     expect(icons.length).toBeGreaterThanOrEqual(4)
   })
 
+  it('sets aria-disabled on upcoming steps', async () => {
+    const wrapper = await mountSuspended(WizardProgress)
+    const buttons = wrapper.findAll('button')
+    expect(buttons[0]!.attributes('aria-disabled')).toBeUndefined()
+    expect(buttons[1]!.attributes('aria-disabled')).toBe('true')
+    expect(buttons[2]!.attributes('aria-disabled')).toBe('true')
+    expect(buttons[3]!.attributes('aria-disabled')).toBe('true')
+  })
+
+  it('does not set aria-disabled on completed or active steps', async () => {
+    const { goToStep } = useWizardNavigation()
+    goToStep(3)
+
+    const wrapper = await mountSuspended(WizardProgress)
+    const buttons = wrapper.findAll('button')
+    expect(buttons[0]!.attributes('aria-disabled')).toBeUndefined()
+    expect(buttons[1]!.attributes('aria-disabled')).toBeUndefined()
+    expect(buttons[2]!.attributes('aria-disabled')).toBeUndefined()
+    expect(buttons[3]!.attributes('aria-disabled')).toBe('true')
+  })
+
+  it('renders step numbers for mobile display', async () => {
+    const wrapper = await mountSuspended(WizardProgress)
+    const text = wrapper.text()
+    expect(text).toContain('1')
+    expect(text).toContain('2')
+    expect(text).toContain('3')
+    expect(text).toContain('4')
+  })
+
   it('shows all steps as completed on the last step', async () => {
     const { goToStep } = useWizardNavigation()
     goToStep(4)

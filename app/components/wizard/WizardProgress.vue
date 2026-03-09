@@ -33,8 +33,10 @@ function handleStepClick(step: number): void {
           variant="ghost"
           color="neutral"
           class="group"
+          :class="getStepState(step) === 'upcoming' ? 'cursor-default' : ''"
           :ui="{ base: 'flex-col gap-1.5 min-h-[44px] min-w-[44px] h-auto p-2' }"
           :aria-current="getStepState(step) === 'active' ? 'step' : undefined"
+          :aria-disabled="getStepState(step) === 'upcoming' ? 'true' : undefined"
           :aria-label="`Step ${step}: ${stepLabels[step - 1]}`"
           :data-state="getStepState(step)"
           @click="handleStepClick(step)"
@@ -64,14 +66,16 @@ function handleStepClick(step: number): void {
 
           <!-- Step label (hidden on mobile) -->
           <span
-            class="hidden text-xs font-medium transition-colors duration-200 sm:block"
+            class="text-xs font-medium transition-colors duration-200"
             :class="{
               'text-primary font-semibold': getStepState(step) === 'active',
               'text-primary': getStepState(step) === 'completed',
               'text-muted': getStepState(step) === 'upcoming'
             }"
           >
-            {{ stepLabels[step - 1] }}
+            <!-- Step number on mobile, full label on desktop -->
+            <span class="sm:hidden">{{ step }}</span>
+            <span class="hidden sm:inline">{{ stepLabels[step - 1] }}</span>
           </span>
         </UButton>
 
