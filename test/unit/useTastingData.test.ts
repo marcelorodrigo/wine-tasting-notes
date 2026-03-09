@@ -1,5 +1,14 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useTastingData } from '../../app/composables/useTastingData'
+
+const { mockToastAdd } = vi.hoisted(() => {
+  const mockToastAdd = vi.fn()
+  return { mockToastAdd }
+})
+
+vi.mock('#imports', () => ({
+  useToast: () => ({ add: mockToastAdd })
+}))
 
 describe('useTastingData', () => {
   let tastingData: ReturnType<typeof useTastingData>['tastingData']
@@ -8,6 +17,7 @@ describe('useTastingData', () => {
   let validateDataConsistency: ReturnType<typeof useTastingData>['validateDataConsistency']
 
   beforeEach(() => {
+    mockToastAdd.mockClear()
     const composable = useTastingData()
     tastingData = composable.tastingData
     resetTastingData = composable.resetTastingData
@@ -301,6 +311,39 @@ describe('useTastingData', () => {
       expect(greenFruitEntry).toBeDefined()
       expect(greenFruitEntry!.descriptors).toEqual(['apple', 'pear'])
       expect(greenFruitEntry!.aromaType).toBe('primary')
+    })
+
+    it('shows a toast when incompatible aromas are cleared', () => {
+      tastingData.value.appearance.wineType = 'white'
+      tastingData.value.nose.aromas!.primary.greenFruit = ['apple']
+      tastingData.value.nose.aromas!.primary.citrusFruit = ['lemon']
+
+      handleWineTypeChange('red')
+
+      expect(mockToastAdd).toHaveBeenCalledOnce()
+      const call = mockToastAdd.mock.calls[0]![0]
+      expect(call).toMatchObject({ color: 'warning' })
+      expect(call.description).toMatch(/2 incompatible/)
+    })
+
+    it('does not show a toast when no aromas are cleared', () => {
+      tastingData.value.appearance.wineType = 'red'
+      tastingData.value.nose.aromas!.primary.redFruit = ['raspberry']
+
+      handleWineTypeChange('red')
+
+      expect(mockToastAdd).not.toHaveBeenCalled()
+    })
+
+    it('toast message uses singular form when exactly one selection is cleared', () => {
+      tastingData.value.appearance.wineType = 'white'
+      tastingData.value.nose.aromas!.primary.greenFruit = ['apple']
+
+      handleWineTypeChange('red')
+
+      expect(mockToastAdd).toHaveBeenCalledOnce()
+      const call = mockToastAdd.mock.calls[0]![0]
+      expect(call.description).toMatch(/1 incompatible aroma\/flavor selection for/)
     })
   })
 

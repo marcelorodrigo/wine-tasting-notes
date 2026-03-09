@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import { useToast } from '#imports'
 import type {
   AromaObject,
   PrimaryAromaCategory,
@@ -162,6 +163,8 @@ function findAromaInconsistencies(
 const tastingData = ref<TastingData>(createInitialTastingData())
 
 export function useTastingData() {
+  const toast = useToast()
+
   function resetTastingData(): void {
     tastingData.value = createInitialTastingData()
   }
@@ -180,6 +183,14 @@ export function useTastingData() {
     const flavors = tastingData.value.palate.flavors
     if (flavors) {
       removed.push(...collectAndClearInvalidAromas(flavors, newType, 'flavors'))
+    }
+
+    if (removed.length > 0) {
+      toast.add({
+        title: 'Wine type changed',
+        description: `Cleared ${removed.length} incompatible aroma/flavor selection${removed.length > 1 ? 's' : ''} for the selected wine type`,
+        color: 'warning'
+      })
     }
 
     return removed
