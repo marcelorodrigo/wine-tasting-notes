@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import type { RadioGroupItem } from '@nuxt/ui'
-import type { Color } from '~/types/tasting'
+import type { Color, OtherObservation } from '~/types/tasting'
 import { getColorOptionsForWineType } from '~/utils/wineTypeFilters'
+import WineTypeSelector from '~/components/wizard/inputs/WineTypeSelector.vue'
+import RadioGroup from '~/components/wizard/inputs/RadioGroup.vue'
+import CheckboxGroup from '~/components/wizard/inputs/CheckboxGroup.vue'
 
 const { tastingData, handleWineTypeChange } = useTastingData()
 
@@ -49,6 +52,13 @@ const hasWineType = computed(() => !!tastingData.value.appearance.wineType)
 function selectColor(color: string) {
   tastingData.value.appearance.color = color as Color
 }
+
+const otherObservations = computed({
+  get: () => tastingData.value.appearance.otherObservations ?? [],
+  set: (v: string[]) => {
+    tastingData.value.appearance.otherObservations = v as OtherObservation[]
+  }
+})
 </script>
 
 <template>
@@ -130,7 +140,7 @@ function selectColor(color: string) {
     <USeparator />
 
     <CheckboxGroup
-      v-model="tastingData.appearance.otherObservations"
+      v-model="otherObservations"
       label="Other Observations"
       :items="['legs/tears', 'deposit', 'pétillance', 'bubbles']"
     />

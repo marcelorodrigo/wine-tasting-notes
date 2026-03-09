@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { RadioGroupItem } from '@nuxt/ui'
+import RadioGroup from '~/components/wizard/inputs/RadioGroup.vue'
 
 const { tastingData } = useTastingData()
 
