@@ -31,7 +31,7 @@ export function useWizardNavigation() {
   }
 
   function goToStep(step: number): void {
-    if (step >= 1 && step <= TOTAL_STEPS) {
+    if (Number.isFinite(step) && Number.isInteger(step) && step >= 1 && step <= TOTAL_STEPS) {
       currentStep.value = step
     }
   }

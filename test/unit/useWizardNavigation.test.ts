@@ -129,6 +129,24 @@ describe('useWizardNavigation', () => {
         expect(nav.currentStep.value).toBe(step)
       }
     })
+
+    it('ignores non-integer values', () => {
+      nav.goToStep(2)
+      nav.goToStep(1.5)
+      expect(nav.currentStep.value).toBe(2)
+    })
+
+    it('ignores negative values', () => {
+      nav.goToStep(2)
+      nav.goToStep(-1)
+      expect(nav.currentStep.value).toBe(2)
+    })
+
+    it('ignores NaN and special numeric values', () => {
+      nav.goToStep(2)
+      nav.goToStep(NaN)
+      expect(nav.currentStep.value).toBe(2)
+    })
   })
 
   describe('shared singleton state', () => {
