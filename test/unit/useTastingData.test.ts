@@ -131,6 +131,17 @@ describe('useTastingData', () => {
       expect(tastingData.value.appearance.color).toBeNull()
     })
 
+    it('switching to null does not remove aromas', () => {
+      tastingData.value.nose.aromas!.primary.floral = ['rose']
+      tastingData.value.nose.aromas!.secondary.oak = ['vanilla']
+
+      const removed = handleWineTypeChange(null)
+
+      expect(removed).toEqual([])
+      expect(tastingData.value.nose.aromas!.primary.floral).toEqual(['rose'])
+      expect(tastingData.value.nose.aromas!.secondary.oak).toEqual(['vanilla'])
+    })
+
     it('returns empty list when no aromas are selected', () => {
       tastingData.value.appearance.wineType = 'white'
 
@@ -306,6 +317,9 @@ describe('useTastingData', () => {
     })
 
     it('returns empty array when wine type is null (no selections to validate against)', () => {
+      tastingData.value.nose.aromas!.primary.redFruit = ['raspberry']
+      tastingData.value.palate.flavors!.tertiary.bottleAgeRed = ['leather']
+
       const inconsistencies = validateDataConsistency()
 
       expect(inconsistencies).toEqual([])

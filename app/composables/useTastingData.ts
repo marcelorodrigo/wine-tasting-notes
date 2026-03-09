@@ -168,6 +168,8 @@ export function useTastingData() {
 
   function handleWineTypeChange(newType: WineType | null, _oldType?: WineType | null): RemovedAromaEntry[] {
     tastingData.value.appearance.color = null
+    if (!newType) return []
+
     const removed: RemovedAromaEntry[] = []
 
     const aromas = tastingData.value.nose.aromas
@@ -185,6 +187,8 @@ export function useTastingData() {
 
   function validateDataConsistency(): DataInconsistency[] {
     const wineType = tastingData.value.appearance.wineType
+    if (!wineType) return []
+
     const inconsistencies: DataInconsistency[] = []
 
     const aromas = tastingData.value.nose.aromas
