@@ -63,7 +63,7 @@ describe('WizardNavigation', () => {
     expect(wrapper.find('[data-testid="wizard-next"]').exists()).toBe(false)
   })
 
-  it('Generate button has prominent styling (size xl)', async () => {
+  it('Generate button displays prominent text label', async () => {
     const { goToStep } = useWizardNavigation()
     goToStep(4)
 
