@@ -20,11 +20,15 @@ const props = withDefaults(defineProps<{
 })
 
 const normalizedItems = computed<RadioGroupItem[]>(() =>
-  props.items.map(item =>
-    typeof item === 'string'
-      ? { label: item, value: item }
-      : item
-  )
+  props.items.map((item) => {
+    if (typeof item === 'string') {
+      return { label: item, value: item }
+    }
+    if (typeof item === 'object' && item !== null) {
+      return { ...item, value: String(item.value ?? item.label ?? '') }
+    }
+    return { label: String(item), value: String(item) }
+  })
 )
 </script>
 

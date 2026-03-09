@@ -26,7 +26,11 @@ describe('AppearanceStep', () => {
 
   it('renders the WineTypeSelector as the first control', async () => {
     const wrapper = await mountSuspended(AppearanceStep)
-    expect(wrapper.find('[data-testid="wine-type-selector"]').exists()).toBe(true)
+    const html = wrapper.html()
+    const selectorPos = html.indexOf('data-testid="wine-type-selector"')
+    const firstRadioGroupPos = html.indexOf('data-testid="radio-group"')
+    expect(selectorPos).toBeGreaterThan(-1)
+    expect(selectorPos).toBeLessThan(firstRadioGroupPos)
   })
 
   describe('Clarity field', () => {
@@ -211,6 +215,50 @@ describe('AppearanceStep', () => {
       const checkboxes = wrapper.findAll('[role="checkbox"]')
       await checkboxes[0]!.trigger('click')
       expect(tastingData.value.appearance.otherObservations).toContain('legs/tears')
+    })
+  })
+
+  describe('pre-loaded state', () => {
+    it('renders with partial appearance data preloaded', async () => {
+      tastingData.value.appearance.wineType = 'white'
+      tastingData.value.appearance.clarity = 'clear'
+
+      const wrapper = await mountSuspended(AppearanceStep)
+
+      const whiteCard = wrapper.find('[data-testid="wine-type-white"]')
+      expect(whiteCard.attributes('aria-checked')).toBe('true')
+
+      const clearRadio = wrapper.find('[role="radio"][value="clear"]')
+      expect(clearRadio.attributes('aria-checked')).toBe('true')
+
+      expect(wrapper.find('[data-testid="color-lemon-green"]').exists()).toBe(true)
+
+      expect(tastingData.value.appearance.intensity).toBeNull()
+      expect(tastingData.value.appearance.color).toBeNull()
+    })
+
+    it('renders with complete appearance data preloaded', async () => {
+      tastingData.value.appearance.wineType = 'red'
+      tastingData.value.appearance.clarity = 'clear'
+      tastingData.value.appearance.intensity = 'deep'
+      tastingData.value.appearance.otherObservations = ['legs/tears', 'deposit']
+
+      const wrapper = await mountSuspended(AppearanceStep)
+
+      const redCard = wrapper.find('[data-testid="wine-type-red"]')
+      expect(redCard.attributes('aria-checked')).toBe('true')
+
+      expect(wrapper.find('[role="radio"][value="clear"][aria-checked="true"]').exists()).toBe(true)
+      expect(wrapper.find('[role="radio"][value="deep"][aria-checked="true"]').exists()).toBe(true)
+
+      // Color is cleared by handleWineTypeChange watcher on mount; select after mount
+      await wrapper.find('[data-testid="color-ruby"]').trigger('click')
+      expect(tastingData.value.appearance.color).toBe('ruby')
+      expect(wrapper.find('[data-testid="color-ruby"]').attributes('aria-checked')).toBe('true')
+      expect(wrapper.find('[data-testid="color-purple"]').attributes('aria-checked')).toBe('false')
+
+      const checkedBoxes = wrapper.findAll('[role="checkbox"][aria-checked="true"]')
+      expect(checkedBoxes).toHaveLength(2)
     })
   })
 })

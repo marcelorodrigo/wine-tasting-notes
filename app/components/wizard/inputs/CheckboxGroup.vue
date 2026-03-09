@@ -18,17 +18,21 @@ const props = withDefaults(defineProps<{
 })
 
 const normalizedItems = computed<CheckboxGroupItem[]>(() =>
-  props.items.map(item =>
-    typeof item === 'string'
-      ? { label: item, value: item }
-      : item
-  )
+  props.items.map((item) => {
+    if (typeof item === 'string') {
+      return { label: item, value: item }
+    }
+    if (typeof item === 'object' && item !== null) {
+      return { ...item, value: String(item.value ?? item.label ?? '') }
+    }
+    return { label: String(item), value: String(item) }
+  })
 )
 
 const allValues = computed(() =>
   normalizedItems.value.map((item) => {
     if (typeof item === 'object' && item !== null) {
-      return String(item.value ?? item.label ?? '')
+      return String(item.value ?? '')
     }
     return String(item)
   })
@@ -50,15 +54,15 @@ function toggleAll() {
     data-testid="checkbox-group"
   >
     <div class="flex flex-col gap-2">
-      <button
-        type="button"
-        class="text-sm text-primary cursor-pointer hover:underline self-start"
+      <UButton
+        variant="link"
+        size="sm"
         data-testid="toggle-all"
         :disabled="disabled"
         @click="toggleAll"
       >
         {{ allSelected ? 'Deselect all' : 'Select all' }}
-      </button>
+      </UButton>
 
       <UCheckboxGroup
         v-model="model"
