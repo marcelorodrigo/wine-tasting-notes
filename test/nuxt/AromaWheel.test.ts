@@ -104,13 +104,13 @@ describe('AromaWheel', () => {
   })
 
   describe('accessibility', () => {
-    it('sets role="img" and aria-label on SVG', async () => {
+    it('does not set role="img" on SVG (fieldset/legend provides labeling)', async () => {
       const wrapper = await mountSuspended(AromaWheel, {
         props: { wineType: 'white', modelValue: createEmptyAromas() }
       })
       const svg = wrapper.find('svg')
-      expect(svg.attributes('role')).toBe('img')
-      expect(svg.attributes('aria-label')).toContain('Aromas wheel with')
+      expect(svg.attributes('role')).toBeUndefined()
+      expect(svg.attributes('aria-label')).toBeUndefined()
     })
 
     it('sets role="checkbox" on active outer ring segments', async () => {
@@ -240,6 +240,7 @@ describe('AromaWheel', () => {
       expect(segment.attributes('role')).toBeUndefined()
       expect(segment.attributes('aria-disabled')).toBe('true')
       expect(segment.attributes('tabindex')).toBe('-1')
+      expect(segment.attributes('opacity')).toBe('0.15')
     })
 
     it('marks redFruit segments as active for red wine', async () => {
@@ -257,6 +258,7 @@ describe('AromaWheel', () => {
       const segment = wrapper.find('[data-testid="aroma-raspberry"]')
       expect(segment.attributes('role')).toBeUndefined()
       expect(segment.attributes('aria-disabled')).toBe('true')
+      expect(segment.attributes('opacity')).toBe('0.15')
     })
 
     it('shows all categories as active for rosé wine', async () => {
@@ -275,6 +277,7 @@ describe('AromaWheel', () => {
       const segment = wrapper.find('[data-testid="aroma-acacia"]')
       expect(segment.attributes('role')).toBeUndefined()
       expect(segment.attributes('aria-disabled')).toBe('true')
+      expect(segment.attributes('opacity')).toBe('0.15')
     })
 
     it('filters tertiary categories by wine type', async () => {
@@ -287,6 +290,7 @@ describe('AromaWheel', () => {
 
       const redAging = wrapper.find('[data-testid="aroma-leather"]')
       expect(redAging.attributes('role')).toBeUndefined()
+      expect(redAging.attributes('opacity')).toBe('0.15')
     })
   })
 

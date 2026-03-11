@@ -92,6 +92,14 @@ function hideTooltip() {
   }, 100)
 }
 
+function hideTouchTooltip() {
+  if (tooltipTimeout) {
+    clearTimeout(tooltipTimeout)
+    tooltipTimeout = null
+  }
+  tooltip.value.visible = false
+}
+
 function handleSegmentClick(segment: OuterRingSegment) {
   if (!segment.isActive) return
   toggleAroma(segment.aromaType, segment.categoryKey, segment.descriptor)
@@ -145,8 +153,6 @@ function segmentId(seg: OuterRingSegment): string {
         <svg
           :viewBox="viewBox"
           class="h-auto w-full"
-          role="img"
-          :aria-label="`${label} wheel with ${outerRingSegments.length} aromas`"
         >
           <defs>
             <filter
@@ -173,7 +179,7 @@ function segmentId(seg: OuterRingSegment): string {
             :y="center.y"
             text-anchor="middle"
             dominant-baseline="central"
-            class="fill-current text-neutral-500 dark:text-neutral-400"
+            class="fill-current select-none text-neutral-500 dark:text-neutral-400"
             font-size="14"
             font-weight="600"
           >
@@ -227,6 +233,8 @@ function segmentId(seg: OuterRingSegment): string {
                 @mouseenter="showTooltip(seg, $event)"
                 @mouseleave="hideTooltip"
                 @touchstart.passive="showTooltip(seg, $event)"
+                @touchend="hideTouchTooltip"
+                @touchcancel="hideTouchTooltip"
               />
               <text
                 v-if="seg.isActive"
@@ -291,6 +299,8 @@ function segmentId(seg: OuterRingSegment): string {
                 @mouseenter="seg.isActive ? showTooltip(seg, $event) : undefined"
                 @mouseleave="hideTooltip"
                 @touchstart.passive="seg.isActive ? showTooltip(seg, $event) : undefined"
+                @touchend="hideTouchTooltip"
+                @touchcancel="hideTouchTooltip"
               />
               <!-- Outer ring labels: hidden on small screens -->
               <text
@@ -314,7 +324,12 @@ function segmentId(seg: OuterRingSegment): string {
 
         <!-- Tooltip overlay (positioned absolute over the SVG) -->
         <Teleport to="body">
-          <Transition name="fade">
+          <Transition
+            enter-active-class="transition-opacity duration-150 ease-in-out"
+            leave-active-class="transition-opacity duration-150 ease-in-out"
+            enter-from-class="opacity-0"
+            leave-to-class="opacity-0"
+          >
             <div
               v-if="tooltip.visible"
               class="pointer-events-none fixed z-50 -translate-x-1/2 -translate-y-full rounded-md bg-neutral-900 px-2.5 py-1.5 text-xs text-white shadow-lg dark:bg-neutral-100 dark:text-neutral-900"
@@ -342,34 +357,3 @@ function segmentId(seg: OuterRingSegment): string {
     </fieldset>
   </div>
 </template>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.15s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-/* SVG text inside the wheel should not be selectable */
-svg text {
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-/* Ensure dark mode SVG text uses correct fill via CSS class */
-:deep(.dark\:fill-neutral-200) {
-  @media (prefers-color-scheme: dark) {
-    fill: #e5e5e5;
-  }
-}
-
-:deep(.dark\:fill-white) {
-  @media (prefers-color-scheme: dark) {
-    fill: #ffffff;
-  }
-}
-</style>

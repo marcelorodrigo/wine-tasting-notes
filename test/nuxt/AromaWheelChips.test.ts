@@ -94,8 +94,8 @@ describe('AromaWheelChips', () => {
         props: { wineType: 'white', modelValue: aromas }
       })
 
-      expect(wrapper.find('[data-testid="chip-acacia"]').exists()).toBe(true)
-      expect(wrapper.find('[data-testid="chip-violet"]').exists()).toBe(true)
+      expect(wrapper.find('[data-testid="chip-floral-acacia"]').exists()).toBe(true)
+      expect(wrapper.find('[data-testid="chip-floral-violet"]').exists()).toBe(true)
     })
 
     it('shows chips for selected secondary aromas', async () => {
@@ -105,8 +105,8 @@ describe('AromaWheelChips', () => {
         props: { wineType: 'white', modelValue: aromas }
       })
 
-      expect(wrapper.find('[data-testid="chip-vanilla"]').exists()).toBe(true)
-      expect(wrapper.find('[data-testid="chip-cedar"]').exists()).toBe(true)
+      expect(wrapper.find('[data-testid="chip-oak-vanilla"]').exists()).toBe(true)
+      expect(wrapper.find('[data-testid="chip-oak-cedar"]').exists()).toBe(true)
     })
 
     it('shows chips for selected tertiary aromas', async () => {
@@ -116,7 +116,7 @@ describe('AromaWheelChips', () => {
         props: { wineType: 'white', modelValue: aromas }
       })
 
-      expect(wrapper.find('[data-testid="chip-almond"]').exists()).toBe(true)
+      expect(wrapper.find('[data-testid="chip-deliberateOxidation-almond"]').exists()).toBe(true)
     })
 
     it('groups chips by aroma type with labels', async () => {
@@ -155,7 +155,7 @@ describe('AromaWheelChips', () => {
         props: { wineType: 'white', modelValue: aromas }
       })
 
-      const chip = wrapper.find('[data-testid="chip-acacia"]')
+      const chip = wrapper.find('[data-testid="chip-floral-acacia"]')
       // Floral color is #9B59B6
       expect(chip.attributes('style')).toContain('background-color')
       expect(chip.attributes('style')).toContain('#9B59B6')
@@ -180,9 +180,9 @@ describe('AromaWheelChips', () => {
         props: { wineType: 'white', modelValue: aromas }
       })
 
-      const removeBtn = wrapper.find('[data-testid="remove-acacia"]')
+      const removeBtn = wrapper.find('[data-testid="remove-floral-acacia"]')
       expect(removeBtn.exists()).toBe(true)
-      expect(removeBtn.attributes('aria-label')).toBe('Remove acacia')
+      expect(removeBtn.attributes('aria-label')).toBe('Remove acacia (Floral)')
     })
 
     it('removes aroma from model when remove button is clicked', async () => {
@@ -192,7 +192,7 @@ describe('AromaWheelChips', () => {
         props: { wineType: 'white', modelValue: aromas }
       })
 
-      await wrapper.find('[data-testid="remove-acacia"]').trigger('click')
+      await wrapper.find('[data-testid="remove-floral-acacia"]').trigger('click')
 
       expect(aromas.primary.floral).not.toContain('acacia')
       expect(aromas.primary.floral).toContain('violet')
@@ -205,7 +205,7 @@ describe('AromaWheelChips', () => {
         props: { wineType: 'white', modelValue: aromas }
       })
 
-      await wrapper.find('[data-testid="remove-vanilla"]').trigger('click')
+      await wrapper.find('[data-testid="remove-oak-vanilla"]').trigger('click')
 
       expect(aromas.secondary.oak).not.toContain('vanilla')
       expect(aromas.secondary.oak).toContain('cedar')
@@ -220,7 +220,7 @@ describe('AromaWheelChips', () => {
         props: { wineType: 'red', modelValue: aromas }
       })
 
-      expect(wrapper.find('[data-testid="chip-raspberry"]').exists()).toBe(true)
+      expect(wrapper.find('[data-testid="chip-redFruit-raspberry"]').exists()).toBe(true)
     })
 
     it('shows all chip groups for rosé with mixed selections', async () => {
@@ -232,9 +232,9 @@ describe('AromaWheelChips', () => {
         props: { wineType: 'rosé', modelValue: aromas }
       })
 
-      expect(wrapper.find('[data-testid="chip-apple"]').exists()).toBe(true)
-      expect(wrapper.find('[data-testid="chip-raspberry"]').exists()).toBe(true)
-      expect(wrapper.find('[data-testid="chip-petrol"]').exists()).toBe(true)
+      expect(wrapper.find('[data-testid="chip-greenFruit-apple"]').exists()).toBe(true)
+      expect(wrapper.find('[data-testid="chip-redFruit-raspberry"]').exists()).toBe(true)
+      expect(wrapper.find('[data-testid="chip-bottleAgeWhite-petrol"]').exists()).toBe(true)
     })
   })
 })
