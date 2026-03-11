@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, toRef } from 'vue'
+import { ref, computed, toRef, onBeforeUnmount } from 'vue'
 import type { AromaObject, WineType } from '~/types/tasting'
 import {
   useAromaWheel,
@@ -48,6 +48,13 @@ const tooltip = ref<{
 })
 
 let tooltipTimeout: ReturnType<typeof setTimeout> | null = null
+
+onBeforeUnmount(() => {
+  if (tooltipTimeout) {
+    clearTimeout(tooltipTimeout)
+    tooltipTimeout = null
+  }
+})
 
 function showTooltip(segment: OuterRingSegment | MiddleRingSegment, event: MouseEvent | TouchEvent) {
   if (tooltipTimeout) clearTimeout(tooltipTimeout)
