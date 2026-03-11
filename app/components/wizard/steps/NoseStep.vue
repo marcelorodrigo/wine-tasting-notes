@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import type { RadioGroupItem } from '@nuxt/ui'
+import type { AromaObject } from '~/types/tasting'
 import RadioGroup from '~/components/wizard/inputs/RadioGroup.vue'
+import AromaWheel from '~/components/wizard/inputs/AromaWheel.vue'
+import AromaWheelChips from '~/components/wizard/inputs/AromaWheelChips.vue'
 
 const { tastingData } = useTastingData()
 
@@ -8,6 +11,13 @@ const conditionItems: RadioGroupItem[] = [
   { label: 'clean', value: 'clean' },
   { label: 'unclean (faulty?)', value: 'unclean' }
 ]
+
+const aromasModel = computed({
+  get: () => tastingData.value.nose.aromas as AromaObject,
+  set: (v: AromaObject) => {
+    tastingData.value.nose.aromas = v
+  }
+})
 </script>
 
 <template>
@@ -49,15 +59,16 @@ const conditionItems: RadioGroupItem[] = [
 
     <USeparator />
 
-    <UFormField label="Aromas">
-      <div
-        class="flex items-center justify-center rounded-lg border-2 border-dashed border-neutral-300 p-8 dark:border-neutral-700"
-        data-testid="aroma-wheel-placeholder"
-      >
-        <p class="text-sm text-muted italic">
-          Aroma Wheel coming in a future update
-        </p>
-      </div>
-    </UFormField>
+    <AromaWheel
+      v-model="aromasModel"
+      :wine-type="tastingData.appearance.wineType"
+      label="Aromas"
+    />
+
+    <AromaWheelChips
+      v-model="aromasModel"
+      :wine-type="tastingData.appearance.wineType"
+      label="aromas"
+    />
   </div>
 </template>
