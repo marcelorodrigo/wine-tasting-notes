@@ -1,6 +1,60 @@
 import type { AppearanceData, ConclusionsData, NoseData, PalateData } from '../../types/tasting'
 import { capitalize, flatAromaItems, hasAromaData, joinWithAnd } from './_shared'
 
+const BARTALK_ACIDITY: Record<string, string> = {
+  'low': 'mellow acid',
+  'medium(-)': 'soft acid',
+  'medium': 'medium acid',
+  'medium(+)': 'bright acid',
+  'high': 'zippy acid'
+}
+
+const BARTALK_TANNIN: Record<string, string> = {
+  'low': 'light tannins',
+  'medium(-)': 'soft tannins',
+  'medium': 'moderate tannins',
+  'medium(+)': 'firm tannins',
+  'high': 'grippy tannins'
+}
+
+const BARTALK_ALCOHOL: Record<string, string> = {
+  low: 'Light on alcohol.',
+  medium: 'Balanced alcohol.',
+  high: 'Pretty warm.'
+}
+
+const BARTALK_BODY: Record<string, string> = {
+  'light': 'Light-bodied.',
+  'medium(-)': 'Fairly light-bodied.',
+  'medium': 'Medium-bodied.',
+  'medium(+)': 'Fairly full-bodied.',
+  'full': 'Full-bodied.'
+}
+
+const BARTALK_FINISH: Record<string, string> = {
+  'short': 'Quick finish.',
+  'medium(-)': 'Decent finish.',
+  'medium': 'Medium finish.',
+  'medium(+)': 'Nice long finish.',
+  'long': 'Long finish.'
+}
+
+const BARTALK_QUALITY: Record<string, string> = {
+  'faulty': 'Something\'s off with this one',
+  'poor': 'Not great',
+  'acceptable': 'Drinkable',
+  'good': 'Solid wine',
+  'very good': 'Really nice wine',
+  'outstanding': 'Knockout wine'
+}
+
+const BARTALK_READINESS: Record<string, string> = {
+  'too young': 'needs more time',
+  'can drink now, but has potential for ageing': 'drink it now or hold it',
+  'drink now: not suitable for ageing or further ageing': 'drink it now',
+  'too old': 'past its best'
+}
+
 export function generateAppearanceText(data: AppearanceData): string {
   const hasData = data.clarity || data.intensity || data.color
     || (data.otherObservations?.length ?? 0) > 0
@@ -12,10 +66,10 @@ export function generateAppearanceText(data: AppearanceData): string {
   if (data.color) attrs.push(data.color)
 
   const obs = data.otherObservations ?? []
-  const obsText = obs.length > 0 ? `. Shows ${joinWithAnd(obs)}` : ''
 
   if (attrs.length === 0) return `Shows ${joinWithAnd(obs)}.`
 
+  const obsText = obs.length > 0 ? ` — with ${joinWithAnd(obs)}` : ''
   return `Looks ${joinWithAnd(attrs)}${obsText}.`
 }
 
@@ -25,20 +79,44 @@ export function generateNoseText(data: NoseData): string {
 
   const sentences: string[] = []
 
-  const introParts: string[] = []
-  if (data.condition && data.condition !== 'clean') introParts.push('Off on the nose')
-  else if (data.condition === 'clean' && data.intensity) introParts.push(`Clean, ${data.intensity} nose`)
-  else if (data.condition === 'clean') introParts.push('Clean nose')
-  else if (data.intensity) introParts.push(`${capitalize(data.intensity)} nose`)
-
-  if (introParts.length > 0) sentences.push(`${introParts.join('')}.`)
-
-  if (hasAromaData(data.aromas)) {
-    const items = flatAromaItems(data.aromas!)
-    sentences.push(`Smells of ${joinWithAnd(items)}.`)
+  if (data.condition === 'unclean') {
+    sentences.push('Something\'s off on the nose.')
   }
 
-  if (data.development) sentences.push(`${capitalize(data.development)}.`)
+  const hasAromas = hasAromaData(data.aromas)
+
+  if (hasAromas) {
+    const items = flatAromaItems(data.aromas!)
+    const aromaText = joinWithAnd(items)
+
+    if (data.condition === 'clean' && data.intensity) {
+      sentences.push(`Clean, ${data.intensity} nose — ${aromaText}.`)
+    } else if (data.condition === 'clean') {
+      sentences.push(`Clean nose — ${aromaText}.`)
+    } else if (data.intensity && data.condition !== 'unclean') {
+      sentences.push(`${capitalize(data.intensity)} on the nose — ${aromaText}.`)
+    } else {
+      sentences.push(`Smells of ${aromaText}.`)
+    }
+  } else {
+    if (data.condition === 'clean' && data.intensity) {
+      sentences.push(`Clean, ${data.intensity} nose.`)
+    } else if (data.condition === 'clean') {
+      sentences.push('Clean nose.')
+    } else if (data.intensity) {
+      sentences.push(`${capitalize(data.intensity)} on the nose.`)
+    }
+  }
+
+  if (data.development) {
+    const devMap: Record<string, string> = {
+      'youthful': 'Still young.',
+      'developing': 'Developing nicely.',
+      'fully developed': 'Fully developed.',
+      'tired/past its best': 'A bit tired.'
+    }
+    sentences.push(devMap[data.development] ?? `${capitalize(data.development)}.`)
+  }
 
   return sentences.join(' ')
 }
@@ -53,26 +131,37 @@ export function generatePalateText(data: PalateData): string {
 
   const structureParts: string[] = []
   if (data.sweetness) structureParts.push(data.sweetness)
-  if (data.acidity) structureParts.push(`${data.acidity} acid`)
-  if (data.tannin) structureParts.push(`${data.tannin} tannin`)
+  if (data.acidity) structureParts.push(BARTALK_ACIDITY[data.acidity] ?? `${data.acidity} acid`)
+  if (data.tannin) structureParts.push(BARTALK_TANNIN[data.tannin] ?? `${data.tannin} tannin`)
   if (structureParts.length > 0) sentences.push(`${capitalize(joinWithAnd(structureParts))}.`)
 
-  if (data.mousse) sentences.push(`Bubbles are ${data.mousse}.`)
-
-  if (data.fortified) {
-    sentences.push('Fortified.')
-  } else if (data.alcohol) {
-    sentences.push(`${capitalize(data.alcohol)} alcohol.`)
+  if (data.mousse) {
+    const mousseMap: Record<string, string> = {
+      delicate: 'Fine bubbles.',
+      creamy: 'Creamy fizz.',
+      aggressive: 'Aggressive fizz.'
+    }
+    sentences.push(mousseMap[data.mousse] ?? `${capitalize(data.mousse)} bubbles.`)
   }
 
-  if (data.body) sentences.push(`${capitalize(data.body)} body.`)
+  if (data.fortified) {
+    sentences.push('Fortified — packs a punch.')
+  } else if (data.alcohol) {
+    sentences.push(BARTALK_ALCOHOL[data.alcohol] ?? `${capitalize(data.alcohol)} alcohol.`)
+  }
+
+  if (data.body) {
+    sentences.push(BARTALK_BODY[data.body] ?? `${capitalize(data.body)} body.`)
+  }
 
   if (hasAromaData(data.flavors)) {
     const items = flatAromaItems(data.flavors!)
     sentences.push(`Tastes of ${joinWithAnd(items)}.`)
   }
 
-  if (data.finish) sentences.push(`${capitalize(data.finish)} finish.`)
+  if (data.finish) {
+    sentences.push(BARTALK_FINISH[data.finish] ?? `${capitalize(data.finish)} finish.`)
+  }
 
   return sentences.join(' ')
 }
@@ -81,9 +170,14 @@ export function generateConclusionsText(data: ConclusionsData): string {
   const hasData = data.qualityLevel || data.readiness
   if (!hasData) return ''
 
-  const sentences: string[] = []
-  if (data.qualityLevel) sentences.push(`${capitalize(data.qualityLevel)} wine.`)
-  if (data.readiness) sentences.push(`${capitalize(data.readiness)}.`)
+  const qualityText = data.qualityLevel
+    ? BARTALK_QUALITY[data.qualityLevel] ?? capitalize(data.qualityLevel)
+    : null
+  const readinessText = data.readiness
+    ? BARTALK_READINESS[data.readiness] ?? data.readiness
+    : null
 
-  return sentences.join(' ')
+  if (qualityText && readinessText) return `${qualityText} — ${readinessText}.`
+  if (qualityText) return `${qualityText}.`
+  return `${capitalize(readinessText!)}.`
 }
