@@ -4,61 +4,122 @@ import NoseStep from './steps/NoseStep.vue'
 import PalateStep from './steps/PalateStep.vue'
 import ConclusionsStep from './steps/ConclusionsStep.vue'
 
-const { currentStep, goNext, goPrevious, stepLabels } = useWizardNavigation()
+const { currentStep, goNext, goPrevious, goToStep, stepLabels } = useWizardNavigation()
+const { resetTastingData } = useTastingData()
+const { selectedProfile, generatedNote } = useNoteGenerator()
 
 const stepComponents = [AppearanceStep, NoseStep, PalateStep, ConclusionsStep] as const
 
+const showResults = ref(false)
+
 function handleGenerate(): void {
-  alert('Tasting note generation coming soon!')
+  showResults.value = true
+}
+
+function handleBackToEditing(): void {
+  showResults.value = false
+}
+
+function handleStartNewTasting(): void {
+  showResults.value = false
+  resetTastingData()
+  goToStep(1)
 }
 </script>
 
 <template>
   <div class="mx-auto w-full max-w-3xl px-4 py-6 sm:px-6 sm:py-10">
-    <WizardProgress />
+    <WizardProgress v-if="!showResults" />
 
-    <UCard
-      class="mt-6"
-      data-testid="wizard-card"
-      :ui="{ body: 'p-4 sm:p-6' }"
+    <Transition
+      name="fade"
+      mode="out-in"
     >
-      <template #header>
-        <div class="flex items-center gap-2">
-          <span class="text-muted text-sm font-medium">
-            Step {{ currentStep }} of 4
-          </span>
-          <span class="text-muted">·</span>
-          <span class="font-display text-lg font-semibold text-highlighted">
-            {{ stepLabels[currentStep - 1] }}
-          </span>
-        </div>
-      </template>
-
-      <Transition
-        name="fade"
-        mode="out-in"
+      <!-- Results view -->
+      <div
+        v-if="showResults"
+        key="results"
+        data-testid="results-view"
       >
-        <component
-          :is="stepComponents[currentStep - 1]"
-          :key="currentStep"
-        />
-      </Transition>
+        <div class="mb-6">
+          <ProfileSelector v-model="selectedProfile" />
+        </div>
 
-      <template #footer>
-        <WizardNavigation
-          @previous="goPrevious"
-          @next="goNext"
-          @generate="handleGenerate"
-        />
-      </template>
-    </UCard>
+        <TastingNoteDisplay :text="generatedNote" />
+
+        <div class="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
+          <div class="flex gap-3">
+            <UButton
+              label="Back to Editing"
+              variant="outline"
+              color="neutral"
+              icon="i-lucide-pencil"
+              size="lg"
+              class="min-h-[44px]"
+              data-testid="back-to-editing"
+              @click="handleBackToEditing"
+            />
+            <CopyToClipboard :text="generatedNote" />
+          </div>
+          <UButton
+            label="Start New Tasting"
+            variant="ghost"
+            color="neutral"
+            icon="i-lucide-rotate-ccw"
+            size="lg"
+            class="min-h-[44px]"
+            data-testid="start-new-tasting"
+            @click="handleStartNewTasting"
+          />
+        </div>
+      </div>
+
+      <!-- Wizard view -->
+      <UCard
+        v-else
+        key="wizard"
+        class="mt-6"
+        data-testid="wizard-card"
+        :ui="{ body: 'p-4 sm:p-6' }"
+      >
+        <template #header>
+          <div class="flex items-center gap-2">
+            <span class="text-muted text-sm font-medium">
+              Step {{ currentStep }} of 4
+            </span>
+            <span class="text-muted">·</span>
+            <span class="font-display text-lg font-semibold text-highlighted">
+              {{ stepLabels[currentStep - 1] }}
+            </span>
+          </div>
+        </template>
+
+        <Transition
+          name="fade"
+          mode="out-in"
+        >
+          <component
+            :is="stepComponents[currentStep - 1]"
+            :key="currentStep"
+          />
+        </Transition>
+
+        <template #footer>
+          <WizardNavigation
+            @previous="goPrevious"
+            @next="goNext"
+            @generate="handleGenerate"
+          />
+        </template>
+      </UCard>
+    </Transition>
   </div>
 </template>
 
 <style scoped>
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.15s ease;
+  transition: opacity 0.2s ease;
 }
 
 .fade-enter-from,
