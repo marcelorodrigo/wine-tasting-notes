@@ -300,20 +300,19 @@ describe('PalateStep', () => {
     })
   })
 
-  describe('Flavors placeholder', () => {
-    it('renders the flavor wheel placeholder', async () => {
+  describe('Flavor Wheel', () => {
+    it('renders the flavor wheel component', async () => {
       const wrapper = await mountSuspended(PalateStep)
-      expect(wrapper.find('[data-testid="flavor-wheel-placeholder"]').exists()).toBe(true)
+      expect(wrapper.find('[data-testid="aroma-wheel"]').exists()).toBe(true)
     })
 
-    it('shows the "coming in a future update" message', async () => {
+    it('renders the flavor wheel chips component', async () => {
       const wrapper = await mountSuspended(PalateStep)
-      expect(wrapper.find('[data-testid="flavor-wheel-placeholder"]').text()).toContain(
-        'Flavor Wheel coming in a future update'
-      )
+      expect(wrapper.find('[data-testid="aroma-wheel-chips"]').exists()).toBe(true)
     })
 
     it('renders the Flavors label', async () => {
+      tastingData.value.appearance.wineType = 'white'
       const wrapper = await mountSuspended(PalateStep)
       expect(wrapper.text()).toContain('Flavors')
     })

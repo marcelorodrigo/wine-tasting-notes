@@ -140,20 +140,19 @@ describe('NoseStep', () => {
     })
   })
 
-  describe('Aromas placeholder', () => {
-    it('renders the aromas placeholder area', async () => {
+  describe('Aroma Wheel', () => {
+    it('renders the aroma wheel component', async () => {
       const wrapper = await mountSuspended(NoseStep)
-      expect(wrapper.find('[data-testid="aroma-wheel-placeholder"]').exists()).toBe(true)
+      expect(wrapper.find('[data-testid="aroma-wheel"]').exists()).toBe(true)
     })
 
-    it('shows the "coming in a future update" message', async () => {
+    it('renders the aroma wheel chips component', async () => {
       const wrapper = await mountSuspended(NoseStep)
-      expect(wrapper.find('[data-testid="aroma-wheel-placeholder"]').text()).toContain(
-        'Aroma Wheel coming in a future update'
-      )
+      expect(wrapper.find('[data-testid="aroma-wheel-chips"]').exists()).toBe(true)
     })
 
     it('renders the Aromas label', async () => {
+      tastingData.value.appearance.wineType = 'white'
       const wrapper = await mountSuspended(NoseStep)
       expect(wrapper.text()).toContain('Aromas')
     })

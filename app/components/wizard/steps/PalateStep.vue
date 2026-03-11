@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import type { Mousse } from '~/types/tasting'
+import type { AromaObject, Mousse } from '~/types/tasting'
 import RadioGroup from '~/components/wizard/inputs/RadioGroup.vue'
+import AromaWheel from '~/components/wizard/inputs/AromaWheel.vue'
+import AromaWheelChips from '~/components/wizard/inputs/AromaWheelChips.vue'
 
 const { tastingData } = useTastingData()
 
@@ -27,6 +29,13 @@ const mousseModel = computed({
   get: () => tastingData.value.palate.mousse,
   set: (v: string | null) => {
     tastingData.value.palate.mousse = v as Mousse | null
+  }
+})
+
+const flavorsModel = computed({
+  get: () => tastingData.value.palate.flavors as AromaObject,
+  set: (v: AromaObject) => {
+    tastingData.value.palate.flavors = v
   }
 })
 </script>
@@ -139,16 +148,17 @@ const mousseModel = computed({
 
       <USeparator />
 
-      <UFormField label="Flavors">
-        <div
-          class="flex items-center justify-center rounded-lg border-2 border-dashed border-neutral-300 p-8 dark:border-neutral-700"
-          data-testid="flavor-wheel-placeholder"
-        >
-          <p class="text-sm text-muted italic">
-            Flavor Wheel coming in a future update
-          </p>
-        </div>
-      </UFormField>
+      <AromaWheel
+        v-model="flavorsModel"
+        :wine-type="tastingData.appearance.wineType"
+        label="Flavors"
+      />
+
+      <AromaWheelChips
+        v-model="flavorsModel"
+        :wine-type="tastingData.appearance.wineType"
+        label="flavors"
+      />
     </div>
   </div>
 </template>
