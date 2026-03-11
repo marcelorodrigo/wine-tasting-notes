@@ -312,6 +312,7 @@ describe('PalateStep', () => {
     })
 
     it('renders the Flavors label', async () => {
+      tastingData.value.appearance.wineType = 'white'
       const wrapper = await mountSuspended(PalateStep)
       expect(wrapper.text()).toContain('Flavors')
     })

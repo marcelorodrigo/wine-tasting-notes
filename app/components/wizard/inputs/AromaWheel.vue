@@ -144,7 +144,20 @@ function segmentId(seg: OuterRingSegment): string {
     data-testid="aroma-wheel"
     class="relative w-full"
   >
-    <fieldset>
+    <div
+      v-if="!wineType"
+      class="rounded-md border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-800 dark:border-yellow-800 dark:bg-yellow-950 dark:text-yellow-200"
+      role="alert"
+      data-testid="aroma-wheel-no-wine-type"
+    >
+      <UIcon
+        name="i-lucide-alert-triangle"
+        class="mr-1.5 inline-block size-4 align-text-bottom"
+      />
+      Select a wine type first to choose aromas
+    </div>
+
+    <fieldset v-else>
       <legend class="font-display text-lg font-bold text-highlighted">
         {{ label }}
       </legend>
@@ -287,10 +300,10 @@ function segmentId(seg: OuterRingSegment): string {
                 }"
                 :opacity="seg.isActive ? (seg.isSelected ? 1 : 0.75) : 0.15"
                 :filter="seg.isSelected ? 'url(#glow)' : undefined"
-                :role="seg.isActive ? 'checkbox' : undefined"
-                :aria-checked="seg.isActive ? seg.isSelected : undefined"
-                :aria-label="seg.isActive ? `${seg.descriptor} (${seg.categoryKey})` : undefined"
-                :aria-disabled="!seg.isActive ? true : undefined"
+                role="checkbox"
+                :aria-checked="seg.isActive ? seg.isSelected : false"
+                :aria-label="`${seg.descriptor} (${seg.categoryKey})`"
+                :aria-disabled="!seg.isActive"
                 :tabindex="seg.isActive ? 0 : -1"
                 :data-testid="`aroma-${seg.descriptor.replace(/[\s/]+/g, '-')}`"
                 @click="handleSegmentClick(seg)"

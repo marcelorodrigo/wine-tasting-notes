@@ -125,14 +125,16 @@ describe('AromaWheel', () => {
       expect(segment.attributes('tabindex')).toBe('0')
     })
 
-    it('does not set role="checkbox" on inactive segments', async () => {
+    it('sets role="checkbox" on inactive segments with aria-disabled', async () => {
       const wrapper = await mountSuspended(AromaWheel, {
         props: { wineType: 'white', modelValue: createEmptyAromas() }
       })
       // 'redcurrant' is in redFruit, not visible for white wines
       const segment = wrapper.find('[data-testid="aroma-redcurrant"]')
       expect(segment.exists()).toBe(true)
-      expect(segment.attributes('role')).toBeUndefined()
+      expect(segment.attributes('role')).toBe('checkbox')
+      expect(segment.attributes('aria-disabled')).toBe('true')
+      expect(segment.attributes('aria-checked')).toBe('false')
       expect(segment.attributes('tabindex')).toBe('-1')
     })
 
@@ -237,8 +239,9 @@ describe('AromaWheel', () => {
         props: { wineType: 'red', modelValue: createEmptyAromas() }
       })
       const segment = wrapper.find('[data-testid="aroma-apple"]')
-      expect(segment.attributes('role')).toBeUndefined()
+      expect(segment.attributes('role')).toBe('checkbox')
       expect(segment.attributes('aria-disabled')).toBe('true')
+      expect(segment.attributes('aria-checked')).toBe('false')
       expect(segment.attributes('tabindex')).toBe('-1')
       expect(segment.attributes('opacity')).toBe('0.15')
     })
@@ -256,8 +259,9 @@ describe('AromaWheel', () => {
         props: { wineType: 'white', modelValue: createEmptyAromas() }
       })
       const segment = wrapper.find('[data-testid="aroma-raspberry"]')
-      expect(segment.attributes('role')).toBeUndefined()
+      expect(segment.attributes('role')).toBe('checkbox')
       expect(segment.attributes('aria-disabled')).toBe('true')
+      expect(segment.attributes('aria-checked')).toBe('false')
       expect(segment.attributes('opacity')).toBe('0.15')
     })
 
@@ -270,14 +274,14 @@ describe('AromaWheel', () => {
       expect(wrapper.find('[data-testid="aroma-raspberry"]').attributes('role')).toBe('checkbox')
     })
 
-    it('marks all segments inactive when wineType is null', async () => {
+    it('shows warning and hides aroma UI when wineType is null', async () => {
       const wrapper = await mountSuspended(AromaWheel, {
         props: { wineType: null, modelValue: createEmptyAromas() }
       })
-      const segment = wrapper.find('[data-testid="aroma-acacia"]')
-      expect(segment.attributes('role')).toBeUndefined()
-      expect(segment.attributes('aria-disabled')).toBe('true')
-      expect(segment.attributes('opacity')).toBe('0.15')
+      expect(wrapper.find('[data-testid="aroma-wheel-no-wine-type"]').exists()).toBe(true)
+      expect(wrapper.find('[data-testid="aroma-wheel-no-wine-type"]').attributes('role')).toBe('alert')
+      expect(wrapper.find('svg').exists()).toBe(false)
+      expect(wrapper.find('[data-testid="aroma-acacia"]').exists()).toBe(false)
     })
 
     it('filters tertiary categories by wine type', async () => {
@@ -287,9 +291,11 @@ describe('AromaWheel', () => {
       // bottleAgeWhite visible for white; bottleAgeRed not
       const whiteAging = wrapper.find('[data-testid="aroma-petrol"]')
       expect(whiteAging.attributes('role')).toBe('checkbox')
+      expect(whiteAging.attributes('aria-disabled')).toBe('false')
 
       const redAging = wrapper.find('[data-testid="aroma-leather"]')
-      expect(redAging.attributes('role')).toBeUndefined()
+      expect(redAging.attributes('role')).toBe('checkbox')
+      expect(redAging.attributes('aria-disabled')).toBe('true')
       expect(redAging.attributes('opacity')).toBe('0.15')
     })
   })

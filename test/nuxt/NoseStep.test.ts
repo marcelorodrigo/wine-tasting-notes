@@ -152,6 +152,7 @@ describe('NoseStep', () => {
     })
 
     it('renders the Aromas label', async () => {
+      tastingData.value.appearance.wineType = 'white'
       const wrapper = await mountSuspended(NoseStep)
       expect(wrapper.text()).toContain('Aromas')
     })
