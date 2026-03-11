@@ -3,7 +3,6 @@ import { mountSuspended } from '@nuxt/test-utils/runtime'
 import ProfileSelector from '~/components/results/ProfileSelector.vue'
 
 describe('ProfileSelector', () => {
-
   it('renders all 4 profile options', async () => {
     const wrapper = await mountSuspended(ProfileSelector)
     const radios = wrapper.findAll('[role="radio"]')
