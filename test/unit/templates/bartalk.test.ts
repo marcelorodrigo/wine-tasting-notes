@@ -65,16 +65,15 @@ describe('bartalk template', () => {
       expect(result).not.toMatch(/^(NOSE|Nose|On the nose)/)
     })
 
-    it('uses flat aroma list (not grouped)', () => {
+    it('uses grouped aroma formatting', () => {
       const result = generateNoseText(fullNose())
-      expect(result).not.toContain('floral (acacia')
-      expect(result).toContain('acacia')
-      expect(result).toContain('gooseberry')
+      expect(result).toContain('floral (acacia, violet)')
+      expect(result).toContain('green fruit (gooseberry)')
     })
 
     it('integrates condition and aromas with em-dash', () => {
       expect(generateNoseText(fullNose()))
-        .toBe('Clean, medium(+) nose — acacia, violet, gooseberry and bread. Developing nicely.')
+        .toBe('Clean, medium(+) nose — floral (acacia, violet), green fruit (gooseberry), and yeast (bread). Developing nicely.')
     })
 
     it('handles unclean condition', () => {
@@ -94,7 +93,7 @@ describe('bartalk template', () => {
 
     it('handles aromas only (no condition/intensity)', () => {
       const data = { ...emptyNose(), aromas: singleAroma() }
-      expect(generateNoseText(data)).toBe('Smells of acacia.')
+      expect(generateNoseText(data)).toBe('Smells of floral (acacia).')
     })
 
     it('uses casual development descriptions', () => {
@@ -130,7 +129,7 @@ describe('bartalk template', () => {
 
     it('formats full data correctly', () => {
       expect(generatePalateText(fullPalate()))
-        .toBe('Dry, zippy acid and moderate tannins. Fine bubbles. Pretty warm. Medium-bodied. Tastes of gooseberry and vanilla. Nice long finish.')
+        .toBe('Dry, zippy acid and moderate tannins. Fine bubbles. Pretty warm. Medium-bodied. Tastes of green fruit (gooseberry) and oak (vanilla). Medium(+) flavor intensity. Nice long finish.')
     })
 
     it('handles fortified with em-dash', () => {
@@ -155,10 +154,14 @@ describe('bartalk template', () => {
       expect(generatePalateText(data)).toBe('Full-bodied.')
     })
 
-    it('uses flat flavor list', () => {
+    it('uses grouped flavor formatting', () => {
       const result = generatePalateText(fullPalate())
-      expect(result).toContain('Tastes of gooseberry and vanilla')
-      expect(result).not.toContain('green fruit (gooseberry)')
+      expect(result).toContain('Tastes of green fruit (gooseberry) and oak (vanilla)')
+    })
+
+    it('renders flavorIntensity', () => {
+      const data = { ...emptyPalate(), flavorIntensity: 'medium(+)' as const }
+      expect(generatePalateText(data)).toBe('Medium(+) flavor intensity.')
     })
 
     it('handles finish only', () => {

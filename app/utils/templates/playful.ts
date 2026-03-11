@@ -195,6 +195,17 @@ export function generatePalateText(data: PalateData): string {
     sentences.push(`Flavors burst with ${flavorText}.`)
   }
 
+  if (data.flavorIntensity) {
+    const fiMap: Record<string, string> = {
+      'light': 'Subtle flavors.',
+      'medium(-)': 'Gently flavored.',
+      'medium': 'Nice flavor intensity.',
+      'medium(+)': 'Packed with flavor.',
+      'pronounced': 'Flavor bomb!'
+    }
+    sentences.push(fiMap[data.flavorIntensity] ?? `${capitalize(data.flavorIntensity)} flavor intensity.`)
+  }
+
   if (data.finish) sentences.push(`${capitalize(PLAYFUL_FINISH[data.finish] ?? data.finish)}.`)
 
   return sentences.join(' ')

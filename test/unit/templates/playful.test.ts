@@ -90,7 +90,7 @@ describe('playful template', () => {
 
     it('formats full data with creative intro', () => {
       expect(generateNoseText(fullNose()))
-        .toBe('A delightful medium(+) nose of floral (acacia, violet), green fruit (gooseberry) and yeast (bread). Nicely developing.')
+        .toBe('A delightful medium(+) nose of floral (acacia, violet), green fruit (gooseberry), and yeast (bread). Nicely developing.')
     })
 
     it('uses special intro for pronounced intensity', () => {
@@ -151,7 +151,7 @@ describe('playful template', () => {
 
     it('formats full data correctly', () => {
       expect(generatePalateText(fullPalate()))
-        .toBe('Bone dry, zippy acidity and balanced tannin. Tiny, playful bubbles. Warming alcohol — it shows. Medium-bodied. Flavors burst with green fruit (gooseberry) and oak (vanilla). Lingering finish.')
+        .toBe('Bone dry, zippy acidity and balanced tannin. Tiny, playful bubbles. Warming alcohol — it shows. Medium-bodied. Flavors burst with green fruit (gooseberry) and oak (vanilla). Packed with flavor. Lingering finish.')
     })
 
     it('uses playful mousse descriptions', () => {
@@ -182,6 +182,16 @@ describe('playful template', () => {
     it('uses grouped flavor formatting', () => {
       const result = generatePalateText(fullPalate())
       expect(result).toContain('green fruit (gooseberry)')
+    })
+
+    it('renders flavorIntensity with playful descriptions', () => {
+      const data = { ...emptyPalate(), flavorIntensity: 'pronounced' as const }
+      expect(generatePalateText(data)).toBe('Flavor bomb!')
+    })
+
+    it('renders medium flavorIntensity', () => {
+      const data = { ...emptyPalate(), flavorIntensity: 'medium' as const }
+      expect(generatePalateText(data)).toBe('Nice flavor intensity.')
     })
 
     it('uses playful finish descriptions', () => {

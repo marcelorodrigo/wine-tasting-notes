@@ -26,9 +26,9 @@ describe('formatAromaList', () => {
       .toBe('floral (acacia) and green fruit (gooseberry)')
   })
 
-  it('joins three+ categories with commas and "and"', () => {
+  it('joins three+ categories with Oxford comma and "and"', () => {
     expect(formatAromaList(sampleAromas(), AROMA_LABELS))
-      .toBe('floral (acacia, violet), green fruit (gooseberry) and yeast (bread)')
+      .toBe('floral (acacia, violet), green fruit (gooseberry), and yeast (bread)')
   })
 
   it('includes secondary aromas in order', () => {
@@ -53,7 +53,7 @@ describe('formatAromaList', () => {
     aromas.secondary.yeast = ['bread']
     aromas.tertiary.deliberateOxidation = ['marzipan']
     expect(formatAromaList(aromas, AROMA_LABELS))
-      .toBe('floral (acacia), yeast (bread) and deliberate oxidation (marzipan)')
+      .toBe('floral (acacia), yeast (bread), and deliberate oxidation (marzipan)')
   })
 
   it('lowercases category labels', () => {

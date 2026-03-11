@@ -1,5 +1,6 @@
 import type { AppearanceData, ConclusionsData, NoseData, PalateData } from '../../types/tasting'
-import { capitalize, flatAromaItems, hasAromaData, joinWithAnd } from './_shared'
+import { formatAromaList } from '../aromaCategorizer'
+import { AROMA_LABELS, capitalize, hasAromaData, joinWithAnd } from './_shared'
 
 const BARTALK_ACIDITY: Record<string, string> = {
   'low': 'mellow acid',
@@ -86,8 +87,7 @@ export function generateNoseText(data: NoseData): string {
   const hasAromas = hasAromaData(data.aromas)
 
   if (hasAromas) {
-    const items = flatAromaItems(data.aromas!)
-    const aromaText = joinWithAnd(items)
+    const aromaText = formatAromaList(data.aromas!, AROMA_LABELS)
 
     if (data.condition === 'clean' && data.intensity) {
       sentences.push(`Clean, ${data.intensity} nose — ${aromaText}.`)
@@ -155,8 +155,12 @@ export function generatePalateText(data: PalateData): string {
   }
 
   if (hasAromaData(data.flavors)) {
-    const items = flatAromaItems(data.flavors!)
-    sentences.push(`Tastes of ${joinWithAnd(items)}.`)
+    const flavorText = formatAromaList(data.flavors!, AROMA_LABELS)
+    sentences.push(`Tastes of ${flavorText}.`)
+  }
+
+  if (data.flavorIntensity) {
+    sentences.push(`${capitalize(data.flavorIntensity)} flavor intensity.`)
   }
 
   if (data.finish) {

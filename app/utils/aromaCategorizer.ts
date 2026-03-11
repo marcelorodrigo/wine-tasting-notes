@@ -24,16 +24,17 @@ function buildCategoryPart(label: string, items: string[]): string {
 }
 
 /**
- * Joins an array of formatted category parts with Oxford-comma-free grammar:
+ * Joins an array of formatted category parts with Oxford-comma grammar:
  *   - 0 parts → ""
  *   - 1 part  → "floral (acacia)"
  *   - 2 parts → "floral (acacia) and green fruit (gooseberry)"
- *   - 3+ parts → "floral (acacia), green fruit (gooseberry) and yeast (bread)"
+ *   - 3+ parts → "floral (acacia), green fruit (gooseberry), and yeast (bread)"
  */
 function joinWithAnd(parts: string[]): string {
   if (parts.length === 0) return ''
   if (parts.length === 1) return parts[0]!
-  return `${parts.slice(0, -1).join(', ')} and ${parts[parts.length - 1]!}`
+  if (parts.length === 2) return `${parts[0]!} and ${parts[1]!}`
+  return `${parts.slice(0, -1).join(', ')}, and ${parts[parts.length - 1]!}`
 }
 
 /**

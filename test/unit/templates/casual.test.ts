@@ -62,7 +62,7 @@ describe('casual template', () => {
 
     it('formats full data correctly', () => {
       expect(generateNoseText(fullNose()))
-        .toBe('On the nose: The nose is clean and medium(+) intensity. On the nose you\'ll find notes of floral (acacia, violet), green fruit (gooseberry) and yeast (bread). Developing.')
+        .toBe('On the nose: The nose is clean and medium(+) intensity. On the nose you\'ll find notes of floral (acacia, violet), green fruit (gooseberry), and yeast (bread). Developing.')
     })
 
     it('handles condition only', () => {

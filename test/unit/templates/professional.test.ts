@@ -51,7 +51,7 @@ describe('professional template', () => {
 
     it('handles only observations', () => {
       const data = { ...emptyAppearance(), otherObservations: ['legs/tears' as const] }
-      expect(generateAppearanceText(data)).toBe('APPEARANCE: , showing legs/tears.')
+      expect(generateAppearanceText(data)).toBe('APPEARANCE: Showing legs/tears.')
     })
 
     it('handles empty observations array as no data', () => {
@@ -72,7 +72,7 @@ describe('professional template', () => {
 
     it('formats full data correctly', () => {
       expect(generateNoseText(fullNose()))
-        .toBe('NOSE: Clean, with medium(+) intensity. Detected floral (acacia, violet), green fruit (gooseberry) and yeast (bread) aromas. Developing.')
+        .toBe('NOSE: Clean, with medium(+) intensity. Detected floral (acacia, violet), green fruit (gooseberry), and yeast (bread) aromas. Developing.')
     })
 
     it('handles condition only', () => {

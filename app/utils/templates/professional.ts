@@ -19,8 +19,12 @@ export function generateAppearanceText(data: AppearanceData): string {
 
   const sentence = capitalize(joinWithAnd(mainParts))
   const obs = data.otherObservations ?? []
-  const obsSuffix = obs.length > 0 ? `, showing ${joinWithAnd(obs)}` : ''
 
+  if (!sentence && obs.length > 0) {
+    return `APPEARANCE: Showing ${joinWithAnd(obs)}.`
+  }
+
+  const obsSuffix = obs.length > 0 ? `, showing ${joinWithAnd(obs)}` : ''
   return `APPEARANCE: ${sentence}${obsSuffix}.`
 }
 
