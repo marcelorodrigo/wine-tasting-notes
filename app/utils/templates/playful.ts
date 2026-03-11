@@ -2,6 +2,21 @@ import type { AppearanceData, ConclusionsData, NoseData, PalateData } from '../.
 import { formatAromaList } from '../aromaCategorizer'
 import { AROMA_LABELS, capitalize, hasAromaData, joinWithAnd } from './_shared'
 
+const PLAYFUL_COLORS: Record<string, string> = {
+  'lemon-green': 'lemon-green — practically electric',
+  'lemon': 'lemony — like bottled sunshine',
+  'gold': 'golden — liquid treasure',
+  'amber': 'amber — like liquid caramel',
+  'brown': 'brown — serious vintage vibes',
+  'pink': 'pink — blushing beautifully',
+  'salmon': 'salmon — sunset in a glass',
+  'orange': 'orange — copper-kissed',
+  'purple': 'deep purple — moody and brooding',
+  'ruby': 'ruby — like a jewel in the glass',
+  'garnet': 'garnet — gorgeously aged',
+  'tawny': 'tawny — autumn in a glass'
+}
+
 const PLAYFUL_SWEETNESS: Record<string, string> = {
   'dry': 'bone dry',
   'off-dry': 'barely sweet',
@@ -25,6 +40,12 @@ const PLAYFUL_TANNIN: Record<string, string> = {
   'medium': 'balanced tannin',
   'medium(+)': 'firm tannin',
   'high': 'grippy tannin'
+}
+
+const PLAYFUL_MOUSSE: Record<string, string> = {
+  delicate: 'Tiny, playful bubbles.',
+  creamy: 'Bubbles smooth as silk.',
+  aggressive: 'Bubbles going wild!'
 }
 
 const PLAYFUL_FINISH: Record<string, string> = {
@@ -56,22 +77,30 @@ export function generateAppearanceText(data: AppearanceData): string {
     || (data.otherObservations?.length ?? 0) > 0
   if (!hasData) return ''
 
-  const attrs: string[] = []
-  if (data.clarity) attrs.push(data.clarity)
-  if (data.intensity && data.color) {
-    attrs.push(`${data.intensity} ${data.color}`)
-  } else if (data.color) {
-    attrs.push(data.color)
+  const parts: string[] = []
+  if (data.clarity) parts.push(data.clarity)
+
+  if (data.color) {
+    const colorText = PLAYFUL_COLORS[data.color]
+    if (data.intensity && colorText) {
+      parts.push(`${data.intensity} ${colorText}`)
+    } else if (colorText) {
+      parts.push(colorText)
+    } else if (data.intensity) {
+      parts.push(`${data.intensity} ${data.color}`)
+    } else {
+      parts.push(data.color)
+    }
   } else if (data.intensity) {
-    attrs.push(data.intensity)
+    parts.push(data.intensity)
   }
 
   const obs = data.otherObservations ?? []
   const obsSuffix = obs.length > 0 ? ` — showing ${joinWithAnd(obs)}` : ''
 
-  if (attrs.length === 0) return `Shows ${joinWithAnd(obs)}.`
+  if (parts.length === 0) return `Shows ${joinWithAnd(obs)}.`
 
-  return `${capitalize(joinWithAnd(attrs))}${obsSuffix}.`
+  return `${capitalize(joinWithAnd(parts))}${obsSuffix}.`
 }
 
 export function generateNoseText(data: NoseData): string {
@@ -80,13 +109,32 @@ export function generateNoseText(data: NoseData): string {
 
   const sentences: string[] = []
 
-  if (data.condition && data.condition !== 'clean') {
+  if (data.condition === 'unclean') {
     sentences.push('Watch out — something smells off here.')
   }
 
-  if (hasAromaData(data.aromas)) {
+  const hasAromas = hasAromaData(data.aromas)
+
+  if (hasAromas) {
     const aromaText = formatAromaList(data.aromas!, AROMA_LABELS)
-    sentences.push(`A delightful mix of ${aromaText}.`)
+
+    if (data.condition === 'clean' && data.intensity === 'pronounced') {
+      sentences.push(`Your nose is in for a treat — ${aromaText}.`)
+    } else if (data.condition === 'clean' && data.intensity) {
+      sentences.push(`A delightful ${data.intensity} nose of ${aromaText}.`)
+    } else {
+      sentences.push(`A delightful mix of ${aromaText}.`)
+    }
+  } else {
+    if (data.condition === 'clean' && data.intensity === 'pronounced') {
+      sentences.push('Your nose is in for a treat!')
+    } else if (data.condition === 'clean' && data.intensity) {
+      sentences.push(`Clean and ${data.intensity} on the nose.`)
+    } else if (data.condition === 'clean') {
+      sentences.push('Clean on the nose.')
+    } else if (data.intensity) {
+      sentences.push(`${capitalize(data.intensity)} on the nose.`)
+    }
   }
 
   if (data.development) {
@@ -116,7 +164,9 @@ export function generatePalateText(data: PalateData): string {
   if (data.tannin) structureParts.push(PLAYFUL_TANNIN[data.tannin] ?? `${data.tannin} tannin`)
   if (structureParts.length > 0) sentences.push(`${capitalize(joinWithAnd(structureParts))}.`)
 
-  if (data.mousse) sentences.push(`Bubbles: ${data.mousse}.`)
+  if (data.mousse) {
+    sentences.push(PLAYFUL_MOUSSE[data.mousse] ?? `${capitalize(data.mousse)} bubbles.`)
+  }
 
   if (data.fortified) {
     sentences.push('Fortified — packs a punch!')
