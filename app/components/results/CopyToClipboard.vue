@@ -10,34 +10,39 @@ let timeout: ReturnType<typeof setTimeout> | undefined
 async function copyToClipboard() {
   if (!props.text?.trim()) return
 
+  let success = false
   try {
     await navigator.clipboard.writeText(props.text)
+    success = true
   } catch {
-    fallbackCopy(props.text)
+    success = fallbackCopy(props.text)
   }
 
-  toast.add({
-    title: 'Copied to clipboard!',
-    icon: 'i-lucide-check',
-    color: 'success'
-  })
+  if (success) {
+    toast.add({
+      title: 'Copied to clipboard!',
+      icon: 'i-lucide-check',
+      color: 'success'
+    })
 
-  copied.value = true
-  clearTimeout(timeout)
-  timeout = setTimeout(() => {
-    copied.value = false
-  }, 2000)
+    copied.value = true
+    clearTimeout(timeout)
+    timeout = setTimeout(() => {
+      copied.value = false
+    }, 2000)
+  }
 }
 
-function fallbackCopy(text: string) {
+function fallbackCopy(text: string): boolean {
   const textarea = document.createElement('textarea')
   textarea.value = text
   textarea.style.position = 'fixed'
   textarea.style.opacity = '0'
   document.body.appendChild(textarea)
   textarea.select()
-  document.execCommand('copy')
+  const result = document.execCommand('copy')
   document.body.removeChild(textarea)
+  return result
 }
 
 onUnmounted(() => {
