@@ -32,7 +32,12 @@ function handleStartNewTasting(): void {
     <WizardProgress v-if="!showResults" />
 
     <Transition
-      name="fade"
+      enter-active-class="transition-opacity duration-200"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-150"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
       mode="out-in"
     >
       <!-- Results view -->
@@ -48,18 +53,21 @@ function handleStartNewTasting(): void {
         <TastingNoteDisplay :text="generatedNote" />
 
         <div class="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
-          <div class="flex gap-3">
+          <div class="flex flex-col gap-3 sm:flex-row sm:gap-3 w-full sm:w-auto">
             <UButton
               label="Back to Editing"
               variant="outline"
               color="neutral"
               icon="i-lucide-pencil"
               size="lg"
-              class="min-h-[44px]"
+              class="min-h-[44px] w-full sm:w-auto justify-center"
               data-testid="back-to-editing"
               @click="handleBackToEditing"
             />
-            <CopyToClipboard :text="generatedNote" />
+            <CopyToClipboard
+              class="w-full sm:w-auto justify-center"
+              :text="generatedNote"
+            />
           </div>
           <UButton
             label="Start New Tasting"
@@ -67,7 +75,7 @@ function handleStartNewTasting(): void {
             color="neutral"
             icon="i-lucide-rotate-ccw"
             size="lg"
-            class="min-h-[44px]"
+            class="min-h-[44px] w-full sm:w-auto justify-center"
             data-testid="start-new-tasting"
             @click="handleStartNewTasting"
           />
@@ -95,7 +103,12 @@ function handleStartNewTasting(): void {
         </template>
 
         <Transition
-          name="fade"
+          enter-active-class="transition-opacity duration-200"
+          enter-from-class="opacity-0"
+          enter-to-class="opacity-100"
+          leave-active-class="transition-opacity duration-150"
+          leave-from-class="opacity-100"
+          leave-to-class="opacity-0"
           mode="out-in"
         >
           <component
@@ -115,15 +128,3 @@ function handleStartNewTasting(): void {
     </Transition>
   </div>
 </template>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>

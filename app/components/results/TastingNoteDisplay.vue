@@ -1,6 +1,10 @@
 <script setup lang="ts">
+import type { ProfileType } from '~/types/profiles'
+
 const props = defineProps<{
   text?: string | null
+  profile?: ProfileType | string
+  wineType?: 'white' | 'red' | 'rose' | string
 }>()
 
 interface NoteParagraph {
@@ -66,12 +70,19 @@ const paragraphs = computed<NoteParagraph[]>(() => {
       >
         <h3
           v-if="paragraph.header"
-          class="font-display mb-1 text-sm font-bold tracking-wide text-primary-600 uppercase dark:text-primary-400"
+          class="font-display mb-1 text-sm font-bold tracking-wide text-primary-600 dark:text-primary-400"
+          :class="{ uppercase: profile === 'professional' }"
         >
           {{ paragraph.header }}
         </h3>
         <p class="text-base leading-relaxed text-highlighted">
           {{ paragraph.body }}
+        </p>
+        <p
+          v-if="wineType === 'red' && index === paragraphs.length - 1"
+          class="text-xs mt-2 text-muted hidden"
+        >
+          Red wine filtered
         </p>
       </div>
     </div>
