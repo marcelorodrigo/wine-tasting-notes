@@ -488,6 +488,215 @@ wine-tasting-notes/
 
 ---
 
+## Internationalization (i18n) Architecture
+
+### Decision: Nuxt i18n Module
+
+**Package:** `@nuxtjs/i18n`
+
+**Rationale:**
+- Official Nuxt module, well-maintained
+- Auto-detect browser language
+- Manual language switching with localStorage persistence
+- SSR support for SEO benefits
+- Lazy loading of locale files
+
+---
+
+### Supported Languages
+
+**WSET-Approved Languages (12):**
+
+| Phase | Language | Code | Notes |
+|-------|----------|------|-------|
+| v1 | English | `en` | Default, broadest reach |
+| v2 | Portuguese | `pt` | User's native language |
+| v3 | Spanish | `es` | |
+| v3 | French | `fr` | |
+| v3 | Italian | `it` | |
+| v3 | German | `de` | +20-30% text expansion |
+| v3 | Dutch | `nl` | |
+| v3 | Chinese (Traditional) | `zh` | CJK characters |
+| v3 | Japanese | `ja` | CJK characters |
+| v3 | Korean | `ko` | CJK characters |
+| v3 | Greek | `el` | |
+| v3 | Turkish | `tr` | |
+
+**Explicitly Not Supported:**
+- Russian, Polish, Persian — Not available in WSET materials
+
+---
+
+### WSET Terminology Sourcing Strategy
+
+**Core Principle:** Always source terminology from WSET official materials
+
+**Sourcing Hierarchy:**
+
+```
+For each language:
+1. Check WSET website for SAT PDF in target language
+   → If exists: Use official WSET terminology directly
+   
+2. If not available: Translate from English only
+   → Use official EN terms as source of truth
+   → Human review by native speaker required
+   
+3. Quality gate: Native speaker with wine knowledge verifies
+```
+
+**Key Rules:**
+- ✅ Always use English as source of truth
+- ✅ Source from target language if available on WSET website
+- ✅ Translate from English if target not available
+- ❌ NEVER chain translate (EN→PT→ES forbidden)
+- ❌ NEVER use machine translation without human review
+
+**WSET Resources:**
+- Level 2 SAT: https://www.wsetglobal.com/media/13156/wset_l2wines_sat_en_may2023_issue2.pdf
+- Level 3 SAT: https://www.wsetglobal.com/media/11766/wset_l3wines_sat_en_may2022_issue2.pdf
+
+---
+
+### Implementation Structure
+
+**Locale Files:**
+```
+app/
+├── locales/
+│   ├── en.json           # English (default)
+│   ├── pt.json           # Portuguese
+│   ├── es.json           # Spanish
+│   ├── fr.json           # French
+│   └── ...
+├── data/
+│   └── wine-terminology/ # WSET terms per language
+│       ├── en.json
+│       ├── pt.json
+│       └── ...
+```
+
+**Locale File Structure:**
+```json
+{
+  "ui": {
+    "startTasting": "Start Tasting",
+    "next": "Next",
+    "back": "Back"
+  },
+  "wizard": {
+    "appearance": "Appearance",
+    "nose": "Nose",
+    "palate": "Palate",
+    "conclusions": "Conclusions"
+  },
+  "aromas": {
+    "primary": "Primary",
+    "secondary": "Secondary",
+    "tertiary": "Tertiary"
+  },
+  "terminology": {
+    "tannin": "Tannin",
+    "acidity": "Acidity",
+    "body": "Body"
+  }
+}
+```
+
+---
+
+### Language Detection Strategy
+
+**Auto-Detection (First Visit):**
+- Use `navigator.language` to detect browser language
+- Match to supported locale (e.g., `pt-BR` → `pt`)
+- Fall back to English if unsupported
+
+**Manual Override:**
+- Language switcher in header/footer
+- Persist selection in `localStorage`
+- On return visit, use saved preference
+
+---
+
+### Quality Assurance
+
+**Risk Mitigation:**
+
+| Risk | Mitigation |
+|------|------------|
+| Wrong translation/terminology | Native speaker review panel |
+| No human review capability | Crowdsourced corrections |
+| Maintenance burden | Prioritize high-value languages (PT first) |
+| Machine translation errors | Human review mandatory for all translations |
+
+**Review Process:**
+1. Initial translation by human (not machine)
+2. Native speaker with wine knowledge reviews
+3. Community can flag incorrect terms
+4. Quarterly terminology audits
+
+---
+
+### UI/UX Considerations
+
+**Text Expansion:**
+- German/French text 20-30% longer than English
+- Use flexible containers, avoid fixed widths
+- Test with longest translated strings
+
+**Font Support:**
+- `@fontsource/playfair-display` for English/Latin
+- Additional fonts needed for: Chinese, Japanese, Korean, Greek
+- Consider system fonts as fallback for CJK
+
+**RTL Support:**
+- Not required for v1-v3 (no RTL languages)
+-预留 for future: Persian if added later
+
+**Date/Number Formatting:**
+- Use `Intl.NumberFormat` and `Intl.DateTimeFormat`
+- Locale-aware formatting per language
+
+---
+
+### Integration Points
+
+**Components Using i18n:**
+- All UI components via `$t()` or `useI18n()`
+- Aroma wheel labels
+- Template output text
+- Error messages and tooltips
+
+**State Management:**
+- Language preference stored in localStorage
+- Sync with Pinia store for reactive updates
+
+---
+
+### Future Considerations (Post-v3)
+
+- **Gamified translations** — Users earn badges for contributions
+- **Wine vocabulary learning** — App teaches wine terms in multiple languages
+- **Audio pronunciation** — Audio clips for correct term pronunciation
+- **Regional variants** — Regional wine terminology (e.g., "espumante" vs "mousseux")
+
+---
+
+### Implementation Priority
+
+**Post-MVP (After v1.0):**
+
+1. **Install:** `npx nuxi@latest module add i18n`
+2. **Configure:** Set up locales, detection, fallback
+3. **Create:** English locale file (default)
+4. **Test:** Language switcher component
+5. **Launch:** v1 with English only
+6. **Phase 2:** Add Portuguese locale + terminology
+7. **Phase 3:** Expand to remaining 10 languages
+
+---
+
 ## Architecture Validation Results
 
 ### Coherence Validation ✅

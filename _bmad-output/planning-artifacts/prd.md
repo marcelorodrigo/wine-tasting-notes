@@ -108,6 +108,40 @@ vision:
 - Export to PDF
 - Aroma wheel customization
 
+### Internationalization (Future Phases)
+
+**Phase 4: Internationalization**
+
+The app will support multiple languages to serve global wine enthusiasts and WSET students worldwide.
+
+**Supported Languages (WSET-Approved):**
+
+| Phase | Language | Notes |
+|-------|----------|-------|
+| v1 | English | Default, broadest reach |
+| v2 | Portuguese | User's native language |
+| v3 | Spanish, French, Italian, German, Dutch, Chinese, Japanese, Korean, Greek, Turkish | Other WSET languages |
+
+**Not Supported (No WSET Materials):**
+- Russian, Polish, Persian
+
+**Key Features:**
+- Auto-detect browser language on first visit
+- Manual language switcher in header/footer
+- Language preference persisted in localStorage
+- All UI text + wine terminology translated
+- Localized date/number formatting
+
+**WSET Terminology Sourcing:**
+- Source from official WSET SAT PDFs
+- Priority: Target language (if available) → Translate from English
+- Never chain translate (EN→PT→ES forbidden)
+- Native speaker review required for accuracy
+
+**WSET Resources:**
+- Level 2 SAT: https://www.wsetglobal.com/media/13156/wset_l2wines_sat_en_may2023_issue2.pdf
+- Level 3 SAT: https://www.wsetglobal.com/media/11766/wset_l3wines_sat_en_may2022_issue2.pdf
+
 ---
 
 ## User Journey
