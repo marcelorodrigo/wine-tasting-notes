@@ -56,7 +56,7 @@ vision:
 ### Business Success
 
 - **Primary Metrics:** Visits, social shares, wines tasted
-- **3-Month Target:** At least **200 weekly wine tasting experiences created**
+- **3-Month Target:** At least **1,000 sessions in first 3 months**
 - **Engagement:** Users complete the full wizard flow and generate a note
 - **Virality:** Generated notes are shareable (via copy/paste to social platforms)
 
@@ -70,7 +70,7 @@ vision:
 ### Measurable Outcomes
 
 - Wizard completion rate > 70%
-- 200+ tasting notes generated per week by month 3
+- 1,000 tasting sessions in first 3 months
 - Average session: user completes full flow in < 3 minutes
 - Zero critical bugs on mobile Chrome/Safari
 
@@ -83,7 +83,7 @@ vision:
 **Core Features:**
 
 1. **Homepage** — Stunning landing page with Playfair Display typography, wine-themed aesthetic, and clear CTA to start tasting
-2. Smart Aroma Wheel — Interactive wheel filtered by wine type (white, red, rosé, sparkling, dessert)
+2. **Smart Aroma Wheel** — Interactive wheel filtered by wine type (white, red, rosé, sparkling, dessert)
 3. Dual Progress Indicator — Wine glass fills + mini timeline showing current step
 4. Style Switcher Preview — Toggle between 4 output styles (Professional, Casual, Bar Talk, Playful)
 5. Flexible Completion — Allow skipping any field, generate note with partial data
@@ -285,5 +285,3 @@ Every interaction is designed for complete beginners. The aroma wheel filters ou
 **Resource:** Focus on MVP only; defer everything post-launch
 
 ---
-
-**Select:** [A] Advanced Elicitation [P] Party Mode [C] Complete PRD

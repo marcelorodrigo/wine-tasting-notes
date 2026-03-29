@@ -96,7 +96,6 @@ A frictionless wizard that makes wine tasting structured, memorable, and shareab
 - Usage analytics integration
 
 ### v2.0 (Next phase)
-- Additional output styles (Casual, Bar Talk, Playful)
 - User accounts (optional save)
 - Export options (PDF, image)
 
