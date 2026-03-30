@@ -1,8 +1,11 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
+@import "@fontsource/playfair-display/400.css";
+@import "@fontsource/playfair-display/700.css";
 
 @theme static {
   --font-sans: 'Public Sans', sans-serif;
+  --font-serif: 'Playfair Display', serif;
 
   --color-green-50: #EFFDF5;
   --color-green-100: #D9FBE8;
