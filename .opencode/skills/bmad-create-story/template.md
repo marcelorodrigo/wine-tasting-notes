@@ -4,6 +4,11 @@ Status: ready-for-dev
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
+## 🚨 Development Checklist
+
+- [ ] Run `pnpm run lint` before committing - fix any issues
+- [ ] Run `pnpm run typecheck` before committing - fix any type errors
+
 ## Story
 
 As a {{role}},

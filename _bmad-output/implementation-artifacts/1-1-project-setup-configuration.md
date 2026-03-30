@@ -1,6 +1,11 @@
 # Story 1.1: Project Setup & Configuration
 
-Status: ready-for-dev
+Status: done
+
+## 🚨 Development Checklist
+
+- [x] Run `pnpm run lint` before committing - fix any issues
+- [x] Run `pnpm run typecheck` before committing - fix any type errors
 
 ## Story
 
@@ -14,22 +19,22 @@ so that I can start implementing features without setup delays.
 
 ## Tasks / Subtasks
 
-- [ ] Install @pinia/nuxt and configure tasting store (AC: #1)
-  - [ ] Run `npx nuxi@latest module add pinia`
-  - [ ] Create `app/stores/tasting.ts` with wizard state structure
-  - [ ] Verify store integrates with Nuxt UI components
-- [ ] Install @nuxtjs/seo and configure site metadata (AC: #1)
-  - [ ] Run `npx nuxi@latest module add seo`
-  - [ ] Configure nuxt.config.ts with site metadata
-  - [ ] Verify sitemap, robots, schema-org, opengraph work
-- [ ] Install @fontsource/playfair-display and configure CSS (AC: #1)
-  - [ ] Run `npm install @fontsource/playfair-display`
-  - [ ] Import in `app/assets/css/main.css`
-  - [ ] Configure Tailwind CSS to use Playfair Display
-- [ ] Verify all integrations work together (AC: #1)
-  - [ ] Run `npm run dev` and verify no errors
-  - [ ] Run `npm run lint` - fix any issues
-  - [ ] Run `npm run typecheck` - fix any type errors
+- [x] Install @pinia/nuxt and configure tasting store (AC: #1)
+  - [x] Run `npx nuxi@latest module add pinia`
+  - [x] Create `app/stores/tasting.ts` with wizard state structure
+  - [x] Verify store integrates with Nuxt UI components
+- [x] Install @nuxtjs/seo and configure site metadata (AC: #1)
+  - [x] Run `npx nuxi@latest module add seo`
+  - [x] Configure nuxt.config.ts with site metadata
+  - [x] Verify sitemap, robots, schema-org, opengraph work
+- [x] Install @fontsource/playfair-display and configure CSS (AC: #1)
+  - [x] Run `npm install @fontsource/playfair-display`
+  - [x] Import in `app/assets/css/main.css`
+  - [x] Configure Tailwind CSS to use Playfair Display
+- [x] Verify all integrations work together (AC: #1)
+  - [x] Run `npm run dev` and verify no errors
+  - [x] Run `npm run lint` - fix any issues
+  - [x] Run `npm run typecheck` - fix any type errors
   - [ ] Test dark/light mode toggle works
 
 ## Dev Notes
@@ -125,5 +130,21 @@ app/
 
 ### Completion Notes List
 
+- Installed @pinia/nuxt (v0.11.3) and pinia (v3.0.4)
+- Installed @nuxtjs/seo (v5.1.0) and nuxt-site-config (v4.0.7)
+- Installed @fontsource/playfair-display (v5.2.8)
+- Created `app/stores/tasting.ts` with complete wizard state management
+- Updated `nuxt.config.ts` with modules and SEO configuration
+- Updated `app/app.config.ts` with site configuration
+- Updated `app/assets/css/main.css` with font imports and Tailwind theme
+- Fixed lint errors in tasting.ts and nuxt.config.ts
+- All typechecks pass
+
 ### File List
+
+- package.json (modified)
+- app/stores/tasting.ts (new)
+- nuxt.config.ts (modified)
+- app/app.config.ts (modified)
+- app/assets/css/main.css (modified)
 
