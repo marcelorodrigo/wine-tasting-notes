@@ -142,6 +142,7 @@ app/
 
 ### File List
 
+- package.json (modified)
 - app/stores/tasting.ts (new)
 - nuxt.config.ts (modified)
 - app/app.config.ts (modified)

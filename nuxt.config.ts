@@ -19,6 +19,13 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.css'],
 
+  site: {
+    url: 'https://wine-tasting-notes.app',
+    name: 'Wine Tasting Notes',
+    description: 'Make wine tasting accessible to everyone through guided, structured exploration',
+    defaultLocale: 'en'
+  },
+
   routeRules: {
     '/': { prerender: true }
   },

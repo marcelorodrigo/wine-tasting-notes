@@ -61,17 +61,14 @@ export const useTastingStore = defineStore('tasting', {
 
   getters: {
     isComplete: (state): boolean => {
-      return state.wineType !== null
-        && (state.appearance.color !== ''
-          || state.appearance.intensity !== null
-          || state.aromas.primary.length > 0
-          || state.aromas.secondary.length > 0
-          || state.aromas.tertiary.length > 0
-          || state.palate.tannins !== null
-          || state.palate.acidity !== null
-          || state.palate.body !== null
-          || state.conclusions.finish !== null
-          || state.conclusions.agingPotential !== null)
+      if (state.wineType === null) return false
+
+      const hasAppearance = state.appearance.color !== '' || state.appearance.intensity !== null
+      const hasAromas = state.aromas.primary.length > 0 || state.aromas.secondary.length > 0 || state.aromas.tertiary.length > 0
+      const hasPalate = state.palate.tannins !== null && state.palate.acidity !== null && state.palate.body !== null
+      const hasConclusions = state.conclusions.finish !== null && state.conclusions.agingPotential !== null
+
+      return hasAppearance && hasAromas && hasPalate && hasConclusions
     },
 
     selectedAromas: (state): string[] => {
