@@ -290,15 +290,15 @@ Every interaction is designed for complete beginners. The aroma wheel filters ou
 
 ### Performance
 
-- Initial page load under 3 seconds on 3G connection
-- Time to interactive under 2 seconds
+- Initial page load under 1.5 seconds on 4G connection
+- Time to interactive under 1 second
 - Wizard step transitions complete within 500ms
 - Aroma wheel interactions (tap, scroll) feel instant (< 100ms)
 
 ### Quality
 
 - Zero critical bugs on supported browsers
-- Mobile responsiveness tested on devices 320px - 768px width
+- Mobile responsiveness tested on devices 360px - 768px width
 
 ---
 
