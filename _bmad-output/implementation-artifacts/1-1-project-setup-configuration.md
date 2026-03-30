@@ -1,6 +1,11 @@
 # Story 1.1: Project Setup & Configuration
 
-Status: review
+Status: done
+
+## 🚨 Development Checklist
+
+- [x] Run `pnpm run lint` before committing - fix any issues
+- [x] Run `pnpm run typecheck` before committing - fix any type errors
 
 ## Story
 
