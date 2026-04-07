@@ -15,8 +15,8 @@ importers:
         specifier: ^1.2.100
         version: 1.2.100
       '@iconify-json/simple-icons':
-        specifier: ^1.2.75
-        version: 1.2.75
+        specifier: ^1.2.77
+        version: 1.2.77
       '@nuxt/ui':
         specifier: ^4.6.0
         version: 4.6.0(@tiptap/extensions@3.21.0(@tiptap/core@3.21.0(@tiptap/pm@3.21.0))(@tiptap/pm@3.21.0))(@tiptap/y-tiptap@3.0.2(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.7)(y-protocols@1.0.7(yjs@13.6.30))(yjs@13.6.30))(change-case@5.4.4)(db0@0.3.4)(embla-carousel@8.6.0)(ioredis@5.10.1)(magicast@0.5.2)(tailwindcss@4.2.2)(typescript@5.9.3)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3))(vue-router@5.0.4(@vue/compiler-sfc@3.5.31)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.31(typescript@5.9.3)))(vue@3.5.31(typescript@5.9.3)))(vue@3.5.31(typescript@5.9.3))(yjs@13.6.30)
@@ -504,8 +504,8 @@ packages:
   '@iconify-json/lucide@1.2.100':
     resolution: {integrity: sha512-vCrhQ/6T530HEMkWOkSyedvMiuQdVU1tMHEs32k4tklJmCmjokH3Dej6ycvfLt7kftBSQ2kPSUiyOpoW3uOF5g==}
 
-  '@iconify-json/simple-icons@1.2.75':
-    resolution: {integrity: sha512-KvcCUbvcBWb0sbqLIxHoY8z5/piXY08wcY9gfMhF+ph3AfzGMaSmZFkUY71HSXAljQngXkgs4bdKdekO0HQWvg==}
+  '@iconify-json/simple-icons@1.2.77':
+    resolution: {integrity: sha512-oaENvo6C3BkAEWMlcQA3XemxU9v2SFOTlApSUCODAkIu1haeLCjzrmH3HgmGqjRnJjM+LevO8sA+MgdMHBFBDA==}
 
   '@iconify/collections@1.0.667':
     resolution: {integrity: sha512-VJYrtbHyi7HAlSpGv9qsVZMi94bVbrOasCmHSRn0Deu/neOmGUywqO7Ufi0gG1Cmvh/amfZeoXlgj9ErGAhEIg==}
@@ -6140,7 +6140,7 @@ snapshots:
     dependencies:
       '@iconify/types': 2.0.0
 
-  '@iconify-json/simple-icons@1.2.75':
+  '@iconify-json/simple-icons@1.2.77':
     dependencies:
       '@iconify/types': 2.0.0
 
