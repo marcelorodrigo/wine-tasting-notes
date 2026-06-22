@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@fontsource/playfair-display": "^5.2.8",
-    "@iconify-json/lucide": "^1.2.111",
+    "@iconify-json/lucide": "^1.2.113",
     "@iconify-json/simple-icons": "^1.2.86",
     "@nuxt/ui": "^4.8.2",
     "@nuxtjs/seo": "^5.2.3",
