@@ -12,12 +12,12 @@
   },
   "dependencies": {
     "@fontsource/playfair-display": "^5.2.8",
-    "@iconify-json/lucide": "^1.2.113",
+    "@iconify-json/lucide": "^1.2.122",
     "@iconify-json/simple-icons": "^1.2.86",
     "@nuxt/ui": "^4.8.2",
     "@nuxtjs/seo": "^5.2.3",
     "@pinia/nuxt": "^0.11.3",
-    "nuxt": "^4.4.8",
+    "nuxt": "^4.5.2",
     "nuxt-site-config": "^4.1.0",
     "pinia": "^3.0.4",
     "tailwindcss": "^4.3.1"
@@ -28,5 +28,5 @@
     "typescript": "^5.9.3",
     "vue-tsc": "^3.2.6"
   },
-  "packageManager": "pnpm@10.32.1"
+  "packageManager": "pnpm@11.25.0"
 }
