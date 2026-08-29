@@ -241,15 +241,27 @@ Draft validation rules:
 interface SatFieldDefinition {
   id: string
   sectionId: TastingSectionId
+  order: number
   labelKey: string
   promptKey: string
   helpKey?: string
   control: 'single' | 'multi' | 'text-list'
   required: boolean
+  minSelections: number
+  maxSelections: number
   optionIds?: string[]
   applicabilityRuleId?: ApplicabilityRuleId
 }
 ```
+
+SAT field metadata rules:
+
+- `order` is a non-negative integer unique within its section.
+- `minSelections` and `maxSelections` are integers satisfying `0 <= minSelections <= maxSelections`.
+- `required` is equivalent to `minSelections > 0`; definitions must not express conflicting values.
+- `single` fields have `maxSelections: 1`, while `multi` bounds count selected option IDs.
+- `text-list` bounds count entries; the existing per-entry free-text limits remain separate.
+- Renderers and validators consume these definition values instead of hard-coded selection limits.
 
 ### Aroma Node
 
@@ -258,6 +270,7 @@ interface AromaNode {
   id: string
   parentId: string | null
   kind: 'family' | 'category' | 'descriptor'
+  selectable: boolean
   labelKey: string
   order: number
   colourToken: string
@@ -269,7 +282,8 @@ Aroma rules:
 - IDs remain stable across translations.
 - Every non-root node references an existing parent.
 - Sibling order is unique and deterministic.
-- Only nodes designated selectable may enter aroma or flavour selections.
+- Every node explicitly declares `selectable`; families and categories are navigation-only, and only nodes with `selectable: true` may enter aroma or flavour selections.
+- `validateAromaTaxonomy` rejects invalid selectable states, and all selection consumers use the same predicate.
 - Hierarchy and wheel components consume the same collection and emit the same IDs.
 - Nose-to-palate suggestions never copy values automatically.
 
@@ -339,7 +353,17 @@ Encoding pipeline:
 5. Prefix it with `#note=v1.`.
 6. Reject a final fragment longer than 8,000 characters.
 
-Decoding reverses the process, rejects extra schema keys, validates every identifier, and marks the result as `source: 'shared'`.
+Decoding pipeline:
+
+1. Read the complete fragment on the client.
+2. Reject fragments longer than 8,000 characters before base64 decoding or invoking `lz-string`.
+3. Check the `#note=v1.` prefix and supported version.
+4. Decode the unpadded base64url payload.
+5. Use an `lz-string`-compatible bounded decoder that stops as soon as decompression would produce more than 32,000 characters. A post-decompression length check is not sufficient.
+6. Parse the bounded result as JSON and reject extra schema keys.
+7. Validate every identifier and map the result to a draft with `source: 'shared'`.
+
+Encoded or decompressed values that exceed their limits return `SharePayloadTooLarge`; malformed compression or JSON returns `InvalidSharedPayload`.
 
 ## Core Modules and Responsibilities
 
@@ -390,8 +414,8 @@ Decoding reverses the process, rejects extra schema keys, validates every identi
 | `SectionReviewCard` | Section definitions and answers | Edit request | Present localized human-readable review data. |
 | `AromaPicker` | Taxonomy and selected IDs | Selection and view changes | Coordinate hierarchy, search, wheel, and selected chips. |
 | `AromaSearch` | Taxonomy and query | Contextual matches | Search normalized labels with ancestor context. |
-| `AromaHierarchy` | Taxonomy, focus node, and selected IDs | Focus and selection changes | Provide the first-class browse and drill-down interaction. |
-| `AromaWheel` | Taxonomy, focus node, geometry, and selected IDs | Focus and selection changes | Present the responsive deterministic SVG view. |
+| `AromaHierarchy` | Taxonomy, focus node, and selected IDs | Focus and selection changes | Provide the first-class browse and drill-down interaction; emit selection changes only for nodes with `selectable: true`. |
+| `AromaWheel` | Taxonomy, focus node, geometry, and selected IDs | Focus and selection changes | Present the responsive deterministic SVG view; allow navigation through non-selectable nodes but emit selection changes only for nodes with `selectable: true`. |
 | `SelectedAromas` | Selected IDs | Remove events | Show selected terms with category context. |
 | `GeneratedNoteView` | Generated note | Rendered note | Present title, section paragraphs, and accessible text structure. |
 | `ShareActions` | Generated text and complete draft | Copy, native-share, and link actions | Coordinate supported sharing mechanisms. |
@@ -403,11 +427,11 @@ Decoding reverses the process, rejects extra schema keys, validates every identi
 | Validator | Input | Rules |
 | --- | --- | --- |
 | `TastingDraftSchema` | Restored session value | Schema version, limits, enums, known IDs, strict keys, and valid combinations. |
-| `SharedNoteV1Schema` | Decompressed fragment value | Strict compact DTO, payload limits, known IDs, and valid combinations. |
-| `validateSection` | Draft and section ID | Required applicable values and selection limits. |
+| `SharedNoteV1Schema` | Bounded decompressed fragment value | Strict compact DTO, known IDs, and valid combinations after input and decompressed-size limits are enforced. |
+| `validateSection` | Draft and section ID | Required applicable values and definition-provided selection bounds. |
 | `validateDraftForGeneration` | Full draft | Complete applicable sections and no stale or unknown answers. |
-| `validateAromaTaxonomy` | Aroma node collection | Unique IDs, valid parents, no cycles, sibling order, and selectable-node rules. |
-| `validateSatDefinitions` | Fields and options | Unique IDs, valid option and translation references, and registered applicability rules. |
+| `validateAromaTaxonomy` | Aroma node collection | Unique IDs, valid parents, no cycles, sibling order, explicit selectable states, and selectable-node rules. |
+| `validateSatDefinitions` | Fields and options | Unique IDs, field order, cardinality bounds, valid option and translation references, and registered applicability rules. |
 | `validateArticleRegistry` | Academy content | Unique slugs, required metadata, sources, review dates, CTA routes, and known block types. |
 
 ## External Boundaries
@@ -491,12 +515,13 @@ Decoding reverses the process, rejects extra schema keys, validates every identi
 ### Shared Link Opening
 
 1. `/tasting/shared` reads the fragment on the client.
-2. The decoder checks the prefix and version before decompression.
-3. A strict schema and canonical data validate all values.
-4. The mapper creates a `source: 'shared'` draft.
-5. The page renders observations and generated prose.
-6. Shared state never enters session draft persistence.
-7. “Taste this wine yourself” starts an empty local draft only after explicit action.
+2. The decoder rejects a fragment longer than 8,000 characters before base64 decoding or decompression.
+3. The decoder checks the prefix and version, then uses bounded decompression that stops beyond 32,000 output characters.
+4. A strict schema and canonical data validate all values.
+5. The mapper creates a `source: 'shared'` draft.
+6. The page renders observations and generated prose.
+7. Shared state never enters session draft persistence.
+8. “Taste this wine yourself” starts an empty local draft only after explicit action.
 
 ### Academy Content
 
@@ -527,7 +552,7 @@ Decoding reverses the process, rejects extra schema keys, validates every identi
 | `InvalidAromaTaxonomy` | `sat.aroma-taxonomy-invalid` | Aroma data contains invalid parents, duplicate IDs, or cycles. |
 | `InvalidSharedPayload` | `share.invalid-payload` | Fragment decoding or strict schema validation fails. |
 | `UnsupportedShareVersion` | `share.unsupported-version` | The fragment version is not supported. |
-| `SharePayloadTooLarge` | `share.payload-too-large` | The final encoded fragment exceeds 8,000 characters. |
+| `SharePayloadTooLarge` | `share.payload-too-large` | An encoded fragment exceeds 8,000 characters or bounded decompression would produce more than 32,000 characters. |
 | `UnknownSharedIdentifier` | `share.unknown-identifier` | A shared value references an unknown canonical ID. |
 | `ClipboardUnavailable` | `clipboard.unavailable` | No supported clipboard path exists. |
 | `CopyFailed` | `clipboard.copy-failed` | The clipboard operation rejects. |
@@ -1102,6 +1127,7 @@ The repository contains typed, versioned canonical SAT sections and approved opt
 - Transcribe the approved user-supplied Appearance, Nose, Palate, and Conclusions terms.
 - Assign stable dot-separated IDs.
 - Store label, prompt, help, order, control, and selection-cardinality metadata.
+- Make `order`, `minSelections`, and `maxSelections` explicit in `SatFieldDefinition`.
 - Add source expectations in `test/fixtures/sat-source-expectations.ts`.
 - Exclude applicability behavior from this issue.
 
@@ -1111,12 +1137,13 @@ The repository contains typed, versioned canonical SAT sections and approved opt
 - Official wording matches the recorded source.
 - IDs are unique and independent of English labels.
 - Every field references existing options and localization keys.
+- Field order is unique within each section, and selection bounds are valid for the field control.
 - Provenance records schema and source version.
 - The source-expectation fixture detects omission and accidental duplication.
 
 **Tests**
 
-- Unit-test uniqueness, order, option references, translation keys, and expected counts.
+- Unit-test uniqueness, order, cardinality bounds, option references, translation keys, and expected counts.
 - Test that data modules do not import Vue or Nuxt.
 
 ---
@@ -1136,7 +1163,7 @@ The complete approved aroma and flavour lexicon exists as one ordered, validated
 - Create `app/data/sat/v1/aromas.ts`.
 - Add aroma-specific types to `app/domain/sat/types.ts`.
 - Transcribe families, categories, and descriptors from the approved source.
-- Assign stable IDs, parents, sibling order, selectable state, and color tokens.
+- Assign stable IDs, parents, sibling order, explicit `selectable: boolean` state, and color tokens.
 - Implement taxonomy validation in `app/domain/sat/definition-validation.ts`.
 - Extend source-expectation fixtures with counts and key paths.
 
@@ -1146,12 +1173,12 @@ The complete approved aroma and flavour lexicon exists as one ordered, validated
 - IDs are unique and parent references are valid.
 - The graph has no cycle.
 - Sibling ordering is deterministic.
-- Selectable nodes are explicitly identified.
+- Selectable nodes are explicitly identified by `selectable: true`; non-selectable families and categories remain navigation-only.
 - Every node has an English translation key.
 
 **Tests**
 
-- Unit-test duplicates, missing parents, cycles, sibling order, selectable nodes, translation keys, and expected counts.
+- Unit-test duplicates, missing parents, cycles, sibling order, selectable states, translation keys, and expected counts.
 - Include mutation-style negative fixtures that prove each validator can fail.
 
 ---
@@ -1205,7 +1232,7 @@ The application can derive valid, incomplete, and complete states for each SAT s
 
 - Create `app/domain/sat/completion.ts`.
 - Implement `validateSection`, `getSectionCompletion`, and `validateDraftForGeneration` contracts.
-- Validate required applicable fields, selection limits, and known values.
+- Validate required applicable fields, definition-provided selection bounds, and known values.
 - Return field IDs and localized error codes rather than display strings.
 - Exclude optional unanswered fields from incomplete counts.
 
@@ -1253,7 +1280,7 @@ Framework-independent utilities provide normalized search, tree navigation, brea
 **Tests**
 
 - Unit-test search normalization, ordering, breadcrumbs, and empty results.
-- Unit-test geometry boundaries, focus roots, stable ordering, and representative snapshots.
+- Unit-test geometry boundaries, focus roots, stable ordering, selectable-node handling, and representative snapshots.
 - Prefer numeric assertions over broad snapshots.
 
 ## Academy Content System
@@ -1492,7 +1519,7 @@ The public site includes reviewed frequently asked questions, methodology/about 
 
 **Type:** Domain model  
 **Labels:** `domain`, `state`, `testing`  
-**Depends on:** WT-013, WT-015, WT-016  
+**Depends on:** WT-013, WT-014, WT-015, WT-016
 
 **Pull request outcome**
 
@@ -1501,7 +1528,7 @@ The application can create and strictly parse version 1 tasting drafts without i
 **Scope**
 
 - Create tasting types, Zod schema, error types, and `createEmptyDraft`.
-- Implement string limits, known-ID validation, free-text normalization, and source values.
+- Implement string limits, known-ID validation against the versioned option and aroma registries, free-text normalization, and source values.
 - Inject the clock used for timestamps.
 - Implement `sanitizeDraft` and stale-answer clearing integration.
 - Reject unknown schema keys at persistence boundaries.
@@ -1644,12 +1671,14 @@ The first complete workflow section renders from canonical definitions using reu
 - Add `SatFieldRenderer.vue`, `SingleChoiceField.vue`, `MultiChoiceField.vue`, `TextObservationField.vue`, and `SectionValidationSummary.vue`.
 - Build `/tasting/appearance` from applicable definitions.
 - Add prompt, official label, help, required, error, and completion presentation.
+- Render field order and selection limits from `SatFieldDefinition` metadata.
 - Link validation-summary errors to fields and focus them.
 - Save updates through store actions.
 
 **Acceptance criteria**
 
 - Appearance field order and options come from canonical data.
+- Multi-choice and text-list limits come from field definitions rather than component rules.
 - Controls expose labels, selected state, help, and errors to assistive technology.
 - Validation links focus the correct field.
 - Text limits are visible and enforced.
@@ -1660,7 +1689,7 @@ The first complete workflow section renders from canonical definitions using reu
 
 - Nuxt-test each reusable field component using `mountSuspended`.
 - Nuxt-test the page with a real test Pinia and localized data.
-- Test keyboard choice selection, errors, focus links, text limits, and recovered state.
+- Test keyboard choice selection, definition-provided selection limits, errors, focus links, text limits, and recovered state.
 
 ---
 
@@ -1684,7 +1713,7 @@ Users can search, browse, select, and remove every aroma descriptor without usin
 
 **Acceptance criteria**
 
-- Every selectable descriptor is reachable by hierarchy navigation.
+- Every node with `selectable: true` is reachable by hierarchy navigation and only selectable nodes can be selected.
 - Search handles case and diacritics.
 - Search results include family/category context.
 - Selection is visible and announced.
@@ -1693,7 +1722,7 @@ Users can search, browse, select, and remove every aroma descriptor without usin
 
 **Tests**
 
-- Nuxt-test search, drill-down, breadcrumbs, selection, removal, focus, announcements, empty results, and canonical event values.
+- Nuxt-test search, drill-down, breadcrumbs, selectable and non-selectable nodes, selection, removal, focus, announcements, empty results, and canonical event values.
 - Playwright-test complete keyboard selection and run axe on browse, search, and selected states.
 
 ---
@@ -1748,12 +1777,14 @@ Users with suitable viewports can use a responsive SVG wheel that remains synchr
 - Support focus, category zoom, descriptor selection, breadcrumbs, and return to all families.
 - Add pointer and keyboard interactions.
 - Synchronize wheel and hierarchy through `AromaPicker`'s one selection state.
+- Allow navigation through non-selectable nodes, but emit selection changes only for nodes with `selectable: true`.
 - Default to hierarchy view below the empirically chosen usable breakpoint.
 - Persist only the preferred view through `PreferencesStore`.
 
 **Acceptance criteria**
 
 - Wheel and hierarchy show identical selections immediately.
+- Non-selectable wheel nodes cannot enter the shared selection state.
 - Wheel zoom does not lose selections.
 - All wheel actions have accessible names and keyboard equivalents.
 - Category and selection do not rely on color alone.
@@ -1762,7 +1793,7 @@ Users with suitable viewports can use a responsive SVG wheel that remains synchr
 
 **Tests**
 
-- Nuxt-test SVG semantics, keyboard events, zoom, reset, selection synchronization, and preference changes.
+- Nuxt-test SVG semantics, keyboard events, zoom, reset, selectable and non-selectable node behavior, selection synchronization, and preference changes.
 - Unit-test any additional geometry behavior.
 - Playwright-test pointer and keyboard use at supported desktop/tablet sizes plus hierarchy fallback on mobile.
 - Run axe in both views.
@@ -1809,7 +1840,7 @@ Users can complete the Palate assessment with correct conditional fields and opt
 
 **Type:** Tasting sections  
 **Labels:** `tasting-flow`, `review`, `accessibility`  
-**Depends on:** WT-016, WT-028, WT-029, WT-031, WT-033  
+**Depends on:** WT-016, WT-024, WT-028, WT-029, WT-031, WT-033
 
 **Pull request outcome**
 
@@ -1837,7 +1868,7 @@ Users can complete Conclusions, review all applicable observations, edit any sec
 **Tests**
 
 - Nuxt-test Conclusions fields, incomplete review, complete review, localized labels, edit links, and generation gating.
-- Unit-test worked-example fixtures against the draft schema.
+- Unit-test WT-024 worked-example fixtures against the draft schema.
 - Playwright-test review editing and return navigation.
 
 ## Generated Notes and Sharing
@@ -1933,6 +1964,8 @@ Complete tastings round-trip through a strict compact version 1 URL-fragment pay
 - Implement LZ compression and unpadded base64url encoding.
 - Use `#note=v1.<payload>`.
 - Enforce the 8,000-character final fragment limit.
+- Reject incoming fragments over 8,000 characters before base64 decoding or decompression.
+- Use bounded `lz-string`-compatible decompression that stops beyond 32,000 output characters.
 - Reject malformed payloads, unknown IDs, extra keys, and unsupported versions.
 
 **Acceptance criteria**
@@ -1942,12 +1975,13 @@ Complete tastings round-trip through a strict compact version 1 URL-fragment pay
 - Output is canonical for identical input.
 - Unsupported versions produce a distinct typed error.
 - Oversized output fails before a URL is returned.
+- Oversized encoded input and decompression expansion produce `SharePayloadTooLarge` without unbounded decompression or JSON parsing.
 - Decoded drafts always use `source: 'shared'`.
 
 **Tests**
 
 - Unit-test every representative tasting fixture.
-- Test malformed base64url, decompression failure, invalid JSON, extra keys, unknown IDs, unsupported versions, Unicode, and size boundary values.
+- Test malformed base64url, decompression failure, bounded expansion beyond 32,000 characters, invalid JSON, extra keys, unknown IDs, unsupported versions, Unicode, and encoded/decompressed size boundary values.
 - Include property-style round-trip cases across option combinations where practical.
 
 ---
@@ -1969,6 +2003,7 @@ Users can explicitly create a warned fragment link and recipients can open a rea
 - Require confirmation before every newly generated link.
 - Add copy and native-share support for the link.
 - Render invalid, oversized, unknown-ID, and unsupported-version states.
+- Render both encoded-size and decompression-expansion limit errors as actionable oversized-payload states.
 - Offer “Taste this wine yourself” as an explicit empty local start.
 - Never move shared state into `TastingStore` draft persistence.
 
@@ -1984,7 +2019,7 @@ Users can explicitly create a warned fragment link and recipients can open a rea
 
 **Tests**
 
-- Nuxt-test confirmation, cancellation, link actions, decoder states, read-only rendering, and no repository writes.
+- Nuxt-test confirmation, cancellation, link actions, invalid and oversized decoder states, read-only rendering, and no repository writes.
 - Playwright-test complete link creation and opening in a fresh context.
 - Inspect browser requests to prove fragments are not sent to the host.
 - Assert no tasting data appears in local storage, cookies, or query strings.
@@ -2266,12 +2301,13 @@ WT-001/WT-005/WT-011 -> WT-013 -> WT-015 -> WT-016
 WT-001/WT-005/WT-011 -> WT-014 -> WT-017
 
 Tasting state:
-WT-013/WT-015/WT-016 -> WT-025 -> WT-026 -> WT-027 -> WT-028
+WT-013/WT-014/WT-015/WT-016 -> WT-025 -> WT-026 -> WT-027 -> WT-028
 
 Tasting UI:
 WT-028 -> WT-029
 WT-014/WT-017/WT-012 -> WT-030 -> WT-031 -> WT-032
 WT-029/WT-031/WT-032 -> WT-033 -> WT-034
+WT-024 -> WT-034
 
 Notes and sharing:
 WT-034 -> WT-035 -> WT-036
