@@ -9,11 +9,11 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "test": "vitest",
+    "test": "vitest run",
     "test:watch": "vitest --watch",
-    "test:coverage": "vitest --coverage",
-    "test:unit": "vitest --project unit",
-    "test:nuxt": "vitest --project nuxt"
+    "test:coverage": "vitest run --coverage",
+    "test:unit": "vitest run --project unit",
+    "test:nuxt": "vitest run --project nuxt"
   },
   "dependencies": {
     "@nuxt/test-utils": "^4.2.0",
