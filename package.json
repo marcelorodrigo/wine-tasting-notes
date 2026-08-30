@@ -25,6 +25,8 @@
     "test:e2e:smoke": "playwright test smoke.spec.ts"
   },
   "dependencies": {
+    "@fontsource-variable/manrope": "^5.0.0",
+    "@fontsource-variable/newsreader": "^5.0.0",
     "@nuxt/test-utils": "^4.2.0",
     "@nuxtjs/i18n": "^10.6.0",
     "@nuxtjs/robots": "^6.2.0",
