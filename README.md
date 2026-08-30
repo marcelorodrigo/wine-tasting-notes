@@ -1,21 +1,11 @@
 # Wine Tasting Notes
 
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=marcelorodrigo_wine-tasting-notes&metric=alert_status)](https://sonarcloud.io/dashboard?id=marcelorodrigo_wine-tasting-notes)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=marcelorodrigo_wine-tasting-notes&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=marcelorodrigo_wine-tasting-notes)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=marcelorodrigo_wine-tasting-notes&metric=coverage)](https://sonarcloud.io/dashboard?id=marcelorodrigo_wine-tasting-notes)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=marcelorodrigo_wine-tasting-notes&metric=code_smells)](https://sonarcloud.io/dashboard?id=marcelorodrigo_wine-tasting-notes)
+
 Educational wine-tasting academy and adaptive guided tasting tool built with Nuxt 4.
-
-## Requirements
-
-- **Node.js 26** (see `.nvmrc`)
-- **pnpm 12.1.0** (see `packageManager` in `package.json`)
-
-## Setup
-
-Enable corepack and install dependencies:
-
-```bash
-corepack enable
-corepack prepare pnpm@12.1.0 --activate
-pnpm install
-```
 
 ## Development
 
