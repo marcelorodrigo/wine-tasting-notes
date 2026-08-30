@@ -212,7 +212,6 @@ describe('BaseDialog', () => {
       props: { open: true, title: 'Title', returnFocus: false },
     })
     const dialog = wrapper.find('dialog')
-    // @ts-expect-error -- focus exists at runtime but not in happy-dom types
     const focusSpy = vi.spyOn(dialog.element, 'focus')
     wrapper.vm.close()
     await wrapper.vm.$nextTick()

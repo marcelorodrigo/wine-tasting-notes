@@ -50,7 +50,7 @@ describe('useFocusTrap', () => {
   it('traps Tab key from last to first element', () => {
     const { activate } = useFocusTrap()
     activate(container)
-    const last = container.querySelector('#link1')!
+    const last = container.querySelector<HTMLElement>('#link1')!
     last.focus()
     const event = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true })
     const preventSpy = vi.spyOn(event, 'preventDefault')
@@ -61,7 +61,7 @@ describe('useFocusTrap', () => {
   it('traps Shift+Tab from first to last element', () => {
     const { activate } = useFocusTrap()
     activate(container)
-    const first = container.querySelector('#btn1')!
+    const first = container.querySelector<HTMLElement>('#btn1')!
     first.focus()
     const event = new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true })
     const preventSpy = vi.spyOn(event, 'preventDefault')
@@ -101,7 +101,6 @@ describe('useFocusTrap', () => {
     const trigger = document.createElement('button')
     trigger.id = 'trigger'
     document.body.appendChild(trigger)
-    // @ts-expect-error -- focus exists at runtime but not in happy-dom types
     const focusSpy = vi.spyOn(trigger, 'focus')
 
     const { activate, restoreFocus } = useFocusTrap()
@@ -136,8 +135,7 @@ describe('useFocusTrap', () => {
   })
 
   it('focusElement focuses matching element and returns true', () => {
-    const input = container.querySelector('#input1')!
-    // @ts-expect-error -- focus exists at runtime but not in happy-dom types
+    const input = container.querySelector<HTMLElement>('#input1')!
     const focusSpy = vi.spyOn(input, 'focus')
     const { focusElement } = useFocusTrap()
     const result = focusElement(container, '#input1')
@@ -155,7 +153,6 @@ describe('useFocusTrap', () => {
     const trigger = document.createElement('button')
     trigger.id = 'custom-trigger'
     document.body.appendChild(trigger)
-    // @ts-expect-error -- focus exists at runtime but not in happy-dom types
     const focusSpy = vi.spyOn(trigger, 'focus')
 
     const { activate, restoreFocus } = useFocusTrap()
