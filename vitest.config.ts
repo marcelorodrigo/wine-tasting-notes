@@ -29,6 +29,7 @@ export default defineConfig({
     coverage: {
       enabled: true,
       provider: 'v8',
+      reporter: ['text', 'html', 'lcov'],
     },
   },
 })
