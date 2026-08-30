@@ -36,6 +36,7 @@ const focusDialogOpen = ref(false)
 
       <BaseButton data-testid="dialog-focus-trigger" @click="focusDialogOpen = true">Open focus dialog</BaseButton>
       <BaseDialog v-model:open="focusDialogOpen" title="Focus dialog" initial-focus="#focus-target" data-testid="dialog-focus-panel">
+        <label for="focus-target">Focus target</label>
         <input id="focus-target" data-testid="focus-target" type="text" placeholder="Focus me">
         <template #footer>
           <BaseButton data-testid="dialog-focus-action" @click="focusDialogOpen = false">Close</BaseButton>

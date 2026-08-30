@@ -222,7 +222,7 @@ describe('BaseDialog', () => {
     const wrapper = await mountSuspended(BaseDialog, {
       props: { open: true, title: 'Title' },
     })
-    wrapper.unmount()
+    expect(() => wrapper.unmount()).not.toThrow()
   })
 
   it('sets aria-labelledby on dialog when title prop is present', async () => {

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useId } from 'vue'
+
 const props = withDefaults(defineProps<{
   value: number | null
   max?: number
@@ -13,6 +15,7 @@ const props = withDefaults(defineProps<{
   text: undefined,
 })
 
+const progressId = `progress-${useId()}`
 const clampedValue = computed(() => {
   if (props.value === null) return null
   return Math.max(0, Math.min(props.value, props.max))
@@ -32,11 +35,13 @@ const variantClasses: Record<string, string> = {
   <div>
     <label
       v-if="label"
+      :for="progressId"
       class="block text-sm font-medium text-foreground mb-1"
     >
       <slot name="label">{{ label }}</slot>
     </label>
     <progress
+      :id="progressId"
       :value="progressValue"
       :max="max"
       :aria-label="label"

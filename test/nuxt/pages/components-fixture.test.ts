@@ -16,27 +16,24 @@ describe('components-fixture page', () => {
     expect(wrapper.find('[data-testid="main-content"]').exists()).toBe(true)
   })
 
-  it('renders all button variants', async () => {
+  it.each([
+    {
+      name: 'button variants',
+      selectors: ['btn-primary', 'btn-secondary', 'btn-ghost', 'btn-danger', 'btn-busy', 'btn-disabled'],
+    },
+    {
+      name: 'card variants',
+      selectors: ['card-default', 'card-outlined', 'card-elevated'],
+    },
+    {
+      name: 'dialog trigger and panel',
+      selectors: ['dialog-trigger', 'dialog-panel'],
+    },
+  ])('renders $name', async ({ selectors }) => {
     const wrapper = await mountSuspended(ComponentsFixture)
-    expect(wrapper.find('[data-testid="btn-primary"]').exists()).toBe(true)
-    expect(wrapper.find('[data-testid="btn-secondary"]').exists()).toBe(true)
-    expect(wrapper.find('[data-testid="btn-ghost"]').exists()).toBe(true)
-    expect(wrapper.find('[data-testid="btn-danger"]').exists()).toBe(true)
-    expect(wrapper.find('[data-testid="btn-busy"]').exists()).toBe(true)
-    expect(wrapper.find('[data-testid="btn-disabled"]').exists()).toBe(true)
-  })
-
-  it('renders card variants', async () => {
-    const wrapper = await mountSuspended(ComponentsFixture)
-    expect(wrapper.find('[data-testid="card-default"]').exists()).toBe(true)
-    expect(wrapper.find('[data-testid="card-outlined"]').exists()).toBe(true)
-    expect(wrapper.find('[data-testid="card-elevated"]').exists()).toBe(true)
-  })
-
-  it('renders dialog with trigger and panel', async () => {
-    const wrapper = await mountSuspended(ComponentsFixture)
-    expect(wrapper.find('[data-testid="dialog-trigger"]').exists()).toBe(true)
-    expect(wrapper.find('[data-testid="dialog-panel"]').exists()).toBe(true)
+    for (const selector of selectors) {
+      expect(wrapper.find(`[data-testid="${selector}"]`).exists()).toBe(true)
+    }
   })
 
   it('renders fieldset with all props', async () => {

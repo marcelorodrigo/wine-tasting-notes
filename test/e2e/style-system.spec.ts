@@ -13,7 +13,7 @@ test('no remote requests are attempted', async ({ page }) => {
 test('Manrope and Newsreader font families are available', async ({ page }) => {
   await page.goto('/')
 
-  await page.waitForLoadState('networkidle')
+  await expect.poll(() => page.evaluate(() => document.fonts.status)).toBe('loaded')
 
   const fonts = await page.evaluate(async () => {
     await document.fonts.ready
@@ -34,7 +34,7 @@ test('font responses are same-origin generated assets', async ({ page }) => {
   const guard = installLocalOnlyNetworkGuard(page)
 
   await page.goto('/')
-  await page.waitForLoadState('networkidle')
+  await expect.poll(() => page.evaluate(() => document.fonts.status)).toBe('loaded')
 
   expect(guard.localFontUrls.length).toBeGreaterThan(0)
 

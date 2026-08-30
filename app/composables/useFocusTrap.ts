@@ -21,26 +21,24 @@ export function useFocusTrap() {
         event.preventDefault()
         return
       }
-      const first = elements[0]
-      const last = elements[elements.length - 1]
-      if (event.shiftKey) {
-        if (document.activeElement === first && last) {
-          event.preventDefault()
-          last.focus()
-        }
-      } else {
-        if (document.activeElement === last && first) {
-          event.preventDefault()
-          first.focus()
-        }
-      }
+       const first = elements.at(0)
+       const last = elements.at(-1)
+       if (event.shiftKey && document.activeElement === first && last) {
+         event.preventDefault()
+         last.focus()
+         return
+       }
+       if (!event.shiftKey && document.activeElement === last && first) {
+         event.preventDefault()
+         first.focus()
+       }
     }
     container.addEventListener('keydown', handler)
     const autofocus = container.querySelector<HTMLElement>('[autofocus]')
     if (autofocus) {
       autofocus.focus()
     } else if (focusable.length > 0) {
-      focusable[0]!.focus()
+       focusable.at(0)!.focus()
     } else {
       container.setAttribute('tabindex', '-1')
       container.focus()
