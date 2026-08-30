@@ -72,6 +72,20 @@ describe('BaseProgress', () => {
     expect(wrapper.find('progress').classes().join(' ')).toContain('bg-success')
   })
 
+  it('shows 0 / max when value is null and showValue is true', async () => {
+    const wrapper = await mountSuspended(BaseProgress, {
+      props: { value: null, label: 'Progress', showValue: true },
+    })
+    expect(wrapper.text()).toContain('0 / 100')
+  })
+
+  it('hides label element when label is empty string', async () => {
+    const wrapper = await mountSuspended(BaseProgress, {
+      props: { value: 50, label: '' },
+    })
+    expect(wrapper.find('label').exists()).toBe(false)
+  })
+
   it('clamps out-of-range values', async () => {
     const wrapper = await mountSuspended(BaseProgress, {
       props: { value: 150, max: 100, label: 'Progress', showValue: true },

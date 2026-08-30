@@ -67,6 +67,24 @@ describe('BaseFieldset', () => {
     expect(wrapper.find('[role="alert"]').exists()).toBe(false)
   })
 
+  it('renders help via slot only without help prop', async () => {
+    const wrapper = await mountSuspended(BaseFieldset, {
+      props: { id: 'test' },
+      slots: { help: '<span>Slot help</span>' },
+    })
+    expect(wrapper.find('#test-help').exists()).toBe(true)
+    expect(wrapper.text()).toContain('Slot help')
+  })
+
+  it('renders error via slot only without error prop', async () => {
+    const wrapper = await mountSuspended(BaseFieldset, {
+      props: { id: 'test', invalid: true },
+      slots: { error: '<span>Slot error</span>' },
+    })
+    expect(wrapper.find('#test-error').exists()).toBe(true)
+    expect(wrapper.text()).toContain('Slot error')
+  })
+
   it('forwards attributes', async () => {
     const wrapper = await mountSuspended(BaseFieldset, {
       props: { id: 'custom' },
