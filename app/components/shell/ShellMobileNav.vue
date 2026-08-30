@@ -73,6 +73,7 @@ watch(() => route.fullPath, () => {
         class="fixed inset-y-0 right-0 w-72 overflow-y-auto bg-surface shadow-dialog"
         :aria-label="t('shell.nav.primary')"
         role="dialog"
+        aria-modal="true"
       >
         <div class="flex items-center justify-between border-b border-border px-4 py-4">
           <ShellAppLogo />

@@ -44,6 +44,7 @@ test.describe('Application shell', () => {
 })
 
 test.describe('Mobile navigation', () => {
+  test.use({ viewport: { width: 375, height: 667 } })
   test('mobile menu button opens the off-canvas menu', async ({ page }) => {
     await page.goto('/')
     const menuButton = page.getByRole('button', { name: /Open menu/i })
@@ -80,7 +81,7 @@ test.describe('Mobile navigation', () => {
     await menuButton.click()
     const dialog = page.getByRole('dialog')
     await expect(dialog).toBeVisible()
-    await page.locator('.fixed.inset-0.bg-ink-950\\/50').click({ force: true })
+    await page.locator('.fixed.inset-0.bg-ink-950\\/50').click({ position: { x: 8, y: 8 } })
     await expect(dialog).not.toBeVisible()
   })
 })

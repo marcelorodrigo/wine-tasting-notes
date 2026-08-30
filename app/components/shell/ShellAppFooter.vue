@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const { t } = useI18n()
 
-const currentYear = new Date().getFullYear()
+const currentYear = useState('currentYear', () => new Date().getFullYear())
 
 const productLinks = computed(() => [
   { to: '/academy', label: t('shell.footer.academy') },
