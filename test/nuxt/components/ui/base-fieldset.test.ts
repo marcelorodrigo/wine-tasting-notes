@@ -1,0 +1,76 @@
+import { describe, expect, it } from 'vitest'
+import { mountSuspended } from '@nuxt/test-utils/runtime'
+import BaseFieldset from '~/components/ui/BaseFieldset.vue'
+
+describe('BaseFieldset', () => {
+  it('renders native fieldset', async () => {
+    const wrapper = await mountSuspended(BaseFieldset)
+    expect(wrapper.find('fieldset').exists()).toBe(true)
+  })
+
+  it('renders legend from prop', async () => {
+    const wrapper = await mountSuspended(BaseFieldset, {
+      props: { legend: 'Personal info' },
+    })
+    expect(wrapper.find('legend').text()).toBe('Personal info')
+  })
+
+  it('renders legend from slot', async () => {
+    const wrapper = await mountSuspended(BaseFieldset, {
+      slots: { legend: 'Slot legend' },
+    })
+    expect(wrapper.find('legend').text()).toBe('Slot legend')
+  })
+
+  it('renders help text with id association', async () => {
+    const wrapper = await mountSuspended(BaseFieldset, {
+      props: { id: 'test', legend: 'Group', help: 'Help text' },
+    })
+    const fieldset = wrapper.find('fieldset')
+    expect(fieldset.attributes('aria-describedby')).toContain('test-help')
+    expect(wrapper.find('#test-help').text()).toBe('Help text')
+  })
+
+  it('renders error text with id association when invalid', async () => {
+    const wrapper = await mountSuspended(BaseFieldset, {
+      props: { id: 'test', legend: 'Group', error: 'Required field', invalid: true },
+    })
+    const fieldset = wrapper.find('fieldset')
+    expect(fieldset.attributes('aria-describedby')).toContain('test-error')
+    expect(fieldset.attributes('aria-invalid')).toBe('true')
+    expect(wrapper.find('#test-error').text()).toBe('Required field')
+  })
+
+  it('defaults invalid to true when error is provided', async () => {
+    const wrapper = await mountSuspended(BaseFieldset, {
+      props: { error: 'Something wrong' },
+    })
+    expect(wrapper.find('fieldset').attributes('aria-invalid')).toBe('true')
+  })
+
+  it('does not set aria-invalid when no error', async () => {
+    const wrapper = await mountSuspended(BaseFieldset)
+    expect(wrapper.find('fieldset').attributes('aria-invalid')).toBeUndefined()
+  })
+
+  it('applies disabled to fieldset', async () => {
+    const wrapper = await mountSuspended(BaseFieldset, {
+      props: { disabled: true },
+    })
+    expect(wrapper.find('fieldset').attributes('disabled')).toBeDefined()
+  })
+
+  it('does not render empty help/error wrappers', async () => {
+    const wrapper = await mountSuspended(BaseFieldset, {
+      props: { legend: 'Group' },
+    })
+    expect(wrapper.find('[role="alert"]').exists()).toBe(false)
+  })
+
+  it('forwards attributes', async () => {
+    const wrapper = await mountSuspended(BaseFieldset, {
+      props: { id: 'custom' },
+    })
+    expect(wrapper.find('fieldset').attributes('id')).toBe('custom')
+  })
+})

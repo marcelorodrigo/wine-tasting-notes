@@ -1,14 +1,12 @@
 import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
+import { installLocalOnlyNetworkGuard } from './support/network'
 
-test.beforeEach(async ({ page }) => {
-  await page.route('**/*', (route) => {
-    const { hostname, protocol } = new URL(route.request().url())
-    if (protocol === 'data:' || protocol === 'blob:' || hostname === 'localhost') {
-      return route.continue()
-    }
-    return route.abort()
-  })
+test('no remote requests are attempted', async ({ page }) => {
+  const guard = installLocalOnlyNetworkGuard(page)
+
+  await page.goto('/')
+  expect(guard.blockedUrls).toEqual([])
 })
 
 test('loads starter shell from generated output', async ({ page }) => {

@@ -1,1 +1,212 @@
 @import "tailwindcss";
+@import "@fontsource-variable/manrope";
+@import "@fontsource-variable/newsreader";
+
+/* ================================================================
+   Raw palette tokens
+   ================================================================ */
+:root {
+  --color-burgundy-200: #e8b7c2;
+  --color-burgundy-700: #6f1d32;
+  --color-burgundy-900: #35101b;
+
+  --color-parchment-50: #fbf7ed;
+  --color-parchment-200: #e8dcc4;
+
+  --color-sage-200: #c7d6c1;
+  --color-sage-700: #465d43;
+
+  --color-ink-200: #c9d0cc;
+  --color-ink-700: #46504c;
+  --color-ink-950: #111816;
+}
+
+/* ================================================================
+   Tailwind theme integration
+   ================================================================ */
+@theme inline {
+  --font-interface: "Manrope Variable", sans-serif;
+  --font-editorial: "Newsreader Variable", serif;
+
+  --color-canvas: var(--color-canvas);
+  --color-surface: var(--color-surface);
+  --color-subtle: var(--color-subtle);
+  --color-foreground: var(--color-foreground);
+  --color-muted: var(--color-muted);
+  --color-border: var(--color-border);
+  --color-action: var(--color-action);
+  --color-on-action: var(--color-on-action);
+  --color-focus: var(--color-focus);
+  --color-success: var(--color-success);
+  --color-warning: var(--color-warning);
+  --color-danger: var(--color-danger);
+  --color-information: var(--color-information);
+
+  --radius-control: 0.375rem;
+  --radius-card: 0.5rem;
+  --radius-dialog: 0.75rem;
+
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-dialog: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  --container-reading: 40rem;
+  --container-content: 56rem;
+  --container-wide: 72rem;
+
+  --spacing-touch: 2.75rem;
+}
+
+/* ================================================================
+   Light theme (default)
+   ================================================================ */
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
+  --color-canvas: #fbf7ed;
+  --color-surface: #ffffff;
+  --color-subtle: #f3ead8;
+  --color-foreground: #1f2423;
+  --color-muted: #46504c;
+  --color-border: #68726d;
+  --color-action: #6f1d32;
+  --color-on-action: #ffffff;
+  --color-focus: #6f1d32;
+  --color-success: #2f5d3a;
+  --color-warning: #6b4711;
+  --color-danger: #8f2638;
+  --color-information: #315e75;
+}
+
+/* ================================================================
+   Dark theme (system fallback + explicit override)
+   ================================================================ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --color-canvas: #111816;
+    --color-surface: #1b2421;
+    --color-subtle: #26312d;
+    --color-foreground: #f8f1df;
+    --color-muted: #c9d0cc;
+    --color-border: #8c9791;
+    --color-action: #e8b7c2;
+    --color-on-action: #35101b;
+    --color-focus: #f1c56f;
+    --color-success: #a9d6b2;
+    --color-warning: #e8c27a;
+    --color-danger: #f0a3af;
+    --color-information: #9dccdf;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-canvas: #111816;
+  --color-surface: #1b2421;
+  --color-subtle: #26312d;
+  --color-foreground: #f8f1df;
+  --color-muted: #c9d0cc;
+  --color-border: #8c9791;
+  --color-action: #e8b7c2;
+  --color-on-action: #35101b;
+  --color-focus: #f1c56f;
+  --color-success: #a9d6b2;
+  --color-warning: #e8c27a;
+  --color-danger: #f0a3af;
+  --color-information: #9dccdf;
+}
+
+/* ================================================================
+   Base typography
+   ================================================================ */
+body {
+  font-family: var(--font-interface);
+  background-color: var(--color-canvas);
+  color: var(--color-foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-editorial);
+}
+
+/* ================================================================
+   Responsive base safeguards
+   ================================================================ */
+html {
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+img,
+svg,
+video,
+iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ================================================================
+   Focus visible
+   ================================================================ */
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+/* ================================================================
+   Reduced motion
+   ================================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ================================================================
+   Visually hidden (screen-reader only)
+   ================================================================ */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ================================================================
+   Safe area utilities
+   ================================================================ */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-area-inline {
+  padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
+}
