@@ -6,6 +6,12 @@ export default defineNuxtConfig({
 
   ssr: false,
 
+  app: {
+    head: {
+      htmlAttrs: { lang: 'en' },
+    },
+  },
+
   css: ['~/assets/css/main.css'],
 
   modules: [

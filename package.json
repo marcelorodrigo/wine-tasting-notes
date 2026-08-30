@@ -20,7 +20,9 @@
     "test:watch": "vitest --watch",
     "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run --project unit",
-    "test:nuxt": "vitest run --project nuxt"
+    "test:nuxt": "vitest run --project nuxt",
+    "test:e2e": "playwright test",
+    "test:e2e:smoke": "playwright test smoke.spec.ts"
   },
   "dependencies": {
     "@nuxt/test-utils": "^4.2.0",
@@ -35,7 +37,9 @@
     "vue-router": "^5.2.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@nuxt/eslint": "^1.17.0",
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/vite": "^4.3.3",
     "@testing-library/vue": "^8.1.0",
     "@vitest/coverage-v8": "^4.1.11",
