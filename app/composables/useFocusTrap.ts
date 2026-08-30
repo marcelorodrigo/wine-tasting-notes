@@ -13,22 +13,23 @@ export function useFocusTrap() {
   function activate(container: HTMLElement, trigger?: HTMLElement | null) {
     containerElement = container
     triggerElement = trigger ?? (document.activeElement as HTMLElement | null)
+    const focusable = getFocusableElements(container)
     handler = (event: KeyboardEvent) => {
       if (event.key !== 'Tab' || !containerElement) return
-      const focusable = getFocusableElements(containerElement)
-      if (focusable.length === 0) {
+      const elements = getFocusableElements(containerElement)
+      if (elements.length === 0) {
         event.preventDefault()
         return
       }
-      const first = focusable[0]
-      const last = focusable[focusable.length - 1]
+      const first = elements[0]
+      const last = elements[elements.length - 1]
       if (event.shiftKey) {
-        if (document.activeElement === first) {
+        if (document.activeElement === first && last) {
           event.preventDefault()
           last.focus()
         }
       } else {
-        if (document.activeElement === last) {
+        if (document.activeElement === last && first) {
           event.preventDefault()
           first.focus()
         }
@@ -39,7 +40,7 @@ export function useFocusTrap() {
     if (autofocus) {
       autofocus.focus()
     } else if (focusable.length > 0) {
-      focusable[0].focus()
+      focusable[0]!.focus()
     } else {
       container.setAttribute('tabindex', '-1')
       container.focus()
