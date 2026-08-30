@@ -38,6 +38,8 @@ pnpm preview
 pnpm test:unit     # Unit tests only
 pnpm test:nuxt     # Nuxt integration tests only
 pnpm test:coverage # Tests with coverage report
+pnpm test:e2e      # Playwright browser tests (desktop + mobile)
+pnpm test:e2e:smoke # Smoke + axe only
 ```
 
 ### Test Layers
@@ -46,7 +48,17 @@ pnpm test:coverage # Tests with coverage report
 |-------|-----------|-------------|---------|
 | **Unit** | `test/unit/**/*.test.ts` | Node | Pure domain logic, schemas, adapters, utilities — no Vue or Nuxt imports |
 | **Nuxt** | `test/nuxt/**/*.test.ts` | happy-dom | Components, composables, Pinia stores, middleware — uses `mountSuspended` / `renderSuspended` |
-| **Browser** | Playwright (future) | Real browser | End-to-end user flows, accessibility contracts, axe checks |
+| **Browser** | `test/e2e/**/*.spec.ts` | Chromium (desktop + mobile) | End-to-end user flows, accessibility contracts, axe checks |
 
 Shared test fixtures live in `test/fixtures/` and export typed factories (e.g. `createWineNote`).
 Unit tests import fixtures directly; Nuxt tests can use them inside `mountSuspended`.
+
+### Browser Tests
+
+First-time setup (installs Chromium):
+
+```bash
+pnpm exec playwright install chromium
+```
+
+Browser tests run against generated output (`pnpm generate` is triggered automatically via `webServer` in `playwright.config.ts`). Artifacts (traces, screenshots) are retained only on failure.
