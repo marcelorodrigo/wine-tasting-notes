@@ -35,4 +35,30 @@ describe('Default layout', () => {
     const main = wrapper.find('main')
     expect(main.find('[data-testid="content"]').exists()).toBe(true)
   })
+
+  it('opens mobile nav when header emits openMenu', async () => {
+    const wrapper = await mountSuspended(DefaultLayout, {
+      slots: { default: '<p>Page content</p>' },
+    })
+    const header = wrapper.findComponent({ name: 'ShellAppHeader' })
+    expect(header.exists()).toBe(true)
+    await header.vm.$emit('openMenu')
+    await wrapper.vm.$nextTick()
+    const mobileNav = wrapper.findComponent({ name: 'ShellMobileNav' })
+    expect(mobileNav.props('open')).toBe(true)
+  })
+
+  it('closes mobile nav when ShellMobileNav emits close', async () => {
+    const wrapper = await mountSuspended(DefaultLayout, {
+      slots: { default: '<p>Page content</p>' },
+    })
+    const header = wrapper.findComponent({ name: 'ShellAppHeader' })
+    await header.vm.$emit('openMenu')
+    await wrapper.vm.$nextTick()
+    const mobileNav = wrapper.findComponent({ name: 'ShellMobileNav' })
+    expect(mobileNav.props('open')).toBe(true)
+    await mobileNav.vm.$emit('close')
+    await wrapper.vm.$nextTick()
+    expect(mobileNav.props('open')).toBe(false)
+  })
 })

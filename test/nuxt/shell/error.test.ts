@@ -66,4 +66,22 @@ describe('error.vue', () => {
     expect(tastingLink.exists()).toBe(true)
     expect(tastingLink.text()).toContain('Start Tasting')
   })
+
+  it('hides status when statusCode is falsy', async () => {
+    const wrapper = await mountSuspended(ErrorPage, {
+      props: {
+        error: createError({ statusCode: 0 }),
+      },
+    })
+    expect(wrapper.text()).not.toContain('Status')
+  })
+
+  it('hides message when error.message is empty', async () => {
+    const wrapper = await mountSuspended(ErrorPage, {
+      props: {
+        error: createError({ message: '' }),
+      },
+    })
+    expect(wrapper.text()).not.toContain('Message')
+  })
 })
