@@ -33,7 +33,7 @@ The experience serves all wine enthusiasts. It pairs approachable guidance with 
 - Offline and installable Progressive Web App (PWA) behavior is launch scope.
 - The application is mobile-first, responsive, and supports light and dark themes.
 - The application contains no analytics.
-- The user has confirmed written WSET permission. The exact evidence, attribution, disclaimer, territories, and modification terms must be recorded before official material is merged.
+- The exact WSET Level 3 source, project credit, trademark, and non-affiliation notice must be recorded before official material is merged.
 
 ## Out of Scope
 
@@ -371,7 +371,7 @@ Encoded or decompressed values that exceed their limits return `SharePayloadTooL
 | --- | --- | --- | --- |
 | `satV1Sections` | None | `SatSectionDefinition[]` | Canonical field definitions and order. |
 | `satV1Aromas` | None | `AromaNode[]` | Canonical aroma and flavour hierarchy. |
-| `satV1Provenance` | None | `SatProvenance` | Source version, permission reference, attribution, and review date. |
+| `satV1Provenance` | None | `SatProvenance` | Source version, attribution, and review date. |
 | `getApplicableFields` | Draft and definitions | Applicable definitions | Evaluate conditional visibility. |
 | `validateSection` | Section ID and draft | Validation result | Report missing or invalid applicable answers. |
 | `getSectionCompletion` | Section ID and draft | Completion counts | Derive section progress. |
@@ -611,7 +611,7 @@ wine-tasting-notes/
 │   └── error.vue
 ├── docs/
 │   ├── content-governance.md
-│   └── legal/wset-permission.md
+│   └── legal/wset-attribution.md
 ├── public/
 │   ├── icons/
 │   ├── favicon.ico
@@ -696,33 +696,33 @@ Issue IDs are stable dependency references. Create GitHub issues in the listed o
 
 ## Foundation and Governance
 
-### WT-001: Record WSET permission and source provenance
+### WT-001: Record WSET attribution and source provenance
 
-**Type:** Documentation and legal gate  
+**Type:** Documentation and attribution gate  
 **Labels:** `legal`, `content`, `priority:critical`  
 **Depends on:** None  
 
 **Pull request outcome**
 
-The repository contains an approved, auditable record of the permission and exact source used for official WSET Level 3 SAT material.
+The repository contains the canonical WSET credit, trademark and non-affiliation notice, placement requirements, and source provenance for WSET Level 3 SAT terminology.
 
 **Scope**
 
-- Create `docs/legal/wset-permission.md`.
-- Record evidence date and immutable evidence location.
-- Record permitted territories, channels, languages, and modification terms.
-- Record exact approved attribution, trademark spelling, link, disclaimer, and placement requirements.
-- Record source title, edition or version, publication date, and access date.
-- State whether evidence can be committed publicly or must be externally referenced.
-- Do not commit unreviewed correspondence, personal data, or confidential material.
+- Create `docs/legal/wset-attribution.md`.
+- Record the canonical WSET framework credit.
+- Record the exact trademark and non-affiliation notice.
+- Record where the canonical attribution block must appear.
+- Record the source title, edition or version, publication date, and access date.
+- Distinguish source terminology from project-authored explanatory prose.
+- Do not claim that WSET authorizes, endorses, or is affiliated with the project.
 
 **Acceptance criteria**
 
-- Public wording is copied exactly from approved terms.
+- The canonical attribution block matches the approved project wording exactly.
 - The source edition for SAT data is unambiguous.
-- Official terms are identified as verbatim material.
-- Sensitive evidence is redacted or referenced safely.
-- A named owner records approval in the pull request.
+- Official source terms and project-authored prose are clearly distinguished.
+- Future layout and terms-page placement requirements are explicit.
+- A named content owner reviews the wording and source record in the pull request.
 
 **Tests**
 
@@ -753,7 +753,7 @@ The repository defines how official terminology and original educational content
 **Acceptance criteria**
 
 - Every factual academy article requires sources, owner, reviewer, and review date.
-- Official terms cannot be copy-edited without checking permission and source.
+- Official terms cannot be copy-edited without checking source and attribution.
 - Worked examples must be original or explicitly licensed.
 - The update process covers both content and canonical SAT data.
 
@@ -1899,7 +1899,7 @@ A pure generator converts a complete draft into polished, deterministic localize
 - Identical input produces identical output.
 - Descriptor order follows canonical taxonomy order.
 - Optional identity and observations read naturally.
-- Official terms remain intact where permission requires them.
+- Official terms remain intact where source fidelity requires them.
 - Generated output is not stored independently.
 
 **Tests**
@@ -2271,7 +2271,7 @@ The repository has enforced coverage, complete documentation, no starter artifac
 - `pnpm test:e2e` passes.
 - No tasting data is written outside the approved session key or explicit fragment.
 - No analytics or note-bearing network request exists.
-- WSET permission and all content reviews are approved.
+- WSET attribution and all content reviews are approved.
 - Known SPA SEO and first-visit offline limitations are documented.
 
 **Tests**
@@ -2375,7 +2375,7 @@ WT-021..WT-024/WT-032..WT-042 -> WT-043 -> WT-044 -> WT-045
 
 The product is ready to launch only when:
 
-- The written WSET permission record and public wording are approved.
+- The canonical WSET attribution, trademark/non-affiliation notice, and source provenance are reviewed.
 - All canonical SAT and lexicon source expectations pass.
 - All academy content has sources, owners, reviewers, and review dates.
 - The complete tasting works on mobile, desktop, keyboard, and supported assistive technology semantics.
