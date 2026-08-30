@@ -39,3 +39,14 @@ pnpm test:unit     # Unit tests only
 pnpm test:nuxt     # Nuxt integration tests only
 pnpm test:coverage # Tests with coverage report
 ```
+
+### Test Layers
+
+| Layer | Directory | Environment | Use for |
+|-------|-----------|-------------|---------|
+| **Unit** | `test/unit/**/*.test.ts` | Node | Pure domain logic, schemas, adapters, utilities — no Vue or Nuxt imports |
+| **Nuxt** | `test/nuxt/**/*.test.ts` | happy-dom | Components, composables, Pinia stores, middleware — uses `mountSuspended` / `renderSuspended` |
+| **Browser** | Playwright (future) | Real browser | End-to-end user flows, accessibility contracts, axe checks |
+
+Shared test fixtures live in `test/fixtures/` and export typed factories (e.g. `createWineNote`).
+Unit tests import fixtures directly; Nuxt tests can use them inside `mountSuspended`.
