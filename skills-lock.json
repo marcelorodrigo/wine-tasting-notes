@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "skills": {
+    "code-reviewer": {
+      "source": "handbook.adra.dev",
+      "sourceUrl": "https://handbook.adra.dev/",
+      "sourceType": "well-known",
+      "computedHash": "153ad487c0d0212c94decc154940d9e49994bf9a60de4608f1b11e5f7dbb7629",
+      "wellKnownDigest": "sha256:66981340c46d56e40b7fa7607f16d59114c1e15942a5840620a3dd9a0903cd2b"
+    },
+    "frontend-best-practices": {
+      "source": "handbook.adra.dev",
+      "sourceUrl": "https://handbook.adra.dev/",
+      "sourceType": "well-known",
+      "computedHash": "e460cac417041d860aac3a6dcde4f4ed687903518a7117c7616e906b9485980e",
+      "wellKnownDigest": "sha256:b0a6c7c62e2a9647376284ac19b4772e6e459e3d631628ebce33de58fc0d5c16"
+    },
+    "nuxt": {
+      "source": "antfu/skills",
+      "sourceType": "github",
+      "skillPath": "skills/nuxt/SKILL.md",
+      "computedHash": "96dbdbfc06bf7045aeb9a463b972d5c0b5679d6dadf196d8ef6b98dc6defed2d"
+    },
+    "nuxt-best-practices": {
+      "source": "vinayakkulkarni/vue-nuxt-best-practices",
+      "sourceType": "github",
+      "skillPath": "skills/nuxt-best-practices/SKILL.md",
+      "computedHash": "47ac0b355716a231f165d7af2077535abefd65d87018cdcde85f8662199130fd"
+    },
+    "nuxt-seo-best-practices": {
+      "source": "vinayakkulkarni/vue-nuxt-best-practices",
+      "sourceType": "github",
+      "skillPath": "skills/nuxt-seo-best-practices/SKILL.md",
+      "computedHash": "3a8147200d259084d8bc552d5a416143fc3d2227a57ab1e5260a8ac13af35caf"
+    },
+    "pinia": {
+      "source": "antfu/skills",
+      "sourceType": "github",
+      "skillPath": "skills/pinia/SKILL.md",
+      "computedHash": "897b6b0982956f41f5cc85128ca638b625e1b3c8bc619e303cd1e7661c95b7de"
+    }
+  }
+}
