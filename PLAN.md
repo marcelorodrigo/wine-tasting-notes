@@ -114,7 +114,7 @@ Current versions and tools:
 - Nuxt 4.5.2
 - Vue 3.5.x
 - Vue Router 5.x
-- pnpm 11.24.0
+- pnpm 12.1.0
 - Vitest 4.1.11
 - `@nuxt/test-utils` 4.2.0
 - Vue Test Utils 2.5.0
@@ -170,7 +170,7 @@ Required quality additions:
 - `@playwright/test`
 - `@axe-core/playwright`
 
-Node 22 LTS is the runtime baseline. `package.json`, `.nvmrc`, and CI must agree on the major version.
+Node 26 LTS is the runtime baseline. `package.json`, `.nvmrc`, and CI must agree on the major version.
 
 ## Domain Contracts
 
@@ -610,7 +610,6 @@ wine-tasting-notes/
 │   ├── app.vue
 │   └── error.vue
 ├── docs/
-│   ├── content-governance.md
 │   └── legal/wset-attribution.md
 ├── public/
 │   ├── icons/
@@ -731,35 +730,9 @@ The repository contains the canonical WSET credit, trademark and non-affiliation
 
 ---
 
-### WT-002: Define content governance and editorial review
+### WT-002: Define content governance and editorial review [CANCELLED]
 
-**Type:** Documentation  
-**Labels:** `content`, `documentation`  
-**Depends on:** WT-001  
-
-**Pull request outcome**
-
-The repository defines how official terminology and original educational content are authored, sourced, reviewed, corrected, and dated.
-
-**Scope**
-
-- Create `docs/content-governance.md`.
-- Define editorial owner and legal/content reviewer responsibilities.
-- Define citation, updated-date, and review-cadence rules.
-- Define the boundary between verbatim official terms and original explanatory prose.
-- Define correction and source-version update procedures.
-- Define rules for worked examples and licensed/original text.
-
-**Acceptance criteria**
-
-- Every factual academy article requires sources, owner, reviewer, and review date.
-- Official terms cannot be copy-edited without checking source and attribution.
-- Worked examples must be original or explicitly licensed.
-- The update process covers both content and canonical SAT data.
-
-**Tests**
-
-- Documentation-only issue. No executable test is required.
+**Status:** Cancelled. The attribution, source-provenance, content-boundary, and review guidance delivered by WT-001 (#90) is sufficient for the current scope. A separate `docs/content-governance.md` will not be created.
 
 ---
 
@@ -775,17 +748,17 @@ Contributors and CI use one Node version and consistent lint, typecheck, and tes
 
 **Scope**
 
-- Set Node 22 in `.nvmrc` and `package.json` engines.
+- Set Node 26 in `.nvmrc` and `package.json` engines.
 - Add `@nuxt/eslint`, ESLint, TypeScript, and `vue-tsc`.
 - Create `eslint.config.mjs` using Nuxt's flat configuration.
 - Add `lint`, `lint:fix`, `typecheck`, and `check` scripts.
-- Keep pnpm 11.24.0 as the package manager.
+- Keep pnpm 12.1.0 as the package manager.
 - Update the lockfile.
 - Document the commands in `README.md`.
 
 **Acceptance criteria**
 
-- `pnpm install --frozen-lockfile` works on Node 22.
+- `pnpm install --frozen-lockfile` works on Node 26.
 - `pnpm lint` covers TypeScript and Vue source.
 - `pnpm typecheck` uses Nuxt-generated types.
 - Existing starter source passes lint and typecheck.
@@ -917,7 +890,7 @@ GitHub validates every pull request and default-branch update without deploying 
 **Scope**
 
 - Create `.github/workflows/ci.yml`.
-- Use Node 22 and the package-manager version declared by the repository.
+- Use Node 26 and the package-manager version declared by the repository.
 - Install with the frozen lockfile.
 - Cache pnpm safely.
 - Run lint, typecheck, Vitest, production generation, and Playwright smoke tests.
@@ -1289,7 +1262,7 @@ Framework-independent utilities provide normalized search, tree navigation, brea
 
 **Type:** Content architecture  
 **Labels:** `academy`, `content`, `testing`  
-**Depends on:** WT-002, WT-005, WT-011  
+**Depends on:** WT-005, WT-011  
 
 **Pull request outcome**
 
@@ -1307,7 +1280,7 @@ Academy content has a typed block format, validated metadata, and fixed route re
 **Acceptance criteria**
 
 - Duplicate slugs fail validation.
-- Every article requires source and review metadata under governance rules.
+- Every article requires source and review metadata.
 - Unknown block types fail validation.
 - Raw HTML is not a supported block.
 - Registry order is deterministic.
@@ -1390,7 +1363,7 @@ Registered articles render through one semantic route and reusable block compone
 
 **Type:** Content  
 **Labels:** `academy`, `content`  
-**Depends on:** WT-001, WT-002, WT-020  
+**Depends on:** WT-001, WT-020  
 
 **Pull request outcome**
 
@@ -1421,7 +1394,7 @@ The academy publishes reviewed `/academy/how-to-taste` and `/academy/setup` arti
 
 **Type:** Content  
 **Labels:** `academy`, `content`, `sat`  
-**Depends on:** WT-001, WT-002, WT-013, WT-020  
+**Depends on:** WT-001, WT-013, WT-020  
 
 **Pull request outcome**
 
@@ -1452,7 +1425,7 @@ The academy publishes reviewed SAT overview, Appearance, Nose, Palate, and Concl
 
 **Type:** Content and searchable reference  
 **Labels:** `academy`, `content`, `aroma`  
-**Depends on:** WT-001, WT-002, WT-014, WT-020  
+**Depends on:** WT-001, WT-014, WT-020  
 
 **Pull request outcome**
 
@@ -1486,7 +1459,7 @@ The academy publishes aroma/flavour education, common wine faults, and a searcha
 
 **Type:** Content and public frontend  
 **Labels:** `academy`, `content`  
-**Depends on:** WT-001, WT-002, WT-020  
+**Depends on:** WT-001, WT-020  
 
 **Pull request outcome**
 
@@ -2286,7 +2259,7 @@ The following graph shows the main delivery paths. An issue also depends on ever
 
 ```text
 Governance:
-WT-001 -> WT-002 -> WT-018 -> WT-020 -> WT-021/WT-022/WT-023/WT-024
+WT-001 -> WT-018 -> WT-020 -> WT-021/WT-022/WT-023/WT-024
 
 Tooling:
 WT-003 -> WT-004 -> WT-005 -> WT-006 -> WT-007
