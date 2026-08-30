@@ -8,14 +8,14 @@ export default defineConfig({
       {
         test: {
           name: 'unit',
-          include: ['test/unit/*.{test,spec}.ts'],
+          include: ['test/unit/**/*.test.ts'],
           environment: 'node',
         },
       },
       await defineVitestProject({
         test: {
           name: 'nuxt',
-          include: ['test/nuxt/*.{test,spec}.ts'],
+          include: ['test/nuxt/**/*.test.ts'],
           environment: 'nuxt',
           environmentOptions: {
             nuxt: {
@@ -27,8 +27,15 @@ export default defineConfig({
       }),
     ],
     coverage: {
-      enabled: true,
       provider: 'v8',
+      include: ['app/**'],
+      exclude: [
+        '.nuxt/**',
+        '**/*.config.*',
+        '**/*.d.ts',
+        'app/content/**',
+        'app/i18n/**',
+      ],
       reporter: ['text', 'html', 'lcov'],
     },
   },
