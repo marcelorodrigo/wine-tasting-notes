@@ -9,13 +9,21 @@ export function installLocalOnlyNetworkGuard(page: Page, allowedOrigins: string[
   const blockedUrls: string[] = []
   const localFontUrls: string[] = []
 
-  page.on('response', (response) => {
-    const url = response.url()
+  page.on('request', (request) => {
+    const url = request.url()
     try {
       const parsed = new URL(url)
       if (!allowedOrigins.includes(parsed.hostname)) {
         blockedUrls.push(url)
       }
+    } catch {
+      // ignore non-absolute URLs
+    }
+  })
+
+  page.on('response', (response) => {
+    const url = response.url()
+    try {
       const contentType = response.headers()['content-type'] ?? ''
       if (
         contentType.includes('font') ||

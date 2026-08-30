@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useId } from 'vue'
+
 const props = withDefaults(defineProps<{
   id?: string
   legend?: string
@@ -15,15 +17,18 @@ const props = withDefaults(defineProps<{
   invalid: undefined,
 })
 
+const slots = useSlots()
+const uid = useId()
+
 const computedInvalid = computed(() => props.invalid ?? Boolean(props.error))
 
-const helpId = computed(() => props.id ? `${props.id}-help` : undefined)
-const errorId = computed(() => props.id ? `${props.id}-error` : undefined)
+const helpId = computed(() => `${props.id ?? uid}-help`)
+const errorId = computed(() => `${props.id ?? uid}-error`)
 
 const describedBy = computed(() => {
   const ids: string[] = []
-  if (props.help && helpId.value) ids.push(helpId.value)
-  if (computedInvalid.value && props.error && errorId.value) ids.push(errorId.value)
+  if (props.help || slots.help) ids.push(helpId.value)
+  if (computedInvalid.value && (props.error || slots.error)) ids.push(errorId.value)
   return ids.length > 0 ? ids.join(' ') : undefined
 })
 </script>
@@ -43,14 +48,14 @@ const describedBy = computed(() => {
       <slot name="legend">{{ legend }}</slot>
     </legend>
 
-    <div v-if="(help || $slots.help) && helpId" :id="helpId" class="text-sm text-muted mt-1 mb-3">
+    <div v-if="help || $slots.help" :id="helpId" class="text-sm text-muted mt-1 mb-3">
       <slot name="help">{{ help }}</slot>
     </div>
 
     <slot />
 
     <div
-      v-if="computedInvalid && (error || $slots.error) && errorId"
+      v-if="computedInvalid && (error || $slots.error)"
       :id="errorId"
       role="alert"
       class="text-sm text-danger mt-2"

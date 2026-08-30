@@ -112,4 +112,21 @@ describe('InlineNotice', () => {
     })
     expect(wrapper.find('[role]').exists()).toBe(false)
   })
+
+  it('sets accessible name on dismiss button', async () => {
+    const wrapper = await mountSuspended(InlineNotice, {
+      props: { dismissible: true },
+      slots: { default: 'Content' },
+    })
+    expect(wrapper.find('button').attributes('aria-label')).toBe('Dismiss notification')
+  })
+
+  it('renders title from slot without title prop', async () => {
+    const wrapper = await mountSuspended(InlineNotice, {
+      props: { modelValue: true },
+      slots: { title: '<strong>Slot title</strong>', default: 'Body content' },
+    })
+    expect(wrapper.text()).toContain('Slot title')
+    expect(wrapper.text()).toContain('Body content')
+  })
 })

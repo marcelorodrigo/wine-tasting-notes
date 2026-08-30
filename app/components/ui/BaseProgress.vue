@@ -22,9 +22,9 @@ const progressValue = computed(() => clampedValue.value ?? undefined)
 
 const variantClasses: Record<string, string> = {
   default: '',
-  success: '[&::-webkit-progress-bar]:bg-success [&::-moz-progress-bar]:bg-success',
-  warning: '[&::-webkit-progress-bar]:bg-warning [&::-moz-progress-bar]:bg-warning',
-  error: '[&::-webkit-progress-bar]:bg-danger [&::-moz-progress-bar]:bg-danger',
+  success: '[&::-webkit-progress-value]:bg-success [&::-moz-progress-bar]:bg-success',
+  warning: '[&::-webkit-progress-value]:bg-warning [&::-moz-progress-bar]:bg-warning',
+  error: '[&::-webkit-progress-value]:bg-danger [&::-moz-progress-bar]:bg-danger',
 }
 </script>
 
@@ -40,7 +40,7 @@ const variantClasses: Record<string, string> = {
       :value="progressValue"
       :max="max"
       :aria-label="label"
-      class="w-full h-3 appearance-none rounded-control bg-subtle [&::-webkit-progress-bar]:rounded-control [&::-webkit-progress-bar]:bg-action [&::-moz-progress-bar]:rounded-control [&::-moz-progress-bar]:bg-action [&::-webkit-progress-value]:rounded-control [&::-moz-progress-value]:rounded-control"
+      class="w-full h-3 appearance-none rounded-control bg-subtle [&::-webkit-progress-bar]:rounded-control [&::-webkit-progress-value]:rounded-control [&::-webkit-progress-value]:bg-action [&::-moz-progress-bar]:rounded-control [&::-moz-progress-bar]:bg-action [&::-moz-progress-value]:rounded-control"
       :class="variantClasses[props.variant]"
     />
     <p

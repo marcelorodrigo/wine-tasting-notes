@@ -64,6 +64,27 @@ test.describe('base UI components', () => {
     expect(focused).not.toBeNull()
   })
 
+  test('dialog with initialFocus focuses the target and traps Tab', async ({ page }) => {
+    await page.locator('[data-testid="dialog-focus-trigger"]').click()
+    const dialog = page.locator('[data-testid="dialog-focus-panel"]')
+    await expect(dialog).toBeVisible()
+    const target = page.locator('[data-testid="focus-target"]')
+    await expect(target).toBeFocused()
+    await page.keyboard.press('Tab')
+    const focused = await page.evaluate(() => document.activeElement?.closest('dialog'))
+    expect(focused).not.toBeNull()
+  })
+
+  test('dialog restores focus to opener on close', async ({ page }) => {
+    const trigger = page.locator('[data-testid="dialog-trigger"]')
+    await trigger.click()
+    const dialog = page.locator('[data-testid="dialog-panel"]')
+    await expect(dialog).toBeVisible()
+    await page.locator('[data-testid="dialog-action"]').click()
+    await expect(dialog).not.toBeVisible()
+    await expect(trigger).toBeFocused()
+  })
+
   test('fieldset renders legend and error', async ({ page }) => {
     const fieldset = page.locator('[data-testid="section-fieldset"] fieldset')
     await expect(fieldset).toBeVisible()

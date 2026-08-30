@@ -15,11 +15,19 @@ test('Manrope and Newsreader font families are available', async ({ page }) => {
 
   await page.waitForLoadState('networkidle')
 
-  const manrope = await page.evaluate(() => document.fonts.check('1em "Manrope Variable"'))
-  const newsreader = await page.evaluate(() => document.fonts.check('1em "Newsreader Variable"'))
+  const fonts = await page.evaluate(async () => {
+    await document.fonts.ready
+    const entries = [...document.fonts]
+    return {
+      manrope: entries.filter((f) => f.family === 'Manrope Variable').map((f) => f.status),
+      newsreader: entries.filter((f) => f.family === 'Newsreader Variable').map((f) => f.status),
+    }
+  })
 
-  expect(manrope).toBe(true)
-  expect(newsreader).toBe(true)
+  expect(fonts.manrope.length).toBeGreaterThan(0)
+  expect(fonts.manrope.every((s) => s === 'loaded')).toBe(true)
+  expect(fonts.newsreader.length).toBeGreaterThan(0)
+  expect(fonts.newsreader.every((s) => s === 'loaded')).toBe(true)
 })
 
 test('font responses are same-origin generated assets', async ({ page }) => {

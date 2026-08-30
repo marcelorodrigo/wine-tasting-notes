@@ -225,4 +225,58 @@ describe('BaseDialog', () => {
     })
     wrapper.unmount()
   })
+
+  it('sets aria-labelledby on dialog when title prop is present', async () => {
+    const wrapper = await mountSuspended(BaseDialog, {
+      props: { open: false, title: 'Accessible title' },
+    })
+    const dialog = wrapper.find('dialog')
+    const labelledby = dialog.attributes('aria-labelledby')
+    expect(labelledby).toBeDefined()
+    expect(labelledby).toMatch(/-title$/)
+  })
+
+  it('does not set aria-labelledby when no title or slot', async () => {
+    const wrapper = await mountSuspended(BaseDialog, {
+      props: { open: false },
+    })
+    const dialog = wrapper.find('dialog')
+    expect(dialog.attributes('aria-labelledby')).toBeUndefined()
+  })
+
+  it('sets aria-describedby on dialog when description is present', async () => {
+    const wrapper = await mountSuspended(BaseDialog, {
+      props: { open: false, title: 'Title', description: 'A description' },
+    })
+    const dialog = wrapper.find('dialog')
+    const describedby = dialog.attributes('aria-describedby')
+    expect(describedby).toBeDefined()
+    expect(describedby).toMatch(/-desc$/)
+  })
+
+  it('does not set aria-describedby when no description or slot', async () => {
+    const wrapper = await mountSuspended(BaseDialog, {
+      props: { open: false, title: 'Title' },
+    })
+    const dialog = wrapper.find('dialog')
+    expect(dialog.attributes('aria-describedby')).toBeUndefined()
+  })
+
+  it('title ID on h2 matches dialog aria-labelledby', async () => {
+    const wrapper = await mountSuspended(BaseDialog, {
+      props: { open: false, title: 'My Title' },
+    })
+    const labelledby = wrapper.find('dialog').attributes('aria-labelledby')
+    const h2 = wrapper.find('h2')
+    expect(h2.attributes('id')).toBe(labelledby)
+  })
+
+  it('description ID on div matches dialog aria-describedby', async () => {
+    const wrapper = await mountSuspended(BaseDialog, {
+      props: { open: false, title: 'Title', description: 'A description' },
+    })
+    const describedby = wrapper.find('dialog').attributes('aria-describedby')
+    const descDiv = wrapper.findAll('div').find((d) => d.text() === 'A description')
+    expect(descDiv?.attributes('id')).toBe(describedby)
+  })
 })

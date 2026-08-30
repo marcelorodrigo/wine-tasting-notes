@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 
 const dialogOpen = ref(false)
+const focusDialogOpen = ref(false)
 </script>
 
 <template>
@@ -30,6 +31,14 @@ const dialogOpen = ref(false)
         <p>Dialog content</p>
         <template #footer>
           <BaseButton data-testid="dialog-action" @click="dialogOpen = false">Dialog action</BaseButton>
+        </template>
+      </BaseDialog>
+
+      <BaseButton data-testid="dialog-focus-trigger" @click="focusDialogOpen = true">Open focus dialog</BaseButton>
+      <BaseDialog v-model:open="focusDialogOpen" title="Focus dialog" initial-focus="#focus-target" data-testid="dialog-focus-panel">
+        <input id="focus-target" data-testid="focus-target" type="text" placeholder="Focus me">
+        <template #footer>
+          <BaseButton data-testid="dialog-focus-action" @click="focusDialogOpen = false">Close</BaseButton>
         </template>
       </BaseDialog>
     </section>

@@ -45,13 +45,14 @@ function handleDismiss() {
       toneClasses[props.tone],
     ]"
   >
-    <p v-if="title" class="font-semibold text-foreground mb-1">
+    <p v-if="title || $slots.title" class="font-semibold text-foreground mb-1">
       <slot name="title">{{ title }}</slot>
     </p>
     <slot />
     <button
       v-if="dismissible"
       type="button"
+      aria-label="Dismiss notification"
       :class="[
         'absolute top-3 right-3 min-w-[2.75rem] min-h-[2.75rem] inline-flex items-center justify-center rounded-control text-muted hover:text-foreground hover:bg-subtle transition-colors focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-focus',
       ]"

@@ -51,8 +51,7 @@ describe('useFocusTrap', () => {
     const { activate } = useFocusTrap()
     activate(container)
     const last = container.querySelector('#link1')!
-    // Mock activeElement to be the last element
-    Object.defineProperty(document, 'activeElement', { value: last, writable: true, configurable: true })
+    last.focus()
     const event = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true })
     const preventSpy = vi.spyOn(event, 'preventDefault')
     container.dispatchEvent(event)
@@ -63,7 +62,7 @@ describe('useFocusTrap', () => {
     const { activate } = useFocusTrap()
     activate(container)
     const first = container.querySelector('#btn1')!
-    Object.defineProperty(document, 'activeElement', { value: first, writable: true, configurable: true })
+    first.focus()
     const event = new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true })
     const preventSpy = vi.spyOn(event, 'preventDefault')
     container.dispatchEvent(event)

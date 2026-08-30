@@ -91,4 +91,26 @@ describe('BaseFieldset', () => {
     })
     expect(wrapper.find('fieldset').attributes('id')).toBe('custom')
   })
+
+  it('renders help slot without id prop and associates via aria-describedby', async () => {
+    const wrapper = await mountSuspended(BaseFieldset, {
+      slots: { help: '<span>Slot help text</span>' },
+    })
+    const fieldset = wrapper.find('fieldset')
+    const describedby = fieldset.attributes('aria-describedby')
+    expect(describedby).toBeDefined()
+    expect(wrapper.text()).toContain('Slot help text')
+  })
+
+  it('renders error slot without id prop when invalid', async () => {
+    const wrapper = await mountSuspended(BaseFieldset, {
+      props: { invalid: true },
+      slots: { error: '<span>Slot error text</span>' },
+    })
+    const fieldset = wrapper.find('fieldset')
+    const describedby = fieldset.attributes('aria-describedby')
+    expect(describedby).toBeDefined()
+    expect(fieldset.attributes('aria-invalid')).toBe('true')
+    expect(wrapper.text()).toContain('Slot error text')
+  })
 })

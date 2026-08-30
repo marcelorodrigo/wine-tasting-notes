@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useId } from 'vue'
 import { useFocusTrap } from '~/composables/useFocusTrap'
 
 const props = withDefaults(defineProps<{
@@ -26,6 +27,11 @@ const emit = defineEmits<{
   'close': [reason: 'escape' | 'programmatic' | 'native']
 }>()
 
+const slots = useSlots()
+const uid = useId()
+const titleId = computed(() => props.title || slots.title ? `dialog-${uid}-title` : undefined)
+const descId = computed(() => props.description || slots.description ? `dialog-${uid}-desc` : undefined)
+
 const dialogRef = ref<HTMLDialogElement | null>(null)
 const { activate, deactivate, restoreFocus, focusElement } = useFocusTrap()
 let closeReason: 'escape' | 'programmatic' | 'native' | null = null
@@ -33,14 +39,14 @@ let closeReason: 'escape' | 'programmatic' | 'native' | null = null
 function openDialog() {
   const dialog = dialogRef.value
   if (!dialog) return
+  const opener = document.activeElement as HTMLElement | null
   if (typeof dialog.showModal === 'function') {
     dialog.showModal()
   }
   nextTick(() => {
+    activate(dialog, opener)
     if (props.initialFocus) {
       focusElement(dialog, props.initialFocus)
-    } else {
-      activate(dialog)
     }
   })
   emit('open')
@@ -101,12 +107,14 @@ defineExpose<{
       'rounded-dialog bg-surface border border-border shadow-dialog p-6 font-interface backdrop:bg-black/50',
       panelClass,
     ]"
+    :aria-labelledby="titleId"
+    :aria-describedby="descId"
     @cancel="handleCancel"
     @close="handleClose"
   >
     <div v-if="title || $slots.title" class="mb-4">
       <h2
-        :id="`${dialogRef?.id ?? 'dialog'}-title`"
+        :id="titleId"
         class="text-xl font-semibold font-editorial text-foreground"
       >
         <slot name="title">{{ title }}</slot>
@@ -115,7 +123,7 @@ defineExpose<{
 
     <div
       v-if="description || $slots.description"
-      :id="`${dialogRef?.id ?? 'dialog'}-desc`"
+      :id="descId"
       class="text-sm text-muted mb-4"
     >
       <slot name="description">{{ description }}</slot>

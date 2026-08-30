@@ -45,4 +45,11 @@ describe('SkipLink', () => {
     expect(wrapper.text()).not.toContain('Skip to content')
     expect(wrapper.text()).toBe('Skip to navigation')
   })
+
+  it('includes focus:[clip:auto] to override visually-hidden clip', async () => {
+    const wrapper = await mountSuspended(SkipLink, {
+      slots: { default: 'Skip to content' },
+    })
+    expect(wrapper.find('a').classes()).toContain('focus:[clip:auto]')
+  })
 })
