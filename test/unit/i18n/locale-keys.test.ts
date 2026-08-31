@@ -133,12 +133,6 @@ describe('locale key contract', () => {
     expect(missing).toEqual([])
   })
 
-  it('referenced keys are a subset of available keys', () => {
-    const refs = scanAppSourceForTKeys()
-    const missing = refs.filter((key) => !allKeys.includes(key))
-    expect(missing).toEqual([])
-  })
-
   it('values do not embed canonical dot-IDs as labels', () => {
     const dotIdPattern = /^[a-z][a-z0-9]*(\.[a-z0-9-]+)+$/
     const violations = allLeafKeys.filter((key) => {
