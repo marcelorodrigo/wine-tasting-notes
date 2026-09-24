@@ -1,0 +1,80 @@
+{
+  "app": {
+    "name": "Wine Tasting Notes"
+  },
+  "shell": {
+    "skip": {
+      "toContent": "Skip to main content"
+    },
+    "nav": {
+      "primary": "Primary navigation",
+      "academy": "Academy",
+      "tasting": "Start Tasting",
+      "faq": "FAQ",
+      "about": "About",
+      "privacy": "Privacy",
+      "terms": "Terms"
+    },
+    "menu": {
+      "open": "Open menu",
+      "close": "Close menu"
+    },
+    "footer": {
+      "academy": "Academy",
+      "tasting": "Start Tasting",
+      "faq": "FAQ",
+      "about": "About",
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "copyright": "All rights reserved."
+    }
+  },
+  "error": {
+    "title": "Something went wrong",
+    "backToHome": "Back to home",
+    "startTasting": "Start Tasting",
+    "status": "Status",
+    "message": "Message"
+  },
+  "academy": {},
+  "sat": {},
+  "tasting": {},
+  "validation": {},
+  "note": {},
+  "share": {},
+  "legal": {},
+  "offline": {},
+  "errors": {
+    "draft": {
+      "invalid": "Session data is invalid or corrupted.",
+      "storage-unavailable": "Session storage is unavailable in this browser.",
+      "missing": "No tasting draft found. Please start a new tasting."
+    },
+    "tasting": {
+      "incomplete": "Please complete all required fields before generating notes."
+    },
+    "sat": {
+      "definition-invalid": "Wine assessment data is invalid.",
+      "aroma-taxonomy-invalid": "Aroma taxonomy data is invalid."
+    },
+    "share": {
+      "invalid-payload": "The shared link could not be read.",
+      "unsupported-version": "This shared link is from an unsupported version.",
+      "payload-too-large": "The shared link is too large to process.",
+      "unknown-identifier": "A referenced item was not found.",
+      "native-unavailable": "Sharing is not supported on this device.",
+      "native-cancelled": "Sharing was cancelled.",
+      "native-failed": "Sharing could not be completed."
+    },
+    "clipboard": {
+      "unavailable": "Clipboard access is not available.",
+      "copy-failed": "Could not copy to clipboard."
+    },
+    "content": {
+      "article-not-found": "The requested article was not found."
+    },
+    "pwa": {
+      "update-failed": "The app could not update. Please refresh the page."
+    }
+  }
+}
