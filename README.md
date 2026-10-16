@@ -62,3 +62,43 @@ pnpm exec playwright install chromium
 ```
 
 Browser tests run against generated output (`pnpm generate` is triggered automatically via `webServer` in `playwright.config.ts`). Artifacts (traces, screenshots) are retained only on failure.
+
+## Localization
+
+English is the default locale. All user-facing strings must go through `t()` / `$t()` from `useI18n()` — never hard-code product text in templates or components.
+
+### Locale catalog
+
+`app/i18n/locales/en.json` is the single source of truth for translation keys. Namespaces:
+
+| Namespace | Purpose |
+|-----------|---------|
+| `app` | Global app strings (name, tagline) |
+| `shell` | Header, footer, navigation |
+| `error` | Error page UI |
+| `academy` | Academy content labels |
+| `sat` | SAT wine assessment options |
+| `tasting` | Tasting workflow UI |
+| `validation` | Field validation messages |
+| `note` | Generated note prose |
+| `share` | Sharing UI and actions |
+| `legal` | Legal pages |
+| `offline` | Offline/PWA messages |
+| `errors` | Domain error code messages |
+
+### Translation key contract
+
+- CI enforces that every `t('...')` reference resolves to a key in `en.json`
+- CI detects duplicate keys and unreferenced (unused) keys
+- Template audit prevents hard-coded product strings in Vue components
+- Error codes in `errors.*` are a stable contract — do not rename without updating consumers
+
+### Adding a new locale
+
+1. Create `app/i18n/locales/<code>.json`
+2. Register it in `nuxt.config.ts` under `i18n.locales`
+3. Translate all keys from `en.json`
+
+### Domain formatting seams
+
+`app/services/i18n/` exports pure TypeScript types (`Translator`, `ListFormatter`) and utilities for locale-aware formatting. Domain code (e.g. note generators) receives these via dependency injection — no Nuxt imports required.
