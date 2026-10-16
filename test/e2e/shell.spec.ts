@@ -81,7 +81,7 @@ test.describe('Mobile navigation', () => {
     await menuButton.click()
     const dialog = page.getByRole('dialog')
     await expect(dialog).toBeVisible()
-    await page.locator('.fixed.inset-0.bg-ink-950\\/50').click({ position: { x: 8, y: 8 } })
+    await dialog.click({ position: { x: 8, y: 8 } })
     await expect(dialog).not.toBeVisible()
   })
 })
