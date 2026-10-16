@@ -26,10 +26,9 @@ describe('createListFormatter', () => {
 
   it('formats with short style', () => {
     const fmt = createListFormatter('en', 'conjunction', 'short')
-    const result = fmt(['Merlot', 'Cabernet', 'Syrah'])
-    expect(result).toContain('Merlot')
-    expect(result).toContain('Cabernet')
-    expect(result).toContain('Syrah')
+    expect(fmt(['Merlot', 'Cabernet', 'Syrah'])).toBe(
+      'Merlot, Cabernet, & Syrah',
+    )
   })
 
   it('formats empty array', () => {

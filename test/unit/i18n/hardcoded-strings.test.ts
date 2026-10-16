@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync } from 'node:fs'
-import { join } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { parse } from 'vue/compiler-sfc'
+import { parse, type SFCTemplateBlock } from 'vue/compiler-sfc'
 
 const ROOT = join(import.meta.dirname, '..', '..', '..')
 const APP_DIR = join(ROOT, 'app')
@@ -71,6 +71,42 @@ function isHardcodedText(content: string): boolean {
   return /[a-zA-Z]/.test(trimmed)
 }
 
+function resolveTemplateAst(
+  template: SFCTemplateBlock,
+  file: string,
+  relativePath: string,
+): ASTNode | undefined {
+  if (template.src) {
+    const externalPath = resolve(dirname(file), template.src)
+
+    let externalSource: string
+    try {
+      externalSource = readFileSync(externalPath, 'utf-8')
+    } catch {
+      throw new Error(
+        `${relativePath} references external template "${template.src}" that is missing at ${externalPath}`,
+      )
+    }
+
+    // External templates are plain HTML fragments; wrap them so the SFC
+    // compiler produces the same AST shape as an inline template.
+    const { descriptor, errors } = parse(
+      `<template>${externalSource}</template>`,
+      { filename: externalPath },
+    )
+    const templateAst = descriptor.template?.ast
+    if (errors.length > 0 || !templateAst) {
+      throw new Error(
+        `${relativePath} references external template "${template.src}" that could not be audited`,
+      )
+    }
+
+    return templateAst
+  }
+
+  return template.ast
+}
+
 describe('template audit: no hardcoded product strings', () => {
   const files = collectVueFiles()
 
@@ -86,11 +122,14 @@ describe('template audit: no hardcoded product strings', () => {
       }
 
       const template = descriptor.template
-      if (!template || !template.ast) return
+      if (!template) return
+
+      const templateAst = resolveTemplateAst(template, file, relativePath)
+      if (!templateAst) return
 
       const hardcoded: string[] = []
 
-      walkNodes(template.ast, (node) => {
+      walkNodes(templateAst, (node) => {
         if (node.type === 2 && node.content && isHardcodedText(node.content)) {
           hardcoded.push(node.content.trim())
         }

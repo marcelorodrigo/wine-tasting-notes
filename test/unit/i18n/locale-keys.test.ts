@@ -81,23 +81,114 @@ function scanAppSourceForTKeys(): string[] {
   return [...new Set(refs)]
 }
 
-function detectDuplicateKeys(obj: Record<string, unknown>, path = ''): string[] {
+function detectDuplicateKeysInRawJson(raw: string): string[] {
   const duplicates: string[] = []
-  const seen = new Set<string>()
+  let index = 0
 
-  for (const [key, value] of Object.entries(obj)) {
-    const fullPath = path ? `${path}.${key}` : key
-    if (seen.has(key)) {
-      duplicates.push(fullPath)
-    } else {
-      seen.add(key)
-    }
-    if (value && typeof value === 'object' && !Array.isArray(value)) {
-      duplicates.push(
-        ...detectDuplicateKeys(value as Record<string, unknown>, fullPath),
-      )
+  function skipWhitespace(): void {
+    while (index < raw.length && /\s/.test(raw[index] ?? '')) {
+      index += 1
     }
   }
+
+  function readString(): string {
+    index += 1 // opening quote
+    let value = ''
+    while (index < raw.length) {
+      const char = raw[index]
+      if (char === '\\') {
+        value += raw[index + 1] ?? ''
+        index += 2
+        continue
+      }
+      if (char === '"') {
+        index += 1
+        return value
+      }
+      value += char
+      index += 1
+    }
+    throw new Error('Unterminated string while scanning locale JSON')
+  }
+
+  function readLiteral(): void {
+    while (index < raw.length && !/[\s,\]}]/.test(raw[index] ?? '')) {
+      index += 1
+    }
+  }
+
+  function readObject(path: string): void {
+    index += 1 // opening brace
+    const seen = new Set<string>()
+    skipWhitespace()
+    if (raw[index] === '}') {
+      index += 1
+      return
+    }
+    while (index < raw.length) {
+      skipWhitespace()
+      const key = readString()
+      const fullPath = path ? `${path}.${key}` : key
+      if (seen.has(key)) {
+        duplicates.push(fullPath)
+      } else {
+        seen.add(key)
+      }
+      skipWhitespace()
+      if (raw[index] === ':') {
+        index += 1
+      }
+      readValue(fullPath)
+      skipWhitespace()
+      if (raw[index] === ',') {
+        index += 1
+        continue
+      }
+      if (raw[index] === '}') {
+        index += 1
+        return
+      }
+      throw new Error(`Unexpected token in locale JSON at index ${index}`)
+    }
+  }
+
+  function readArray(path: string): void {
+    index += 1 // opening bracket
+    skipWhitespace()
+    if (raw[index] === ']') {
+      index += 1
+      return
+    }
+    while (index < raw.length) {
+      readValue(path)
+      skipWhitespace()
+      if (raw[index] === ',') {
+        index += 1
+        continue
+      }
+      if (raw[index] === ']') {
+        index += 1
+        return
+      }
+      throw new Error(`Unexpected token in locale JSON at index ${index}`)
+    }
+  }
+
+  function readValue(path: string): void {
+    skipWhitespace()
+    const char = raw[index]
+    if (char === '{') {
+      readObject(path)
+    } else if (char === '[') {
+      readArray(path)
+    } else if (char === '"') {
+      readString()
+    } else {
+      readLiteral()
+    }
+  }
+
+  readValue('')
 
   return duplicates
 }
@@ -108,7 +199,7 @@ describe('locale key contract', () => {
   const allKeys = flattenAllKeys(locale)
 
   it('has no duplicate keys at any level', () => {
-    const duplicates = detectDuplicateKeys(locale)
+    const duplicates = detectDuplicateKeysInRawJson(readRawLocale())
     expect(duplicates).toEqual([])
   })
 
