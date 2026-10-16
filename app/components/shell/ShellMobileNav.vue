@@ -12,6 +12,10 @@ const emit = defineEmits<{
 
 const dialogRef = ref<HTMLDialogElement | null>(null)
 
+// Matches Tailwind's default `lg` breakpoint, at which the mobile nav is hidden.
+const DESKTOP_MEDIA_QUERY = '(min-width: 64rem)'
+let desktopQuery: MediaQueryList | null = null
+
 const navLinks = computed(() => [
   { to: '/academy', label: t('shell.nav.academy') },
   { to: '/tasting', label: t('shell.nav.tasting') },
@@ -58,6 +62,13 @@ function closeDialog() {
   nextTick(() => restoreFocus())
 }
 
+function handleDesktopChange(event: MediaQueryListEvent) {
+  if (event.matches && props.open) {
+    closeDialog()
+    emit('close')
+  }
+}
+
 watch(() => props.open, (isOpen) => {
   if (isOpen) {
     openDialog()
@@ -68,6 +79,8 @@ watch(() => props.open, (isOpen) => {
 
 onMounted(() => {
   dialogRef.value?.addEventListener('click', handleBackdropClick)
+  desktopQuery = window.matchMedia(DESKTOP_MEDIA_QUERY)
+  desktopQuery.addEventListener('change', handleDesktopChange)
   if (props.open) {
     openDialog()
   }
@@ -75,6 +88,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   dialogRef.value?.removeEventListener('click', handleBackdropClick)
+  desktopQuery?.removeEventListener('change', handleDesktopChange)
   deactivate()
 })
 

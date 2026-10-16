@@ -1,6 +1,29 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import ShellMobileNav from '~/components/shell/ShellMobileNav.vue'
+
+function mockDesktopMediaQuery() {
+  const listeners = new Set<(event: MediaQueryListEvent) => void>()
+  const matchMedia = vi.spyOn(window, 'matchMedia').mockReturnValue({
+    matches: false,
+    media: '(min-width: 64rem)',
+    addEventListener: (_type: string, listener: (event: MediaQueryListEvent) => void) => {
+      listeners.add(listener)
+    },
+    removeEventListener: (_type: string, listener: (event: MediaQueryListEvent) => void) => {
+      listeners.delete(listener)
+    },
+  } as unknown as MediaQueryList)
+
+  return {
+    matchMedia,
+    emitChange: (matches: boolean) => {
+      for (const listener of listeners) {
+        listener({ matches } as MediaQueryListEvent)
+      }
+    },
+  }
+}
 
 describe('ShellMobileNav', () => {
   it('renders a native dialog element', async () => {
@@ -116,5 +139,39 @@ describe('ShellMobileNav', () => {
       props: { open: true },
     })
     expect(() => wrapper.unmount()).not.toThrow()
+  })
+
+  it('closes the dialog and emits close when the viewport reaches lg', async () => {
+    const { matchMedia, emitChange } = mockDesktopMediaQuery()
+    const wrapper = await mountSuspended(ShellMobileNav, {
+      props: { open: true },
+    })
+    await wrapper.vm.$nextTick()
+
+    emitChange(true)
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.find('dialog').element.open).toBe(false)
+    expect(wrapper.emitted('close')).toHaveLength(1)
+
+    wrapper.unmount()
+    matchMedia.mockRestore()
+  })
+
+  it('keeps the dialog open when the viewport stays below lg', async () => {
+    const { matchMedia, emitChange } = mockDesktopMediaQuery()
+    const wrapper = await mountSuspended(ShellMobileNav, {
+      props: { open: true },
+    })
+    await wrapper.vm.$nextTick()
+
+    emitChange(false)
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.find('dialog').element.open).toBe(true)
+    expect(wrapper.emitted('close')).toBeFalsy()
+
+    wrapper.unmount()
+    matchMedia.mockRestore()
   })
 })
