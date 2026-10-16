@@ -49,6 +49,16 @@ The experience serves all wine enthusiasts. It pairs approachable guidance with 
 - Non-English launch translations
 - Broad grape, region, food-pairing, or service encyclopedias
 
+## MVP Scope Decision (2026-10-16)
+
+The initial release delivers the core guided tasting wizard and note generation only. Everything else remains planned but is deferred as post-MVP work. This section supersedes any earlier sequencing that implied otherwise.
+
+- **MVP surfaces:** the canonical SAT domain, the guided workflow (Appearance, Nose, Palate, Conclusions, and review), both aroma interfaces (searchable hierarchy and radial wheel), deterministic note generation, and the generated-note page with copy.
+- **Deferred surfaces:** the academy framework and content, native sharing, private share links, SEO metadata, legal pages, PWA/offline behavior, and release-gate hardening.
+- **MVP milestone order:** Milestone 1, Milestone 2, Milestone 4, then Milestone 5 (WT-035 and WT-036 only).
+- **Storage:** session-only draft storage is ratified for the MVP. Completed tastings leave no durable note history.
+- **Ordering:** issue numbers are stable identifiers, not execution order. Dispatch work by milestone and the `Depends on` fields.
+
 ## Architecture Overview
 
 Build the product as a client-rendered Nuxt 4 SPA. The academy and adaptive tasting workflow share one component and design foundation. Static, versioned domain data drives SAT fields, terminology, aroma selection, conditional rules, validation, and narrative generation without coupling those rules to Vue components.
@@ -1883,7 +1893,7 @@ A pure generator converts a complete draft into polished, deterministic localize
 
 ---
 
-### WT-036: Build generated-note page, copy, and native share
+### WT-036: Build generated-note page and copy the result (MVP)
 
 **Type:** Result frontend  
 **Labels:** `frontend`, `sharing`, `accessibility`  
@@ -1891,31 +1901,63 @@ A pure generator converts a complete draft into polished, deterministic localize
 
 **Pull request outcome**
 
-Users can view a generated note, copy its text, use native sharing where supported, and complete the local session.
+Users can view a generated note, copy its text, and complete the local session.
 
 **Scope**
 
-- Build `/tasting/note`, `GeneratedNoteView.vue`, and initial `ShareActions.vue`.
+- Build `/tasting/note`, `GeneratedNoteView.vue`, and initial `ShareActions.vue` with copy only.
 - Add `complete-tasting` middleware.
-- Add `ClipboardPort`, `NativeSharePort`, and browser adapters with injected navigator/document dependencies.
-- Report copied, unsupported, cancelled, and failed outcomes accessibly.
+- Add `ClipboardPort` and a browser adapter with injected document dependencies.
+- Report copied, unavailable, and failed outcomes accessibly.
 - Remove session recovery after explicit completion while keeping the current in-memory result until navigation.
-- Exclude private-link creation until WT-038.
+- Exclude native sharing until WT-036b and private-link creation until WT-038.
 
 **Acceptance criteria**
 
 - Incomplete drafts redirect to review.
 - Generated sections and plain text match domain output.
 - Copy works through the Clipboard API and safe fallback where supported.
-- Native share is hidden or disabled when unsupported.
-- User cancellation is not shown as failure.
 - Completing removes the session draft key.
+- No native-share control is required in this issue.
 
 **Tests**
 
-- Unit-test clipboard and native-share adapters for success, unavailable, cancellation, and failure.
+- Unit-test the clipboard adapter for success, unavailable, and failure.
 - Nuxt-test page middleware, result rendering, action announcements, and completion cleanup.
 - Playwright-test real clipboard behavior where browser permissions allow it.
+
+---
+
+### WT-036b: Add native share action for generated notes (post-MVP)
+
+**Type:** Result frontend  
+**Labels:** `frontend`, `sharing`, `accessibility`  
+**Depends on:** WT-036  
+
+**Pull request outcome**
+
+Users can share a generated note through the native share sheet where the platform supports it.
+
+**Scope**
+
+- Add `NativeSharePort` and a browser adapter with an injected navigator dependency.
+- Extend `ShareActions.vue` with a native share action.
+- Report unsupported, cancelled, and failed outcomes accessibly.
+- Hide or disable the action when Web Share is unsupported.
+- Do not add private-link creation; that remains WT-038.
+
+**Acceptance criteria**
+
+- Native share is hidden or disabled when unsupported.
+- User cancellation is not shown as failure.
+- Supported, cancelled, and failed outcomes are announced accessibly.
+- The issue adds no new storage or network behavior.
+
+**Tests**
+
+- Unit-test the native-share adapter for success, unavailable, cancellation, and failure.
+- Nuxt-test `ShareActions` native-share states and announcements.
+- Add Playwright coverage where the platform supports the Web Share API.
 
 ---
 
@@ -1963,7 +2005,7 @@ Complete tastings round-trip through a strict compact version 1 URL-fragment pay
 
 **Type:** Sharing frontend  
 **Labels:** `frontend`, `sharing`, `privacy`, `accessibility`  
-**Depends on:** WT-009, WT-027, WT-034, WT-035, WT-036, WT-037  
+**Depends on:** WT-009, WT-027, WT-034, WT-035, WT-036, WT-036b, WT-037  
 
 **Pull request outcome**
 
@@ -2284,8 +2326,9 @@ WT-024 -> WT-034
 
 Notes and sharing:
 WT-034 -> WT-035 -> WT-036
+WT-036 -> WT-036b
 WT-025/WT-035 -> WT-037
-WT-036/WT-037 -> WT-038
+WT-036/WT-036b/WT-037 -> WT-038
 
 Public delivery:
 WT-018/WT-019/WT-021..WT-024 -> WT-039 -> WT-040
@@ -2297,32 +2340,35 @@ WT-021..WT-024/WT-032..WT-042 -> WT-043 -> WT-044 -> WT-045
 
 ## Suggested Milestones
 
-### Milestone 1: Buildable Foundation
+Each milestone below is marked `MVP` or `post-MVP` per the MVP Scope Decision. The MVP delivery order is Milestone 1, Milestone 2, Milestone 4, then the MVP issues in Milestone 5.
 
-- WT-001 through WT-012
-- Exit condition: client-only Nuxt shell, quality tooling, CI, localization, design system, and preferences work.
+### Milestone 1: Buildable Foundation (MVP)
 
-### Milestone 2: Canonical Domain and Academy Framework
+- WT-011 through WT-012
+- Exit condition: localization and preference foundations work. WT-001 through WT-010 are already complete.
 
-- WT-013 through WT-020
-- Exit condition: SAT data and rules are validated, and typed academy content can render.
+### Milestone 2: Canonical SAT Domain (MVP)
 
-### Milestone 3: Educational Launch Content
+- WT-013 through WT-017
+- Exit condition: SAT data, aroma taxonomy, applicability, completion, and wheel geometry are validated. Academy framework issues (WT-018 through WT-020) belong to Milestone 3.
 
-- WT-021 through WT-024
-- Exit condition: all academy routes contain reviewed launch content.
+### Milestone 3: Academy Framework and Content (post-MVP)
 
-### Milestone 4: Guided Tasting
+- WT-018 through WT-024
+- Exit condition: typed academy content renders and all academy routes contain reviewed launch content.
+
+### Milestone 4: Guided Tasting (MVP)
 
 - WT-025 through WT-034
 - Exit condition: users can complete every tasting section and review a valid assessment.
 
-### Milestone 5: Notes and Sharing
+### Milestone 5: Notes and Sharing (MVP: WT-035, WT-036)
 
-- WT-035 through WT-038
-- Exit condition: prose generation, copy, native sharing, and isolated fragment links work.
+- MVP: WT-035 and WT-036
+- Post-MVP: WT-036b, WT-037, WT-038
+- Exit condition for MVP: prose generation and the generated-note page with copy work. Exit condition for post-MVP: native sharing and isolated fragment links work.
 
-### Milestone 6: Public Delivery and Release
+### Milestone 6: Public Delivery and Release (post-MVP)
 
 - WT-039 through WT-045
 - Exit condition: metadata, legal pages, PWA behavior, accessibility, browser tests, and release gates pass.
