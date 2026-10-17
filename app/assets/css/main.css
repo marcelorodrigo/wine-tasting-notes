@@ -19,6 +19,33 @@
   --color-ink-200: #c9d0cc;
   --color-ink-700: #46504c;
   --color-ink-950: #111816;
+
+  /* Aroma taxonomy accents (WT-014). One token per family and category; the
+     wheel uses these to colour its segments. */
+  --color-aroma-primary: #6f1d32;
+  --color-aroma-secondary: #8a5a2b;
+  --color-aroma-tertiary: #6b4711;
+
+  --color-aroma-floral: #c45c9b;
+  --color-aroma-green-fruit: #6b9b37;
+  --color-aroma-citrus-fruit: #c9a227;
+  --color-aroma-stone-fruit: #d98841;
+  --color-aroma-tropical-fruit: #d4a017;
+  --color-aroma-red-fruit: #b23a48;
+  --color-aroma-black-fruit: #5c2233;
+  --color-aroma-dried-fruit: #9a5a2b;
+  --color-aroma-herbaceous: #4f7a3a;
+  --color-aroma-herbal: #3f7d6e;
+  --color-aroma-pungent-spice: #8a5a1e;
+  --color-aroma-other: #68726d;
+  --color-aroma-yeast: #b8873a;
+  --color-aroma-malolactic: #c9a86a;
+  --color-aroma-oak: #8c6239;
+  --color-aroma-deliberate-oxidation: #8f4b1f;
+  --color-aroma-fruit-development-white: #c98a2e;
+  --color-aroma-fruit-development-red: #7d3a22;
+  --color-aroma-bottle-age-white: #9b9b86;
+  --color-aroma-bottle-age-red: #5a4a3a;
 }
 
 /* ================================================================
