@@ -405,8 +405,8 @@ Encoded or decompressed values that exceed their limits return `SharePayloadTooL
 | `usePageMetadata` | Page metadata | Nuxt head entries | Apply title, description, canonical, and social metadata. |
 | `useTheme` | Preferences store and system-theme port | Applied theme state | Synchronize the selected theme with the document and system preference. |
 | `useOnlineStatus` | Browser connection events | Reactive connection state | Report online and offline transitions. |
-| `AppHeader` | Current route | Header navigation | Present the brand, primary navigation, tasting CTA, and theme toggle. |
-| `AppFooter` | None | Footer navigation | Present academy, legal, source, and product links. |
+| `ShellAppHeader` | Current route | Header navigation | Present the brand, primary navigation, tasting CTA, and theme toggle. |
+| `ShellAppFooter` | None | Footer navigation | Present academy, legal, source, and product links. |
 | `OfflineStatus` | Connection state | Live status message | Announce offline and restored states. |
 | `PwaUpdatePrompt` | Service-worker state | Update action | Let the user activate a waiting worker safely. |
 | `AcademyArticle` | Typed article | Semantic article | Render article blocks, table of contents, sources, and CTA. |
@@ -1072,7 +1072,7 @@ Users can choose system, light, or dark theme, and the application stores only a
 
 - Add `PreferenceRepository` and `SystemThemePort`.
 - Implement browser adapters with injected `Storage` and `matchMedia` dependencies.
-- Add `PreferencesStore`, `useTheme`, initialization plugin, and `ThemeToggle.vue`.
+- Add `PreferencesStore`, `useTheme`, initialization plugin, and `ShellThemeToggle.vue`.
 - Reserve a preference field for hierarchy/wheel view.
 - Use one documented `localStorage` key.
 - Handle unavailable or malformed storage.

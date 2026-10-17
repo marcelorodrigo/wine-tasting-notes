@@ -21,7 +21,7 @@ The first paragraph is the framework credit. The second paragraph is the tradema
 | Location | Required |
 |----------|----------|
 | `docs/legal/wset-attribution.md` | Yes — this document |
-| Application shared footer (`AppFooter.vue`) | Yes — through the default layout |
+| Application shared footer (`ShellAppFooter.vue`) | Yes — through the default layout |
 | Terms and attribution page (`/terms`) | Yes — full context with provenance |
 | Academy content | No — official terminology is identified separately |
 | Generated tasting notes | No — prose generation does not reproduce the full notice |
@@ -74,7 +74,7 @@ This document establishes requirements for later issues:
 
 | Future component | Requirement |
 |------------------|-------------|
-| `AppFooter.vue` | Render the canonical attribution block on all public pages |
+| `ShellAppFooter.vue` | Render the canonical attribution block on all public pages |
 | `app/layouts/default.vue` | Include the shared footer for site-wide placement |
 | `/terms` page | Present the attribution and notice with full source provenance context |
 | `app/data/sat/v1/provenance.ts` | Reference the source edition and attribution record |
