@@ -150,6 +150,203 @@
         }
       }
     },
+    "aromas": {
+      "families": {
+        "primary": "Primary",
+        "secondary": "Secondary",
+        "tertiary": "Tertiary"
+      },
+      "categories": {
+        "floral": "Floral",
+        "green-fruit": "Green fruit",
+        "citrus-fruit": "Citrus fruit",
+        "stone-fruit": "Stone fruit",
+        "tropical-fruit": "Tropical fruit",
+        "red-fruit": "Red fruit",
+        "black-fruit": "Black fruit",
+        "dried-fruit": "Dried/cooked fruit",
+        "herbaceous": "Herbaceous",
+        "herbal": "Herbal",
+        "pungent-spice": "Pungent spice",
+        "other": "Other",
+        "yeast": "Yeast",
+        "malolactic": "Malolactic conversion",
+        "oak": "Oak",
+        "deliberate-oxidation": "Deliberate oxidation",
+        "fruit-development-white": "Fruit development (white)",
+        "fruit-development-red": "Fruit development (red)",
+        "bottle-age-white": "Bottle age (white)",
+        "bottle-age-red": "Bottle age (red)"
+      },
+      "descriptors": {
+        "floral": {
+          "acacia": "Acacia",
+          "honeysuckle": "Honeysuckle",
+          "chamomile": "Chamomile",
+          "elderflower": "Elderflower",
+          "geranium": "Geranium",
+          "blossom": "Blossom",
+          "rose": "Rose",
+          "violet": "Violet"
+        },
+        "green-fruit": {
+          "apple": "Apple",
+          "gooseberry": "Gooseberry",
+          "pear": "Pear",
+          "pear-drop": "Pear drop",
+          "quince": "Quince",
+          "grape": "Grape"
+        },
+        "citrus-fruit": {
+          "grapefruit": "Grapefruit",
+          "lemon": "Lemon",
+          "lime": "Lime",
+          "orange-peel": "Orange peel",
+          "lemon-peel": "Lemon peel"
+        },
+        "stone-fruit": {
+          "peach": "Peach",
+          "apricot": "Apricot",
+          "nectarine": "Nectarine"
+        },
+        "tropical-fruit": {
+          "banana": "Banana",
+          "lychee": "Lychee",
+          "mango": "Mango",
+          "melon": "Melon",
+          "passion-fruit": "Passion fruit",
+          "pineapple": "Pineapple"
+        },
+        "red-fruit": {
+          "redcurrant": "Redcurrant",
+          "cranberry": "Cranberry",
+          "raspberry": "Raspberry",
+          "strawberry": "Strawberry",
+          "red-cherry": "Red cherry",
+          "red-plum": "Red plum"
+        },
+        "black-fruit": {
+          "blackcurrant": "Blackcurrant",
+          "blackberry": "Blackberry",
+          "bramble": "Bramble",
+          "blueberry": "Blueberry",
+          "black-cherry": "Black cherry",
+          "black-plum": "Black plum"
+        },
+        "dried-fruit": {
+          "fig": "Fig",
+          "prune": "Prune",
+          "raisin": "Raisin",
+          "sultana": "Sultana",
+          "kirsch": "Kirsch",
+          "jamminess": "Jamminess",
+          "baked-stewed-fruits": "Baked/stewed fruits",
+          "preserved-fruits": "Preserved fruits"
+        },
+        "herbaceous": {
+          "green-bell-pepper": "Green bell pepper (capsicum)",
+          "grass": "Grass",
+          "tomato-leaf": "Tomato leaf",
+          "asparagus": "Asparagus",
+          "blackcurrant-leaf": "Blackcurrant leaf"
+        },
+        "herbal": {
+          "eucalyptus": "Eucalyptus",
+          "mint": "Mint",
+          "medicinal": "Medicinal",
+          "lavender": "Lavender",
+          "fennel": "Fennel",
+          "dill": "Dill"
+        },
+        "pungent-spice": {
+          "black-white-pepper": "Black/white pepper",
+          "liquorice": "Liquorice"
+        },
+        "other": {
+          "flint": "Flint",
+          "wet-stones": "Wet stones",
+          "wet-wool": "Wet wool"
+        },
+        "yeast": {
+          "biscuit": "Biscuit",
+          "bread": "Bread",
+          "toast": "Toast",
+          "pastry": "Pastry",
+          "brioche": "Brioche",
+          "bread-dough": "Bread dough",
+          "cheese": "Cheese"
+        },
+        "malolactic": {
+          "butter": "Butter",
+          "cheese": "Cheese",
+          "cream": "Cream"
+        },
+        "oak": {
+          "vanilla": "Vanilla",
+          "cloves": "Cloves",
+          "nutmeg": "Nutmeg",
+          "coconut": "Coconut",
+          "butterscotch": "Butterscotch",
+          "toast": "Toast",
+          "cedar": "Cedar",
+          "charred-wood": "Charred wood",
+          "smoke": "Smoke",
+          "chocolate": "Chocolate",
+          "coffee": "Coffee",
+          "resinous": "Resinous"
+        },
+        "deliberate-oxidation": {
+          "almond": "Almond",
+          "marzipan": "Marzipan",
+          "hazelnut": "Hazelnut",
+          "walnut": "Walnut",
+          "chocolate": "Chocolate",
+          "coffee": "Coffee",
+          "toffee": "Toffee",
+          "caramel": "Caramel"
+        },
+        "fruit-development-white": {
+          "dried-apricot": "Dried apricot",
+          "marmalade": "Marmalade",
+          "dried-apple": "Dried apple",
+          "dried-banana": "Dried banana"
+        },
+        "fruit-development-red": {
+          "fig": "Fig",
+          "prune": "Prune",
+          "tar": "Tar",
+          "dried-blackberry": "Dried blackberry",
+          "dried-cranberry": "Dried cranberry",
+          "cooked-blackberry": "Cooked blackberry",
+          "cooked-red-plum": "Cooked red plum"
+        },
+        "bottle-age-white": {
+          "petrol": "Petrol",
+          "kerosene": "Kerosene",
+          "cinnamon": "Cinnamon",
+          "ginger": "Ginger",
+          "nutmeg": "Nutmeg",
+          "toast": "Toast",
+          "nutty": "Nutty",
+          "mushroom": "Mushroom",
+          "hay": "Hay",
+          "honey": "Honey"
+        },
+        "bottle-age-red": {
+          "leather": "Leather",
+          "forest-floor": "Forest floor",
+          "earth": "Earth",
+          "mushroom": "Mushroom",
+          "game": "Game",
+          "tobacco": "Tobacco",
+          "vegetal": "Vegetal",
+          "wet-leaves": "Wet leaves",
+          "savoury": "Savoury",
+          "meaty": "Meaty",
+          "farmyard": "Farmyard"
+        }
+      }
+    },
     "options": {
       "appearance": {
         "clarity": {

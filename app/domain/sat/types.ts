@@ -44,3 +44,22 @@ export interface SatProvenance {
   attributionReference: string
   recordedAt: string
 }
+
+export type AromaNodeKind = 'family' | 'category' | 'descriptor'
+
+/**
+ * A node in the canonical aroma and flavour taxonomy (WT-014). The taxonomy is a
+ * three-level tree — family, category, descriptor — shared by nose aromas and
+ * palate flavours. Ids are stable and independent of their English labels;
+ * families and categories are navigation-only, so only descriptors may be
+ * selected (`selectable: true`).
+ */
+export interface AromaNode {
+  id: string
+  parentId: string | null
+  kind: AromaNodeKind
+  selectable: boolean
+  labelKey: string
+  order: number
+  colourToken: string
+}
