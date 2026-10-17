@@ -43,7 +43,239 @@
     "message": "Message"
   },
   "academy": {},
-  "sat": {},
+  "sat": {
+    "sections": {
+      "appearance": "Appearance",
+      "nose": "Nose",
+      "palate": "Palate",
+      "conclusions": "Conclusions"
+    },
+    "fields": {
+      "appearance": {
+        "clarity": {
+          "label": "Clarity",
+          "prompt": "Is the wine clear or hazy?",
+          "help": "Assessed against a white background."
+        },
+        "intensity": {
+          "label": "Intensity",
+          "prompt": "How intense is the colour?",
+          "help": "Pale, medium, or deep."
+        },
+        "colour": {
+          "label": "Colour",
+          "prompt": "What colour is the wine?",
+          "help": "The available options depend on the wine style."
+        },
+        "other-observations": {
+          "label": "Other observations",
+          "prompt": "Any other appearance observations?"
+        }
+      },
+      "nose": {
+        "condition": {
+          "label": "Condition",
+          "prompt": "Is the nose clean or unclean?",
+          "help": "Unclean indicates a fault."
+        },
+        "faults": {
+          "label": "Faults",
+          "prompt": "Which faults can you identify?",
+          "help": "Only relevant when the nose is unclean."
+        },
+        "intensity": {
+          "label": "Intensity",
+          "prompt": "How intense are the aromas?"
+        },
+        "development": {
+          "label": "Development",
+          "prompt": "How developed are the aromas?",
+          "help": "From youthful through to tired."
+        },
+        "other-aromas": {
+          "label": "Other aromas",
+          "prompt": "Any aromas not listed?"
+        }
+      },
+      "palate": {
+        "sweetness": {
+          "label": "Sweetness",
+          "prompt": "How sweet is the wine?"
+        },
+        "acidity": {
+          "label": "Acidity",
+          "prompt": "How would you rate the acidity?",
+          "help": "From low through to high."
+        },
+        "tannin": {
+          "label": "Tannin",
+          "prompt": "How would you rate the tannin?",
+          "help": "Assessed for red wines."
+        },
+        "alcohol": {
+          "label": "Alcohol",
+          "prompt": "How would you rate the alcohol?"
+        },
+        "body": {
+          "label": "Body",
+          "prompt": "How full is the body?"
+        },
+        "mousse": {
+          "label": "Mousse",
+          "prompt": "How would you describe the mousse?",
+          "help": "Sparkling wines only."
+        },
+        "flavour-intensity": {
+          "label": "Flavour intensity",
+          "prompt": "How intense are the flavours?"
+        },
+        "other-flavours": {
+          "label": "Other flavours",
+          "prompt": "Any flavours not listed?"
+        },
+        "finish": {
+          "label": "Finish",
+          "prompt": "How long is the finish?"
+        }
+      },
+      "conclusions": {
+        "quality": {
+          "label": "Quality",
+          "prompt": "How would you rate the overall quality?"
+        },
+        "readiness": {
+          "label": "Readiness",
+          "prompt": "How ready is the wine to drink?",
+          "help": "Consider the ageing potential."
+        }
+      }
+    },
+    "options": {
+      "appearance": {
+        "clarity": {
+          "clear": "Clear",
+          "hazy": "Hazy"
+        },
+        "intensity": {
+          "pale": "Pale",
+          "medium": "Medium",
+          "deep": "Deep"
+        },
+        "colour": {
+          "lemon-green": "Lemon green",
+          "lemon": "Lemon",
+          "gold": "Gold",
+          "amber": "Amber",
+          "brown": "Brown",
+          "pink": "Pink",
+          "salmon": "Salmon",
+          "orange": "Orange",
+          "purple": "Purple",
+          "ruby": "Ruby",
+          "garnet": "Garnet",
+          "tawny": "Tawny"
+        }
+      },
+      "nose": {
+        "condition": {
+          "clean": "Clean",
+          "unclean": "Unclean"
+        },
+        "faults": {
+          "cork-taint": "Cork taint",
+          "oxidised": "Oxidised",
+          "volatile-acidity": "Volatile acidity",
+          "reduction": "Reduction",
+          "brettanomyces": "Brettanomyces",
+          "sulphur-dioxide": "Sulphur dioxide"
+        },
+        "intensity": {
+          "light": "Light",
+          "medium-minus": "Medium minus",
+          "medium": "Medium",
+          "medium-plus": "Medium plus",
+          "pronounced": "Pronounced"
+        },
+        "development": {
+          "youthful": "Youthful",
+          "developing": "Developing",
+          "fully-developed": "Fully developed",
+          "tired": "Tired"
+        }
+      },
+      "palate": {
+        "sweetness": {
+          "dry": "Dry",
+          "off-dry": "Off-dry",
+          "medium-dry": "Medium dry",
+          "medium-sweet": "Medium sweet",
+          "sweet": "Sweet",
+          "luscious": "Luscious"
+        },
+        "acidity": {
+          "low": "Low",
+          "medium-minus": "Medium minus",
+          "medium": "Medium",
+          "medium-plus": "Medium plus",
+          "high": "High"
+        },
+        "tannin": {
+          "low": "Low",
+          "medium-minus": "Medium minus",
+          "medium": "Medium",
+          "medium-plus": "Medium plus",
+          "high": "High"
+        },
+        "alcohol": {
+          "low": "Low",
+          "medium": "Medium",
+          "high": "High"
+        },
+        "body": {
+          "light": "Light",
+          "medium-minus": "Medium minus",
+          "medium": "Medium",
+          "medium-plus": "Medium plus",
+          "full": "Full"
+        },
+        "mousse": {
+          "delicate": "Delicate",
+          "creamy": "Creamy",
+          "aggressive": "Aggressive"
+        },
+        "flavour-intensity": {
+          "light": "Light",
+          "medium-minus": "Medium minus",
+          "medium": "Medium",
+          "medium-plus": "Medium plus",
+          "pronounced": "Pronounced"
+        },
+        "finish": {
+          "short": "Short",
+          "medium-minus": "Medium minus",
+          "medium": "Medium",
+          "medium-plus": "Medium plus",
+          "long": "Long"
+        }
+      },
+      "conclusions": {
+        "quality": {
+          "faulty": "Faulty",
+          "poor": "Poor",
+          "acceptable": "Acceptable",
+          "good": "Good",
+          "very-good": "Very good",
+          "outstanding": "Outstanding"
+        },
+        "readiness": {
+          "too-young": "Too young",
+          "can-drink-now-but-has-potential-for-ageing": "Can drink now but has potential for ageing",
+          "drink-now-not-suitable-for-ageing": "Drink now, not suitable for ageing",
+          "too-old": "Too old"
+        }
+      }
+    }
+  },
   "tasting": {},
   "validation": {},
   "note": {},
