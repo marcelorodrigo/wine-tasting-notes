@@ -113,12 +113,20 @@ describe('InlineNotice', () => {
     expect(wrapper.find('[role]').exists()).toBe(false)
   })
 
-  it('sets accessible name on dismiss button', async () => {
+  it('uses the dismissLabel prop for the dismiss button accessible name', async () => {
+    const wrapper = await mountSuspended(InlineNotice, {
+      props: { dismissible: true, dismissLabel: 'Dismiss alert' },
+      slots: { default: 'Content' },
+    })
+    expect(wrapper.find('button').attributes('aria-label')).toBe('Dismiss alert')
+  })
+
+  it('does not fabricate an accessible name when dismissLabel is omitted', async () => {
     const wrapper = await mountSuspended(InlineNotice, {
       props: { dismissible: true },
       slots: { default: 'Content' },
     })
-    expect(wrapper.find('button').attributes('aria-label')).toBe('Dismiss notification')
+    expect(wrapper.find('button').attributes('aria-label')).toBeUndefined()
   })
 
   it('renders title from slot without title prop', async () => {

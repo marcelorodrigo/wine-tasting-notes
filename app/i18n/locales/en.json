@@ -48,7 +48,12 @@
   "validation": {},
   "note": {},
   "share": {},
-  "legal": {},
+  "legal": {
+    "attribution": {
+      "framework": "This project's tasting structure and terminology are informed by the WSET Level 3 Systematic Approach to Tasting.",
+      "trademark": "We are not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Wine & Spirit Education Trust. \"WSET\" and \"Systematic Approach to Tasting\" are trademarks of the Wine & Spirit Education Trust."
+    }
+  },
   "offline": {},
   "errors": {
     "draft": {
