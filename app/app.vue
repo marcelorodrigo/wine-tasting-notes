@@ -1,6 +1,12 @@
+<script setup lang="ts">
+useTheme()
+</script>
+
 <template>
   <div>
     <NuxtRouteAnnouncer />
-    <NuxtPage />
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
   </div>
 </template>

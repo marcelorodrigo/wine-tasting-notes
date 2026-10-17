@@ -150,6 +150,10 @@ watch(() => route.fullPath, () => {
           </li>
         </ul>
       </div>
+
+      <div class="border-t border-border px-4 py-6">
+        <ShellThemeToggle />
+      </div>
     </nav>
   </dialog>
 </template>

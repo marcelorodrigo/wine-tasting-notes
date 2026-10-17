@@ -1,4 +1,5 @@
 import tailwindcss from '@tailwindcss/vite'
+import { THEME_INIT_SCRIPT } from './app/ports/preferences'
 
 export default defineNuxtConfig({
   compatibilityDate: '2026-08-30',
@@ -9,6 +10,7 @@ export default defineNuxtConfig({
   app: {
     head: {
       htmlAttrs: { lang: 'en' },
+      script: [{ innerHTML: THEME_INIT_SCRIPT }],
     },
   },
 

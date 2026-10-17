@@ -26,14 +26,14 @@ describe('ShellAppHeader', () => {
 
   it('emits openMenu when mobile menu button is clicked', async () => {
     const wrapper = await mountSuspended(ShellAppHeader)
-    const menuButton = wrapper.find('button')
+    const menuButton = wrapper.get('button[aria-label="Open menu"]')
     await menuButton.trigger('click')
     expect(wrapper.emitted('openMenu')).toHaveLength(1)
   })
 
   it('has accessible aria-label on mobile menu button', async () => {
     const wrapper = await mountSuspended(ShellAppHeader)
-    const menuButton = wrapper.find('button')
+    const menuButton = wrapper.get('button[aria-label="Open menu"]')
     expect(menuButton.attributes('aria-label')).toBeTruthy()
   })
 })
