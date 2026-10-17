@@ -31,7 +31,19 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
     '@nuxtjs/robots',
     '@nuxtjs/sitemap',
+    '@vite-pwa/nuxt',
   ],
+
+  // WT-004: the PWA module is registered at its minimum viable setting so the
+  // dependency and config key exist. Service worker generation, the client
+  // registration plugin, the manifest, and offline behavior are deferred to
+  // WT-041.
+  pwa: {
+    disable: true,
+    client: {
+      registerPlugin: false,
+    },
+  },
 
   vite: {
     plugins: [tailwindcss()],
