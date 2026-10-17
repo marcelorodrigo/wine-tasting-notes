@@ -100,4 +100,4 @@ export function serializePreferences(preferences: Preferences): string {
  * of the wrong colors. It intentionally duplicates the persistence shape in
  * plain JavaScript because it cannot import application modules.
  */
-export const THEME_INIT_SCRIPT = `!function(){try{var r=window.localStorage.getItem(${JSON.stringify(PREFERENCES_STORAGE_KEY)});if(!r)return;var p=JSON.parse(r);if(p&&(p.theme==="light"||p.theme==="dark")){document.documentElement.setAttribute("data-theme",p.theme)}}catch(e){}}();`
+export const THEME_INIT_SCRIPT = `!function(){try{var r=window.localStorage.getItem(${JSON.stringify(PREFERENCES_STORAGE_KEY)});if(!r)return;var p=JSON.parse(r);if(p&&p.schemaVersion===1&&(p.aromaView==="hierarchy"||p.aromaView==="wheel")&&(p.theme==="light"||p.theme==="dark")){document.documentElement.setAttribute("data-theme",p.theme)}}catch(e){}}();`

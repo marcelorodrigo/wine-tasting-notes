@@ -16,7 +16,11 @@ export interface PreferencesStoreOptions {
 }
 
 function browserStorage(): Storage | null {
-  return typeof localStorage === 'undefined' ? null : localStorage
+  try {
+    return typeof localStorage === 'undefined' ? null : localStorage
+  } catch {
+    return null
+  }
 }
 
 function browserMatchMedia(): ((query: string) => MediaQueryList) | null {

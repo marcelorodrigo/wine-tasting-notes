@@ -7,9 +7,9 @@ export function useTheme() {
     watchEffect(() => {
       const root = document.documentElement
       if (store.theme === 'system') {
-        root.removeAttribute('data-theme')
+        delete root.dataset.theme
       } else {
-        root.setAttribute('data-theme', store.theme)
+        root.dataset.theme = store.theme
       }
     })
   }

@@ -98,7 +98,7 @@ describe('createBrowserPreferenceRepository', () => {
     const repository = createBrowserPreferenceRepository(storage)
     const preferences: Preferences = { schemaVersion: 1, theme: 'light', aromaView: 'wheel' }
     expect(repository.save(preferences).ok).toBe(true)
-    expect(storage.length).toBe(1)
+    expect(storage).toHaveLength(1)
     expect(storage.key(0)).toBe(PREFERENCES_STORAGE_KEY)
     expect(JSON.parse(storage.getItem(PREFERENCES_STORAGE_KEY) ?? '')).toEqual(preferences)
   })
