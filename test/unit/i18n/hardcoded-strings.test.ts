@@ -10,6 +10,20 @@ const SCANNED_DIRS = ['components', 'pages', 'layouts']
 const SCANNED_FILES = ['error.vue']
 const EXCLUDED_FILES = ['components-fixture.vue']
 
+// `vue/compiler-sfc` AST node type for a static attribute (e.g. `aria-label="x"`).
+const ATTRIBUTE_NODE = 6
+
+// Attributes whose literal values are exposed to users, through assistive
+// technology or the UI, and must therefore come from localization keys.
+const LOCALIZED_ATTRIBUTES = new Set([
+  'aria-label',
+  'aria-valuetext',
+  'aria-description',
+  'title',
+  'alt',
+  'placeholder',
+])
+
 function collectVueFiles(): string[] {
   const files: string[] = []
 
@@ -47,7 +61,11 @@ interface ASTNode {
   type: number
   content?: string
   children?: ASTNode[]
-  props?: Array<{ name: string; value?: { content: string } }>
+  props?: Array<{
+    type: number
+    name: string
+    value?: { content: string }
+  }>
 }
 
 function walkNodes(
@@ -113,7 +131,7 @@ describe('template audit: no hardcoded product strings', () => {
   for (const file of files) {
     const relativePath = file.replace(`${ROOT}/`, '')
 
-    it(`${relativePath} has no hardcoded visible text`, () => {
+    it(`${relativePath} has no hardcoded user-facing strings`, () => {
       const source = readFileSync(file, 'utf-8')
       const { descriptor, errors } = parse(source, { filename: file })
 
@@ -131,13 +149,22 @@ describe('template audit: no hardcoded product strings', () => {
 
       walkNodes(templateAst, (node) => {
         if (node.type === 2 && node.content && isHardcodedText(node.content)) {
-          hardcoded.push(node.content.trim())
+          hardcoded.push(`text: ${node.content.trim()}`)
+        }
+
+        for (const prop of node.props ?? []) {
+          if (prop.type !== ATTRIBUTE_NODE) continue
+          if (!LOCALIZED_ATTRIBUTES.has(prop.name)) continue
+          const value = prop.value?.content
+          if (value && isHardcodedText(value)) {
+            hardcoded.push(`${prop.name}: ${value.trim()}`)
+          }
         }
       })
 
       expect(
         hardcoded,
-        `Found hardcoded text in ${relativePath}: ${hardcoded.join(', ')}`,
+        `Found hardcoded user-facing strings in ${relativePath}: ${hardcoded.join(', ')}`,
       ).toEqual([])
     })
   }

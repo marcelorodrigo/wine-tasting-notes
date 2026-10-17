@@ -6,6 +6,7 @@ const props = withDefaults(defineProps<{
   role?: InlineNoticeRole
   title?: string
   dismissible?: boolean
+  dismissLabel?: string
   modelValue?: boolean
   live?: 'off' | 'polite' | 'assertive'
 }>(), {
@@ -13,6 +14,7 @@ const props = withDefaults(defineProps<{
   role: 'status',
   title: undefined,
   dismissible: false,
+  dismissLabel: undefined,
   modelValue: true,
   live: 'off',
 })
@@ -52,7 +54,7 @@ function handleDismiss() {
     <button
       v-if="dismissible"
       type="button"
-      aria-label="Dismiss notification"
+      :aria-label="dismissLabel"
       :class="[
         'absolute top-3 right-3 min-w-[2.75rem] min-h-[2.75rem] inline-flex items-center justify-center rounded-control text-muted hover:text-foreground hover:bg-subtle transition-colors focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-focus',
       ]"
