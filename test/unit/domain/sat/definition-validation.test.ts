@@ -42,6 +42,10 @@ describe('validateAromaTaxonomy', () => {
     expect(validateAromaTaxonomy(validTaxonomy).valid).toBe(true)
   })
 
+  it('resolves parents regardless of node order', () => {
+    expect(validateAromaTaxonomy([...validTaxonomy].reverse())).toEqual({ valid: true, errors: [] })
+  })
+
   it('rejects an empty taxonomy', () => {
     expect(errorCodes([])).toContain('empty-taxonomy')
   })
@@ -82,6 +86,15 @@ describe('validateAromaTaxonomy', () => {
       parentId: family.id,
     })
     expect(errorCodes([family, misplaced])).toContain('invalid-parent-kind')
+  })
+
+  it('rejects a wrong parent kind when the parent appears later', () => {
+    const misplaced = node({
+      id: 'aroma.family.misplaced',
+      kind: 'descriptor',
+      parentId: family.id,
+    })
+    expect(errorCodes([misplaced, family])).toContain('invalid-parent-kind')
   })
 
   it('rejects a parent cycle', () => {

@@ -64,7 +64,11 @@ export function validateAromaTaxonomy(
       continue
     }
     byId.set(node.id, node)
+  }
 
+  const uniqueNodes = [...byId.values()]
+
+  for (const node of uniqueNodes) {
     if (!ID_PATTERN.test(node.id)) {
       errors.push({
         code: 'invalid-id',
@@ -138,7 +142,7 @@ export function validateAromaTaxonomy(
   }
 
   const siblingOrders = new Map<string, Set<number>>()
-  for (const node of nodes) {
+  for (const node of uniqueNodes) {
     const siblingKey = node.parentId ?? ROOT_KEY
     const orders = siblingOrders.get(siblingKey) ?? new Set<number>()
     if (orders.has(node.order)) {
@@ -152,7 +156,7 @@ export function validateAromaTaxonomy(
     siblingOrders.set(siblingKey, orders)
   }
 
-  for (const node of nodes) {
+  for (const node of uniqueNodes) {
     const seen = new Set<string>([node.id])
     let current: AromaNode = node
     while (current.parentId !== null) {
