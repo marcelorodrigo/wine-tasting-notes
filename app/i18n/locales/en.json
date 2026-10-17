@@ -19,6 +19,12 @@
       "open": "Open menu",
       "close": "Close menu"
     },
+    "theme": {
+      "label": "Color theme",
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark"
+    },
     "footer": {
       "academy": "Academy",
       "tasting": "Start Tasting",

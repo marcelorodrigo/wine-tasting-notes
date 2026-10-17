@@ -102,3 +102,13 @@ English is the default locale. All user-facing strings must go through `t()` / `
 ### Domain formatting seams
 
 `app/services/i18n/` exports pure TypeScript types (`Translator`, `ListFormatter`) and utilities for locale-aware formatting. Domain code (e.g. note generators) receives these via dependency injection — no Nuxt imports required.
+
+## Browser storage
+
+Non-note user preferences are persisted to a single `localStorage` key.
+
+| Key | Contents |
+|-----|----------|
+| `wtng:preferences:v1` | `theme` (`system` \| `light` \| `dark`) and `aromaView` (`hierarchy` \| `wheel`) |
+
+Tasting notes and session content are never written to `localStorage`; they live in `sessionStorage` or an explicit share fragment only. Malformed or unavailable storage falls back to defaults and never blocks rendering or theme changes.
