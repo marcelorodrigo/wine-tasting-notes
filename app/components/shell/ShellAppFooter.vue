@@ -72,7 +72,13 @@ const legalLinks = computed(() => [
         </div>
       </div>
 
-      <div class="mt-10 border-t border-border pt-6">
+      <div class="mt-10 space-y-3 border-t border-border pt-6">
+        <p class="font-interface text-xs text-muted">
+          {{ t('legal.attribution.framework') }}
+        </p>
+        <p class="font-interface text-xs text-muted">
+          {{ t('legal.attribution.trademark') }}
+        </p>
         <p class="font-interface text-xs text-muted">
           &copy; {{ currentYear }} {{ t('app.name') }}. {{ t('shell.footer.copyright') }}
         </p>
