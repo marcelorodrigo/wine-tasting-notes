@@ -45,7 +45,8 @@ export function validateAromaTaxonomy(
   nodes: readonly AromaNode[],
 ): AromaTaxonomyValidationResult {
   const errors: AromaTaxonomyError[] = []
-  const byId = new Map<string, AromaNode>()
+  const byId = indexById(nodes, errors)
+  const uniqueNodes = [...byId.values()]
 
   if (nodes.length === 0) {
     errors.push({
@@ -54,6 +55,26 @@ export function validateAromaTaxonomy(
     })
   }
 
+  for (const node of uniqueNodes) {
+    validateNodeShape(node, errors)
+    validateNodePlacement(node, byId, errors)
+  }
+
+  validateSiblingOrder(uniqueNodes, errors)
+  validateNoCycles(uniqueNodes, byId, errors)
+
+  return { valid: errors.length === 0, errors }
+}
+
+/**
+ * Indexes nodes by id, reporting each repeated id once and keeping the first
+ * occurrence so every downstream check runs over unique nodes only.
+ */
+function indexById(
+  nodes: readonly AromaNode[],
+  errors: AromaTaxonomyError[],
+): Map<string, AromaNode> {
+  const byId = new Map<string, AromaNode>()
   for (const node of nodes) {
     if (byId.has(node.id)) {
       errors.push({
@@ -65,82 +86,95 @@ export function validateAromaTaxonomy(
     }
     byId.set(node.id, node)
   }
+  return byId
+}
 
-  const uniqueNodes = [...byId.values()]
+function validateNodeShape(node: AromaNode, errors: AromaTaxonomyError[]): void {
+  if (!ID_PATTERN.test(node.id)) {
+    errors.push({
+      code: 'invalid-id',
+      nodeId: node.id,
+      message: `Aroma node id "${node.id}" is not a canonical dot-separated id.`,
+    })
+  }
 
-  for (const node of uniqueNodes) {
-    if (!ID_PATTERN.test(node.id)) {
-      errors.push({
-        code: 'invalid-id',
-        nodeId: node.id,
-        message: `Aroma node id "${node.id}" is not a canonical dot-separated id.`,
-      })
-    }
+  if (node.labelKey.trim() === '') {
+    errors.push({
+      code: 'missing-label-key',
+      nodeId: node.id,
+      message: `Aroma node "${node.id}" has no label key.`,
+    })
+  }
 
-    if (node.labelKey.trim() === '') {
-      errors.push({
-        code: 'missing-label-key',
-        nodeId: node.id,
-        message: `Aroma node "${node.id}" has no label key.`,
-      })
-    }
+  if (!COLOUR_TOKEN_PATTERN.test(node.colourToken)) {
+    errors.push({
+      code: 'invalid-colour-token',
+      nodeId: node.id,
+      message: `Aroma node "${node.id}" has an invalid colour token "${node.colourToken}".`,
+    })
+  }
 
-    if (!COLOUR_TOKEN_PATTERN.test(node.colourToken)) {
-      errors.push({
-        code: 'invalid-colour-token',
-        nodeId: node.id,
-        message: `Aroma node "${node.id}" has an invalid colour token "${node.colourToken}".`,
-      })
-    }
+  const shouldBeSelectable = node.kind === 'descriptor'
+  if (node.selectable !== shouldBeSelectable) {
+    errors.push({
+      code: 'invalid-selectable',
+      nodeId: node.id,
+      message: `${node.kind} "${node.id}" must be ${
+        shouldBeSelectable ? 'selectable' : 'navigation-only'
+      }.`,
+    })
+  }
+}
 
-    const shouldBeSelectable = node.kind === 'descriptor'
-    if (node.selectable !== shouldBeSelectable) {
-      errors.push({
-        code: 'invalid-selectable',
-        nodeId: node.id,
-        message: `${node.kind} "${node.id}" must be ${
-          shouldBeSelectable ? 'selectable' : 'navigation-only'
-        }.`,
-      })
-    }
-
-    if (node.kind === 'family') {
-      if (node.parentId !== null) {
-        errors.push({
-          code: 'invalid-root',
-          nodeId: node.id,
-          message: `Aroma family "${node.id}" must not have a parent.`,
-        })
-      }
-    } else if (node.parentId === null) {
+function validateNodePlacement(
+  node: AromaNode,
+  byId: ReadonlyMap<string, AromaNode>,
+  errors: AromaTaxonomyError[],
+): void {
+  if (node.kind === 'family') {
+    if (node.parentId !== null) {
       errors.push({
         code: 'invalid-root',
         nodeId: node.id,
-        message: `Aroma ${node.kind} "${node.id}" must reference a parent.`,
+        message: `Aroma family "${node.id}" must not have a parent.`,
       })
     }
-
-    if (node.parentId !== null) {
-      const parent = byId.get(node.parentId)
-      if (!parent) {
-        errors.push({
-          code: 'unknown-parent',
-          nodeId: node.id,
-          message: `Aroma node "${node.id}" references unknown parent "${node.parentId}".`,
-        })
-      } else {
-        const expectedKind = EXPECTED_PARENT_KIND[node.kind]
-        if (expectedKind && parent.kind !== expectedKind) {
-          errors.push({
-            code: 'invalid-parent-kind',
-            nodeId: node.id,
-            message: `Aroma ${node.kind} "${node.id}" must have a ${expectedKind} parent, found ${parent.kind} "${parent.id}".`,
-          })
-        }
-      }
-    }
+  } else if (node.parentId === null) {
+    errors.push({
+      code: 'invalid-root',
+      nodeId: node.id,
+      message: `Aroma ${node.kind} "${node.id}" must reference a parent.`,
+    })
   }
 
+  if (node.parentId === null) {
+    return
+  }
+
+  const parent = byId.get(node.parentId)
+  if (!parent) {
+    errors.push({
+      code: 'unknown-parent',
+      nodeId: node.id,
+      message: `Aroma node "${node.id}" references unknown parent "${node.parentId}".`,
+    })
+    return
+  }
+
+  const expectedKind = EXPECTED_PARENT_KIND[node.kind]
+  if (expectedKind && parent.kind !== expectedKind) {
+    errors.push({
+      code: 'invalid-parent-kind',
+      nodeId: node.id,
+      message: `Aroma ${node.kind} "${node.id}" must have a ${expectedKind} parent, found ${parent.kind} "${parent.id}".`,
+    })
+  }
+}
+
+function validateSiblingOrder(
+  uniqueNodes: readonly AromaNode[],
+  errors: AromaTaxonomyError[],
+): void {
   const siblingOrders = new Map<string, Set<number>>()
   for (const node of uniqueNodes) {
     const siblingKey = node.parentId ?? ROOT_KEY
@@ -155,7 +189,13 @@ export function validateAromaTaxonomy(
     orders.add(node.order)
     siblingOrders.set(siblingKey, orders)
   }
+}
 
+function validateNoCycles(
+  uniqueNodes: readonly AromaNode[],
+  byId: ReadonlyMap<string, AromaNode>,
+  errors: AromaTaxonomyError[],
+): void {
   for (const node of uniqueNodes) {
     const seen = new Set<string>([node.id])
     let current: AromaNode = node
@@ -176,8 +216,6 @@ export function validateAromaTaxonomy(
       current = parent
     }
   }
-
-  return { valid: errors.length === 0, errors }
 }
 
 /**

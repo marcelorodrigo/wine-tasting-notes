@@ -92,13 +92,13 @@ describe('SAT source expectations', () => {
   })
 
   it('matches the expected aroma family, category and descriptor counts', () => {
-    expect(satV1Aromas.filter((node) => node.kind === 'family').length).toBe(
+    expect(satV1Aromas.filter((node) => node.kind === 'family')).toHaveLength(
       SAT_SOURCE_EXPECTATIONS.aromas.totalFamilyCount,
     )
-    expect(satV1Aromas.filter((node) => node.kind === 'category').length).toBe(
+    expect(satV1Aromas.filter((node) => node.kind === 'category')).toHaveLength(
       SAT_SOURCE_EXPECTATIONS.aromas.totalCategoryCount,
     )
-    expect(satV1Aromas.filter((node) => node.kind === 'descriptor').length).toBe(
+    expect(satV1Aromas.filter((node) => node.kind === 'descriptor')).toHaveLength(
       SAT_SOURCE_EXPECTATIONS.aromas.totalDescriptorCount,
     )
   })
