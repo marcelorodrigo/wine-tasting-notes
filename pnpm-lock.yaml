@@ -1237,12 +1237,20 @@ packages:
     resolution: {integrity: sha512-+yJ74JRWVJokdgG9zYNMyTSzeNV3O9T4vVxk8PvLFHmI+R/BYA//cITh7vhRK37hWLZ4/kTcKcUz1dlWOpypIg==}
     engines: {node: '>= 22'}
 
-  '@intlify/core@11.4.10':
-    resolution: {integrity: sha512-zQ/dUn7Sp7mXneQMAGp1k1h0vYDXqKWh9wQz7GCReRyx4r9kiZZOdlL/mEAexaUcph6D0gbVxHoknS+je1Em4w==}
+  '@intlify/core-base@11.4.18':
+    resolution: {integrity: sha512-uryU7clROKIJsCLM8I8J6GA4pw9EVI5BCptnFQslpUXGPj/dCrlrixOaV/6gL1jLXZe3Hl8YY3yNi24bgfhvBw==}
+    engines: {node: '>= 22'}
+
+  '@intlify/core@11.4.18':
+    resolution: {integrity: sha512-gpgBRwnQZ1iYrZ+woDFefXa66vZbZLQ6LRvr2LS+i4ZNkGhR+gjGsDZL4fnWgaILLMOXLbJTLUzH9appMhSgTg==}
     engines: {node: '>= 22'}
 
   '@intlify/devtools-types@11.4.10':
     resolution: {integrity: sha512-xZxzZsAuu6/0zoLRVQWdpXWe5Kjl0LnWpjlQA3r9u9FbLYMhapqt7IwkgQyn0Tm2GUNAqhj9eZiUmYOrB024BQ==}
+    engines: {node: '>= 22'}
+
+  '@intlify/devtools-types@11.4.18':
+    resolution: {integrity: sha512-J7/PW4wSSijVzR8j578q2+/HICPbA09RhCIMZsLHEL8PlRkdXXVadhunrxLOre8cBe8dDK54922frpa0Z1UimA==}
     engines: {node: '>= 22'}
 
   '@intlify/h3@0.7.4':
@@ -1253,8 +1261,16 @@ packages:
     resolution: {integrity: sha512-oUB/scz2EJENXDiUJ7JjZffOrH8UIZ1BuZeHvonbi5fWLavLt04aivuk2OIByOZA0tsci1bkeeQRmwhb5M8Imw==}
     engines: {node: '>= 22'}
 
+  '@intlify/message-compiler@11.4.18':
+    resolution: {integrity: sha512-9v2s0+mIuJaFOyWBfZBHrV/g9VLFH/4osx/zaQ52BgT6FQkjvTWHWyNriCMRqWs3PEuBKysmwTUwmNpg9iPjJw==}
+    engines: {node: '>= 22'}
+
   '@intlify/shared@11.4.10':
     resolution: {integrity: sha512-FeImVdPeoSHTm3NBFFZHv0eRP9gQ3F4lj2puDBX5Kw7iiM1uJW6JTf39ian0K/17pbXCI3ef5i9RVsRrALqI6Q==}
+    engines: {node: '>= 22'}
+
+  '@intlify/shared@11.4.18':
+    resolution: {integrity: sha512-8q7UR/eAFP0xOZndaClKYeh/lWkcIPOZkWsU85CMR9BYLjTeaENpAFWfFBvuUI8fFz0BDtZvR/fgbwiiQaqcDg==}
     engines: {node: '>= 22'}
 
   '@intlify/unplugin-vue-i18n@11.2.5':
@@ -7565,19 +7581,30 @@ snapshots:
       '@intlify/message-compiler': 11.4.10
       '@intlify/shared': 11.4.10
 
-  '@intlify/core@11.4.10':
+  '@intlify/core-base@11.4.18':
     dependencies:
-      '@intlify/core-base': 11.4.10
-      '@intlify/shared': 11.4.10
+      '@intlify/devtools-types': 11.4.18
+      '@intlify/message-compiler': 11.4.18
+      '@intlify/shared': 11.4.18
+
+  '@intlify/core@11.4.18':
+    dependencies:
+      '@intlify/core-base': 11.4.18
+      '@intlify/shared': 11.4.18
 
   '@intlify/devtools-types@11.4.10':
     dependencies:
       '@intlify/core-base': 11.4.10
       '@intlify/shared': 11.4.10
 
+  '@intlify/devtools-types@11.4.18':
+    dependencies:
+      '@intlify/core-base': 11.4.18
+      '@intlify/shared': 11.4.18
+
   '@intlify/h3@0.7.4':
     dependencies:
-      '@intlify/core': 11.4.10
+      '@intlify/core': 11.4.18
       '@intlify/utils': 0.13.0
 
   '@intlify/message-compiler@11.4.10':
@@ -7585,7 +7612,14 @@ snapshots:
       '@intlify/shared': 11.4.10
       source-map-js: 1.2.1
 
+  '@intlify/message-compiler@11.4.18':
+    dependencies:
+      '@intlify/shared': 11.4.18
+      source-map-js: 1.2.1
+
   '@intlify/shared@11.4.10': {}
+
+  '@intlify/shared@11.4.18': {}
 
   '@intlify/unplugin-vue-i18n@11.2.5(@vue/compiler-dom@3.5.42)(eslint@10.9.1(jiti@2.7.0)(supports-color@10.2.2))(rollup@4.63.1)(supports-color@10.2.2)(typescript@6.0.3)(vite@8.2.2(@types/node@26.4.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))(vue-i18n@11.4.10(vue@3.5.42(typescript@6.0.3)))(vue@3.5.42(typescript@6.0.3))':
     dependencies:
@@ -8265,7 +8299,7 @@ snapshots:
 
   '@nuxtjs/i18n@10.6.0(@vue/compiler-dom@3.5.42)(db0@0.3.4)(esbuild@0.28.2)(eslint@10.9.1(jiti@2.7.0)(supports-color@10.2.2))(ioredis@5.11.1(supports-color@10.2.2))(magicast@0.5.4)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@6.0.3)(vue@3.5.42(typescript@6.0.3)))(rolldown@1.2.6)(rollup@4.63.1)(supports-color@10.2.2)(typescript@6.0.3)(vite@8.2.2(@types/node@26.4.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))(vue@3.5.42(typescript@6.0.3))':
     dependencies:
-      '@intlify/core': 11.4.10
+      '@intlify/core': 11.4.18
       '@intlify/h3': 0.7.4
       '@intlify/message-compiler': 11.4.10
       '@intlify/shared': 11.4.10
