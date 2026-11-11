@@ -21,6 +21,7 @@
     "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run --project unit",
     "test:nuxt": "vitest run --project nuxt",
+    "test:shuffle": "vitest run --sequence.shuffle.files",
     "test:e2e": "playwright test",
     "test:e2e:smoke": "playwright test smoke.spec.ts"
   },
