@@ -2,3 +2,15 @@ minimumReleaseAge: 0
 allowBuilds:
   esbuild: true
   unrs-resolver: true
+
+# vue-i18n and the @intlify packages are released together and must stay on the
+# same version. @nuxtjs/i18n aliases them to a single instance each, so a partial
+# bump makes @intlify/core-base call helpers that @intlify/shared does not export
+# yet (e.g. getOwn). See GHSA-4fx6-3h3f-fh66 and GHSA-786j-gfwp-vhm5.
+overrides:
+  '@intlify/core': 11.4.23
+  '@intlify/core-base': 11.4.23
+  '@intlify/devtools-types': 11.4.23
+  '@intlify/message-compiler': 11.4.23
+  '@intlify/shared': 11.4.23
+  'vue-i18n': 11.4.23

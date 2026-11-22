@@ -105,6 +105,14 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@intlify/core': 11.4.23
+  '@intlify/core-base': 11.4.23
+  '@intlify/devtools-types': 11.4.23
+  '@intlify/message-compiler': 11.4.23
+  '@intlify/shared': 11.4.23
+  vue-i18n: 11.4.23
+
 importers:
 
   .:
@@ -1236,28 +1244,28 @@ packages:
       vue-i18n:
         optional: true
 
-  '@intlify/core-base@11.4.10':
-    resolution: {integrity: sha512-+yJ74JRWVJokdgG9zYNMyTSzeNV3O9T4vVxk8PvLFHmI+R/BYA//cITh7vhRK37hWLZ4/kTcKcUz1dlWOpypIg==}
+  '@intlify/core-base@11.4.23':
+    resolution: {integrity: sha512-V8a3BQ7iTVPDetJ/LJfGn3lDx4Ir35OjjO4BLgVrFuL+0egWzwUyfdLIPAEYWlMGdo14eC5p6uk3tSlTYY0YmQ==}
     engines: {node: '>= 22'}
 
-  '@intlify/core@11.4.10':
-    resolution: {integrity: sha512-zQ/dUn7Sp7mXneQMAGp1k1h0vYDXqKWh9wQz7GCReRyx4r9kiZZOdlL/mEAexaUcph6D0gbVxHoknS+je1Em4w==}
+  '@intlify/core@11.4.23':
+    resolution: {integrity: sha512-5S//Yq2koh5gX+yLfcHmpM+q6YKTJH7LHTnMIRRe1guSwDtjg98p/f6vDDZM5dM4+SA4J9aPwSpqOuJu5fegPA==}
     engines: {node: '>= 22'}
 
-  '@intlify/devtools-types@11.4.10':
-    resolution: {integrity: sha512-xZxzZsAuu6/0zoLRVQWdpXWe5Kjl0LnWpjlQA3r9u9FbLYMhapqt7IwkgQyn0Tm2GUNAqhj9eZiUmYOrB024BQ==}
+  '@intlify/devtools-types@11.4.23':
+    resolution: {integrity: sha512-zuWkolaeK8ej5z7L9Ss7FLIBHgE8ZF+XcwV1o/vQ7IKagiDg/IosA7fOa2HUFVMW5yT2ugph9rshevHGzcowBQ==}
     engines: {node: '>= 22'}
 
   '@intlify/h3@0.7.4':
     resolution: {integrity: sha512-BtL5+U3Dd9Qz6so+ArOMQWZ+nV21rOqqYUXnqwvW6J3VUXr66A9+9+vUFb/NAQvOU4kdfkO3c/9LMRGU9WZ8vw==}
     engines: {node: '>= 20'}
 
-  '@intlify/message-compiler@11.4.10':
-    resolution: {integrity: sha512-oUB/scz2EJENXDiUJ7JjZffOrH8UIZ1BuZeHvonbi5fWLavLt04aivuk2OIByOZA0tsci1bkeeQRmwhb5M8Imw==}
+  '@intlify/message-compiler@11.4.23':
+    resolution: {integrity: sha512-HgmnQV/lBBX8KgxoNwngzzq8DLw/jECJgz9eBfQGdkEYte7Bw1RSqhIskcWp0DEWrSg2wijUi6dJjpq1WUD+zg==}
     engines: {node: '>= 22'}
 
-  '@intlify/shared@11.4.10':
-    resolution: {integrity: sha512-FeImVdPeoSHTm3NBFFZHv0eRP9gQ3F4lj2puDBX5Kw7iiM1uJW6JTf39ian0K/17pbXCI3ef5i9RVsRrALqI6Q==}
+  '@intlify/shared@11.4.23':
+    resolution: {integrity: sha512-1iqGalDCOlHZ8y7LOC3yisSm52K5AmkTmaNO23XGFYWU6Z1oIX8VeAGRq9rn2KrDFb8nMtQaxNyMa1n8EeDm5g==}
     engines: {node: '>= 22'}
 
   '@intlify/unplugin-vue-i18n@11.2.5':
@@ -1267,7 +1275,7 @@ packages:
       petite-vue-i18n: '*'
       vite: ^6.0.0 || ^7.0.0 || ^8.0.0
       vue: ^3.2.25
-      vue-i18n: '*'
+      vue-i18n: 11.4.23
     peerDependenciesMeta:
       petite-vue-i18n:
         optional: true
@@ -1288,10 +1296,10 @@ packages:
     resolution: {integrity: sha512-w0+70CvTmuqbskWfzeYhn0IXxllr6mU+IeM2MU0M+j9OW64jkrvqY+pYFWrUnIIC9bEdij3NICruicwd5EgUuQ==}
     engines: {node: '>= 18'}
     peerDependencies:
-      '@intlify/shared': ^9.0.0 || ^10.0.0 || ^11.0.0
+      '@intlify/shared': 11.4.23
       '@vue/compiler-dom': ^3.0.0
       vue: ^3.0.0
-      vue-i18n: ^9.0.0 || ^10.0.0 || ^11.0.0
+      vue-i18n: 11.4.23
     peerDependenciesMeta:
       '@intlify/shared':
         optional: true
@@ -5073,6 +5081,7 @@ packages:
   postcss-selector-parser@7.2.0:
     resolution: {integrity: sha512-Khh/tERVBn0I1499dvBSHY0pWJloMJWUxDsOBM0CCDPAcVZ10Jl2L1qy1f19uEX22spa8Mv7DCdEQJc0cGwBhQ==}
     engines: {node: '>=4'}
+    deprecated: Double-escapes CSS Modules class names (#362). Use 7.2.1.
 
   postcss-value-parser@4.2.0:
     resolution: {integrity: sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==}
@@ -6158,8 +6167,8 @@ packages:
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
 
-  vue-i18n@11.4.10:
-    resolution: {integrity: sha512-Lp+BjOxqzOY87DS6Z8KrQrpiTr9IN/Lt4kZEilwyXG2Wrx+AcU6IVsAW92HNXtVcn1HFFPV6ty41p9e/qDpyvg==}
+  vue-i18n@11.4.23:
+    resolution: {integrity: sha512-O+H2L/LF9xzklv2PZEqYAaG0rrbQokm6aX6/gPDxdtokBSDhKm+lvEPVbC3hXdvKpN5ICSBWigIkJ06AzCs3Lw==}
     engines: {node: '>= 22'}
     peerDependencies:
       vue: ^3.0.0
@@ -7454,10 +7463,10 @@ snapshots:
 
   '@humanwhocodes/retry@0.4.3': {}
 
-  '@intlify/bundle-utils@11.2.5(vue-i18n@11.4.10(vue@3.5.45(typescript@6.0.3)))':
+  '@intlify/bundle-utils@11.2.5(vue-i18n@11.4.23(vue@3.5.45(typescript@6.0.3)))':
     dependencies:
-      '@intlify/message-compiler': 11.4.10
-      '@intlify/shared': 11.4.10
+      '@intlify/message-compiler': 11.4.23
+      '@intlify/shared': 11.4.23
       acorn: 8.18.0
       esbuild: 0.25.12
       escodegen: 2.1.0
@@ -7466,42 +7475,42 @@ snapshots:
       source-map-js: 1.2.2
       yaml-eslint-parser: 1.3.2
     optionalDependencies:
-      vue-i18n: 11.4.10(vue@3.5.45(typescript@6.0.3))
+      vue-i18n: 11.4.23(vue@3.5.45(typescript@6.0.3))
 
-  '@intlify/core-base@11.4.10':
+  '@intlify/core-base@11.4.23':
     dependencies:
-      '@intlify/devtools-types': 11.4.10
-      '@intlify/message-compiler': 11.4.10
-      '@intlify/shared': 11.4.10
+      '@intlify/devtools-types': 11.4.23
+      '@intlify/message-compiler': 11.4.23
+      '@intlify/shared': 11.4.23
 
-  '@intlify/core@11.4.10':
+  '@intlify/core@11.4.23':
     dependencies:
-      '@intlify/core-base': 11.4.10
-      '@intlify/shared': 11.4.10
+      '@intlify/core-base': 11.4.23
+      '@intlify/shared': 11.4.23
 
-  '@intlify/devtools-types@11.4.10':
+  '@intlify/devtools-types@11.4.23':
     dependencies:
-      '@intlify/core-base': 11.4.10
-      '@intlify/shared': 11.4.10
+      '@intlify/core-base': 11.4.23
+      '@intlify/shared': 11.4.23
 
   '@intlify/h3@0.7.4':
     dependencies:
-      '@intlify/core': 11.4.10
+      '@intlify/core': 11.4.23
       '@intlify/utils': 0.13.0
 
-  '@intlify/message-compiler@11.4.10':
+  '@intlify/message-compiler@11.4.23':
     dependencies:
-      '@intlify/shared': 11.4.10
+      '@intlify/shared': 11.4.23
       source-map-js: 1.2.2
 
-  '@intlify/shared@11.4.10': {}
+  '@intlify/shared@11.4.23': {}
 
-  '@intlify/unplugin-vue-i18n@11.2.5(@vue/compiler-dom@3.5.45)(eslint@10.15.0(jiti@2.7.0)(supports-color@10.2.2))(rollup@4.68.2)(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.7(@types/node@26.4.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))(vue-i18n@11.4.10(vue@3.5.45(typescript@6.0.3)))(vue@3.5.45(typescript@6.0.3))':
+  '@intlify/unplugin-vue-i18n@11.2.5(@vue/compiler-dom@3.5.45)(eslint@10.15.0(jiti@2.7.0)(supports-color@10.2.2))(rollup@4.68.2)(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.7(@types/node@26.4.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))(vue-i18n@11.4.23(vue@3.5.45(typescript@6.0.3)))(vue@3.5.45(typescript@6.0.3))':
     dependencies:
       '@eslint-community/eslint-utils': 4.10.1(eslint@10.15.0(jiti@2.7.0)(supports-color@10.2.2))
-      '@intlify/bundle-utils': 11.2.5(vue-i18n@11.4.10(vue@3.5.45(typescript@6.0.3)))
-      '@intlify/shared': 11.4.10
-      '@intlify/vue-i18n-extensions': 8.0.0(@intlify/shared@11.4.10)(@vue/compiler-dom@3.5.45)(vue-i18n@11.4.10(vue@3.5.45(typescript@6.0.3)))(vue@3.5.45(typescript@6.0.3))
+      '@intlify/bundle-utils': 11.2.5(vue-i18n@11.4.23(vue@3.5.45(typescript@6.0.3)))
+      '@intlify/shared': 11.4.23
+      '@intlify/vue-i18n-extensions': 8.0.0(@intlify/shared@11.4.23)(@vue/compiler-dom@3.5.45)(vue-i18n@11.4.23(vue@3.5.45(typescript@6.0.3)))(vue@3.5.45(typescript@6.0.3))
       '@rollup/pluginutils': 5.4.0(rollup@4.68.2)
       '@typescript-eslint/scope-manager': 8.68.0
       '@typescript-eslint/typescript-estree': 8.68.0(supports-color@10.2.2)(typescript@6.0.3)
@@ -7513,7 +7522,7 @@ snapshots:
       vue: 3.5.45(typescript@6.0.3)
     optionalDependencies:
       vite: 8.3.7(@types/node@26.4.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)
-      vue-i18n: 11.4.10(vue@3.5.45(typescript@6.0.3))
+      vue-i18n: 11.4.23(vue@3.5.45(typescript@6.0.3))
     transitivePeerDependencies:
       - '@vue/compiler-dom'
       - eslint
@@ -7525,14 +7534,14 @@ snapshots:
 
   '@intlify/utils@0.14.1': {}
 
-  '@intlify/vue-i18n-extensions@8.0.0(@intlify/shared@11.4.10)(@vue/compiler-dom@3.5.45)(vue-i18n@11.4.10(vue@3.5.45(typescript@6.0.3)))(vue@3.5.45(typescript@6.0.3))':
+  '@intlify/vue-i18n-extensions@8.0.0(@intlify/shared@11.4.23)(@vue/compiler-dom@3.5.45)(vue-i18n@11.4.23(vue@3.5.45(typescript@6.0.3)))(vue@3.5.45(typescript@6.0.3))':
     dependencies:
       '@babel/parser': 7.29.13
     optionalDependencies:
-      '@intlify/shared': 11.4.10
+      '@intlify/shared': 11.4.23
       '@vue/compiler-dom': 3.5.45
       vue: 3.5.45(typescript@6.0.3)
-      vue-i18n: 11.4.10(vue@3.5.45(typescript@6.0.3))
+      vue-i18n: 11.4.23(vue@3.5.45(typescript@6.0.3))
 
   '@ioredis/commands@1.10.0': {}
 
@@ -8198,11 +8207,11 @@ snapshots:
 
   '@nuxtjs/i18n@10.6.0(@nuxt/schema@4.6.4)(@vue/compiler-dom@3.5.45)(db0@0.3.4)(esbuild@0.28.2)(eslint@10.15.0(jiti@2.7.0)(supports-color@10.2.2))(ioredis@5.11.1(supports-color@10.2.2))(jiti@2.7.0)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@6.0.3)(vue@3.5.45(typescript@6.0.3)))(rolldown@1.2.18)(rollup@4.68.2)(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.7(@types/node@26.4.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))(vue@3.5.45(typescript@6.0.3))':
     dependencies:
-      '@intlify/core': 11.4.10
+      '@intlify/core': 11.4.23
       '@intlify/h3': 0.7.4
-      '@intlify/message-compiler': 11.4.10
-      '@intlify/shared': 11.4.10
-      '@intlify/unplugin-vue-i18n': 11.2.5(@vue/compiler-dom@3.5.45)(eslint@10.15.0(jiti@2.7.0)(supports-color@10.2.2))(rollup@4.68.2)(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.7(@types/node@26.4.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))(vue-i18n@11.4.10(vue@3.5.45(typescript@6.0.3)))(vue@3.5.45(typescript@6.0.3))
+      '@intlify/message-compiler': 11.4.23
+      '@intlify/shared': 11.4.23
+      '@intlify/unplugin-vue-i18n': 11.2.5(@vue/compiler-dom@3.5.45)(eslint@10.15.0(jiti@2.7.0)(supports-color@10.2.2))(rollup@4.68.2)(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.7(@types/node@26.4.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))(vue-i18n@11.4.23(vue@3.5.45(typescript@6.0.3)))(vue@3.5.45(typescript@6.0.3))
       '@intlify/utils': 0.14.1
       '@miyaneee/rollup-plugin-json5': 1.2.0(rollup@4.68.2)
       '@nuxt/kit': 4.6.4(@nuxt/schema@4.6.4)(confbox@0.2.4)(jiti@2.7.0)(magic-string@0.30.21)(mlly@1.8.2)(oxc-parser@0.141.0)(rolldown@1.2.18)(unplugin@3.7.0(esbuild@0.28.2)(rolldown@1.2.18)(rollup@4.68.2)(vite@8.3.7(@types/node@26.4.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)))
@@ -8225,7 +8234,7 @@ snapshots:
       unplugin: 3.7.0(esbuild@0.28.2)(rolldown@1.2.18)(rollup@4.68.2)(vite@8.3.7(@types/node@26.4.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
       unrouting: 0.2.3
       unstorage: 1.17.6(db0@0.3.4)(ioredis@5.11.1(supports-color@10.2.2))
-      vue-i18n: 11.4.10(vue@3.5.45(typescript@6.0.3))
+      vue-i18n: 11.4.23(vue@3.5.45(typescript@6.0.3))
       vue-router: 5.5.1(@vue/compiler-sfc@3.5.45)(esbuild@0.28.2)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@6.0.3)(vue@3.5.45(typescript@6.0.3)))(rolldown@1.2.18)(rollup@4.68.2)(vite@8.3.7(@types/node@26.4.0)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))(vue@3.5.45(typescript@6.0.3))
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -13049,11 +13058,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  vue-i18n@11.4.10(vue@3.5.45(typescript@6.0.3)):
+  vue-i18n@11.4.23(vue@3.5.45(typescript@6.0.3)):
     dependencies:
-      '@intlify/core-base': 11.4.10
-      '@intlify/devtools-types': 11.4.10
-      '@intlify/shared': 11.4.10
+      '@intlify/core-base': 11.4.23
+      '@intlify/devtools-types': 11.4.23
+      '@intlify/shared': 11.4.23
       '@vue/devtools-api': 6.6.4
       vue: 3.5.45(typescript@6.0.3)
 
